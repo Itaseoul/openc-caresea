@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApi } from "@/lib/useApi";
 import {
   PTY_LABEL, SKY_LABEL, pickValue, isRainingNow, groupForecast, pcpText,
@@ -48,15 +48,20 @@ export default function Dashboard() {
 
   const action = decideAction({ ncst: ncstItems, fcst: fcstItems, heavyRainWarning: heavyRain, riverLevel, planFlood });
 
+  const [lastUpdated, setLastUpdated] = useState("");
+  useEffect(() => {
+    if (ncst.data || fcst.data || river.data) {
+      setLastUpdated(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
+    }
+  }, [ncst.data, fcst.data, river.data]);
+
   return (
-    <section className="rounded-3xl border border-neutral-200 bg-neutral-50/70 p-3 sm:p-4" aria-label="우기 모니터링 대시보드">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="rounded-3xl border border-neutral-200 bg-neutral-50/70 p-3 sm:p-4" aria-label="실증 운영·안전 대시보드">
+      <StatusBar level={action.level} label={action.label} site={site.name} lastUpdated={lastUpdated} demo={demo} />
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <SiteSwitcher value={siteId} onChange={setSiteId} />
-        {demo && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-watch/15 px-2.5 py-1 text-xs font-medium text-watch">
-            <span className="h-1.5 w-1.5 rounded-full bg-watch" aria-hidden /> 데모 데이터
-          </span>
-        )}
+        <span className="text-xs text-neutral-400">10분마다 자동 갱신 · 공개 데이터</span>
       </div>
 
       <div className="mt-3 space-y-3">
@@ -116,6 +121,29 @@ const DOT: Record<ActionLevel, string> = {
   ok: "bg-ok",
   neutral: "bg-neutral-400",
 };
+
+function StatusBar({ level, label, site, lastUpdated, demo }: { level: ActionLevel; label: string; site: string; lastUpdated: string; demo: boolean }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 shadow-sm">
+      <div className="flex items-center gap-2 text-sm">
+        <span className={`h-2.5 w-2.5 rounded-full ${DOT[level]}`} aria-hidden />
+        <span className={`font-semibold ${LEVEL_CLASS[level]}`}>{label}</span>
+        <span className="text-neutral-300">|</span>
+        <span className="text-neutral-500">{site}</span>
+      </div>
+      <div className="flex items-center gap-2 text-xs">
+        {demo ? (
+          <span className="rounded-full bg-watch/15 px-2 py-0.5 font-medium text-watch">데모</span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-ok/10 px-2 py-0.5 font-medium text-ok">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ok" aria-hidden />실데이터
+          </span>
+        )}
+        <span className="text-neutral-400">갱신 {lastUpdated || "—"}</span>
+      </div>
+    </div>
+  );
+}
 
 function ActionAlert({ level, label, detail }: { level: ActionLevel; label: string; detail: string }) {
   return (
