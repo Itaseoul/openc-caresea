@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* SEA:CUT은 라이트 전용 디자인 — OS 다크모드가 폼/스크롤바를 반전하지 않게 고정 */
+  color-scheme: light;
+}
+
+body {
+  @apply bg-white text-neutral-900 antialiased;
+}
+
+/* 시간별 예보 등 가로 스크롤 영역의 가는 스크롤바 */
+.scroll-x {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.scroll-x::-webkit-scrollbar {
+  height: 6px;
+}
+.scroll-x::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.scroll-x::-webkit-scrollbar-track {
+  background: transparent;
+}
