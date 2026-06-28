@@ -8,6 +8,7 @@ import {
   STREAMS_GANGSEO,
   PATHWAYS,
   SANDBOX_CONTACTS,
+  ALT_PILOTS,
   type StreamRow,
 } from "@/components/eulsukdoData";
 
@@ -116,6 +117,21 @@ export default function EulsukdoPage() {
           <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
             ※ 하천법·소하천정비법에 ‘≤5m/≤10m’ 폭 등급은 없습니다(소하천 기준 = 평균 하폭 ≥2m·길이 ≥500m). 표의 폭 유형은 국가하천(&gt;10m) 외 대부분 ‘미상’이며,
             측점별 정밀 하폭·좌표는 RIMGIS 하천대장 또는 사하구청 정보공개청구로만 확보됩니다.
+          </div>
+        </Section>
+
+        {/* 입지 전환 — 보호구역 밖 (권장) */}
+        <Section title="🎯 입지 전략 — 보호구역 '밖'에서 시작 (권장)">
+          <div style={{ fontSize: 12.5, color: "#065f46", lineHeight: 1.65, background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 10, padding: "9px 11px", marginBottom: 10 }}>
+            국가유산청 협의가 비현실적이라면, <b>천연기념물 179호를 벗어난 지방하천 구간</b>에서 실증을 시작하는 편이 빠릅니다.
+            <b>괴정천·장림천의 상·중류는 보호구역 밖(확정)</b>이고, 지방하천 점용허가는 부산시→<b>구청에 위임</b>되어 단일 창구가 됩니다.
+            게다가 「하천점용허가 세부기준」은 <b>‘부유식 구조 우선 고려’</b>를 명시 — 붐 설치에 유리한 법적 근거입니다.
+            <br />→ <b>전략:</b> 보호구역 밖 지방하천에서 데이터·신뢰를 먼저 쌓고, 단계적으로 하구로 확장.
+          </div>
+          <AltTable rows={ALT_PILOTS} />
+          <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
+            ※ ‘공동 문제’가 가장 뜨거운 곳은 낙동강 하구 자체(=179호 안)라는 긴장점이 있습니다. 위는 <b>‘시의성 × 인허가 단순(국가유산청 불요)’</b>을 함께 만족하는 순으로,
+            <b>괴정천 중·하류</b>가 균형 최우수. 단 하구 말단 정밀 경계·외곽 500m 보존지역 저촉은 국가유산청 고시 지형도면 대조로 확인해야 합니다.
           </div>
         </Section>
 
@@ -241,6 +257,38 @@ function StreamTable({ title, rows }: { title: string; rows: StreamRow[] }) {
 
 const thStyle: React.CSSProperties = { padding: "4px 8px", fontWeight: 700, whiteSpace: "nowrap" };
 const tdStyle: React.CSSProperties = { padding: "5px 8px", color: "#475569", verticalAlign: "top" };
+
+function AltTable({ rows }: { rows: typeof ALT_PILOTS }) {
+  const fitColor = (f: string) => (f.startsWith("상") ? "#16a34a" : f.startsWith("중상") ? "#0e7490" : f.startsWith("중") ? "#b45309" : "#dc2626");
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
+        <thead>
+          <tr style={{ color: "#94a3b8", textAlign: "left" }}>
+            <th style={thStyle}>하천(권역)</th>
+            <th style={thStyle}>등급</th>
+            <th style={thStyle}>점용허가 주체</th>
+            <th style={thStyle}>179호</th>
+            <th style={thStyle}>시의성</th>
+            <th style={{ ...thStyle, textAlign: "center" }}>적합도</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.name} style={{ borderTop: "1px solid #eef2f6" }}>
+              <td style={{ ...tdStyle, fontWeight: 700, color: "#0f172a" }}>{r.name}</td>
+              <td style={tdStyle}>{r.grade}</td>
+              <td style={tdStyle}>{r.permit}</td>
+              <td style={tdStyle}>{r.zone}</td>
+              <td style={tdStyle}>{r.timely}</td>
+              <td style={{ ...tdStyle, textAlign: "center", color: fitColor(r.fit), fontWeight: 800, whiteSpace: "nowrap" }}>{r.fit}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
