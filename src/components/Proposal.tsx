@@ -20,7 +20,7 @@ function Section({
       {eyebrow && (
         <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">{eyebrow}</div>
       )}
-      <h2 className="mb-4 text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">{title}</h2>
+      <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">{title}</h2>
       <div className="space-y-4 text-[15px] leading-7 text-neutral-700">{children}</div>
     </section>
   );
@@ -40,7 +40,7 @@ export default function Proposal() {
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden />
             SEA:CUT · source to sea
           </div>
-          <h1 className="mt-5 text-[1.9rem] font-bold leading-[1.25] tracking-tight text-neutral-900 sm:text-[2.6rem]">
+          <h1 className="mt-5 text-balance text-[1.9rem] font-bold leading-[1.25] tracking-tight text-neutral-900 sm:text-[2.6rem]">
             도시의 작은 하천 병목에서 바다로 흘러가는 부유 쓰레기를,{" "}
             <span className="text-brand-700">시민이 직접 막고 기록하고 공개합니다.</span>
           </h1>

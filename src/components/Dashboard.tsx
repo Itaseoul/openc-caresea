@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   return (
     <section className="rounded-3xl border border-neutral-200 bg-neutral-50/70 p-3 sm:p-4" aria-label="실증 운영·안전 대시보드">
-      <StatusBar level={action.level} label={action.label} site={site.name} lastUpdated={lastUpdated} demo={demo} />
+      <StatusBar level={action.level} label={OPS_LABEL[action.level]} site={site.name} lastUpdated={lastUpdated} demo={demo} />
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
         <SiteSwitcher value={siteId} onChange={setSiteId} />
@@ -72,7 +72,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <ActionAlert level={action.level} label={action.label} detail={action.detail} />
+        <ActionAlert level={action.level} label={OPS_LABEL[action.level]} detail={OPS_DETAIL[action.level]} />
 
         <div className="grid gap-3 sm:grid-cols-2">
           <NowcastCard items={ncstItems} base={ncst.data?.base} loading={ncst.loading} demo={ncst.data?.demo} />
@@ -120,6 +120,20 @@ const DOT: Record<ActionLevel, string> = {
   watch: "bg-watch",
   ok: "bg-ok",
   neutral: "bg-neutral-400",
+};
+
+// 운영·안전 프레이밍 라벨(표시용). 판정 로직(decideAction)은 그대로, 문구만 거치/철거 중심으로.
+const OPS_LABEL: Record<ActionLevel, string> = {
+  danger: "철거 권고",
+  watch: "주의 · 둔치 진입 자제",
+  ok: "거치·측정 적기",
+  neutral: "평상 · 특이사항 없음",
+};
+const OPS_DETAIL: Record<ActionLevel, string> = {
+  danger: "호우특보 또는 수위 위험. 무동력 붐 비상 철거와 둔치 진입 금지.",
+  watch: "강우 또는 증수 진행. 둔치 진입을 피하고 다리 위에서만 관찰.",
+  ok: "비 그친 표층 부유물 측정·베이스라인에 적합. 무동력 붐 거치·수거 작업 적기. 정밀 윈도우는 강우 이벤트 기록 연동 예정.",
+  neutral: "특이사항 없음. 평상 운영.",
 };
 
 function StatusBar({ level, label, site, lastUpdated, demo }: { level: ActionLevel; label: string; site: string; lastUpdated: string; demo: boolean }) {
