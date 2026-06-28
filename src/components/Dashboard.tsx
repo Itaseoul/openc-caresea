@@ -2,400 +2,397 @@
 
 import { useState, useEffect } from "react";
 import { useApi } from "@/lib/useApi";
-import {
-  PTY_LABEL, SKY_LABEL, pickValue, isRainingNow, groupForecast, pcpText,
-  riverStatus, decideAction, LEVEL_BG, LEVEL_CLASS, type ActionLevel,
-} from "@/lib/wx";
+import { pickValue, isRainingNow, groupForecast } from "@/lib/wx";
 import dynamic from "next/dynamic";
 
-// 관측 지점 위치 지도 (Leaflet) — 클라이언트 전용, SSR 비활성
+// 관측 지점 위치 지도 (Leaflet) — 클라이언트 전용
 const RiverMap = dynamic(() => import("./RiverMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-64 w-full items-center justify-center rounded-xl border border-neutral-200 bg-neutral-100 text-sm text-neutral-400">
+    <div style={{ height: 220, borderRadius: 12, background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 13 }}>
       지도 불러오는 중…
     </div>
   ),
 });
 
 type DSite = {
-  id: string; name: string; region: string; stnId: string;
-  seoulRiver: string | null; busanArea: string | null; planFlood: number | null;
-  lat: number; lon: number;
+  id: string; label: string; region: string; stnId: string;
+  seoulRiver: string | null; busanArea: string | null; planFlood: number; lat: number; lon: number;
 };
 const SITES: DSite[] = [
-  { id: "sacheon", name: "홍제천 사천교", region: "서울 서대문", stnId: "109", seoulRiver: "홍제천", busanArea: null, planFlood: 15.3, lat: 37.5835, lon: 126.9182 },
-  { id: "hakjang", name: "학장천 엄궁동", region: "부산 사상", stnId: "159", seoulRiver: null, busanArea: "사상구", planFlood: null, lat: 35.138, lon: 128.969 },
+  { id: "sacheon", label: "홍제천 사천교", region: "서울", stnId: "109", seoulRiver: "홍제천", busanArea: null, planFlood: 15.3, lat: 37.5835, lon: 126.9182 },
+  { id: "hakjang", label: "학장천 엄궁동", region: "부산 사상구", stnId: "159", seoulRiver: null, busanArea: "사상구", planFlood: 15.3, lat: 35.138, lon: 128.969 },
 ];
+
+const PTY_TXT = ["강수 없음", "비", "비/눈", "눈", "소나기", "빗방울", "빗방울/눈날림", "눈날림"];
+
+type Theme = { tag: string; solid: string; tint: string; border: string; text: string; icon: string };
+const THEME: Record<string, Theme> = {
+  danger: { tag: "철거 권고", solid: "#dc2626", tint: "#fef2f2", border: "#fecaca", text: "#b91c1c", icon: "alert" },
+  watch: { tag: "주의", solid: "#f59e0b", tint: "#fffbeb", border: "#fde68a", text: "#b45309", icon: "rain" },
+  ok: { tag: "촬영 적기", solid: "#16a34a", tint: "#f0fdf4", border: "#bbf7d0", text: "#15803d", icon: "camera" },
+  neutral: { tag: "평상", solid: "#64748b", tint: "#f8fafc", border: "#e2e8f0", text: "#475569", icon: "sun" },
+};
 
 export default function Dashboard() {
   const [siteId, setSiteId] = useState("sacheon");
+  const [minsAgo, setMinsAgo] = useState(0);
+  const [nonce, setNonce] = useState(0);
   const site = SITES.find((s) => s.id === siteId)!;
+  const bust = `&_=${nonce}`;
 
-  const ncst = useApi(`/api/kma?site=${site.id}&type=ncst`);
-  const fcst = useApi(`/api/kma?site=${site.id}&type=fcst`);
-  const wrn = useApi(`/api/wrn?stnId=${site.stnId}`);
-  const river = useApi(site.seoulRiver ? `/api/seoul?river=${encodeURIComponent(site.seoulRiver)}` : null);
-  const busanRain = useApi(site.busanArea ? `/api/busan-rain?area=${encodeURIComponent(site.busanArea)}` : null);
+  const ncst = useApi(`/api/kma?site=${site.id}&type=ncst${bust}`);
+  const fcst = useApi(`/api/kma?site=${site.id}&type=fcst${bust}`);
+  const wrn = useApi(`/api/wrn?stnId=${site.stnId}${bust}`);
+  const river = useApi(site.seoulRiver ? `/api/seoul?river=${encodeURIComponent(site.seoulRiver)}${bust}` : null);
+  const busanRain = useApi(site.busanArea ? `/api/busan-rain?area=${encodeURIComponent(site.busanArea)}${bust}` : null);
 
+  useEffect(() => {
+    const t = setInterval(() => setMinsAgo((m) => m + 1), 60000);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => { setMinsAgo(0); }, [ncst.data, fcst.data, river.data, siteId]);
+
+  const refresh = () => { setNonce((n) => n + 1); setMinsAgo(0); };
+  const lastUpdated = minsAgo === 0 ? "방금 갱신" : `${minsAgo}분 전`;
+
+  // ---- 실데이터 추출 ----
   const ncstItems = ncst.data?.items;
   const fcstItems = fcst.data?.items;
+  const pty = Number(pickValue(ncstItems, "PTY") ?? 0);
+  const sky = Number(pickValue(ncstItems, "SKY") ?? 0);
+  const rn1raw = pickValue(ncstItems, "RN1");
+  const rn1 = rn1raw ?? "0";
+  const rn1num = Number(rn1raw ?? 0) || 0;
+  const t1h = pickValue(ncstItems, "T1H") ?? "—";
+  const reh = pickValue(ncstItems, "REH") ?? "—";
+  const rehNum = Number(reh) || 0;
+  const raining = isRainingNow(ncstItems);
+  const ncstDemo = !!ncst.data?.demo;
+  const baseTimeRaw = ncst.data?.base?.base_time as string | undefined;
+  const baseTime = baseTimeRaw && baseTimeRaw.length >= 4 ? `${baseTimeRaw.slice(0, 2)}:${baseTimeRaw.slice(2, 4)}` : "—";
+
   const heavyRain = !!wrn.data?.heavyRainWarning;
   const hje = river.data?.items?.[0];
-  const riverLevel = hje?.level ?? null;
+  const level: number | null = hje?.level ?? null;
   const planFlood = hje?.planFloodLevel ?? site.planFlood;
-  const demo = !!(ncst.data?.demo || river.data?.demo);
+  const watchLine = +(planFlood * 0.9).toFixed(1);
+  const riverAvailable = !!site.seoulRiver;
+  const levelDanger = riverAvailable && level != null && level >= planFlood;
+  const levelWatch = riverAvailable && level != null && level >= watchLine;
+  const riverDemo = !!river.data?.demo;
+  const busanItem = busanRain.data?.items?.[0];
 
-  const action = decideAction({ ncst: ncstItems, fcst: fcstItems, heavyRainWarning: heavyRain, riverLevel, planFlood });
+  // ---- ActionAlert 판정 (철거 > 주의 > 촬영적기 > 평상) ----
+  let key = "neutral", title = "평상 — 특이사항 없음", sub = "", note = "";
+  if (heavyRain || levelDanger) {
+    key = "danger"; title = "붐 비상 철거 — 둔치 장비 철수";
+    sub = heavyRain && levelDanger ? "호우특보 발효 · 수위 위험선 도달" : heavyRain ? "호우특보 발효 — 철거 절차 가동" : "수위 위험선 도달 — 즉시 철수";
+  } else if (raining || levelWatch) {
+    key = "watch"; title = "둔치 진입 주의 — 다리 위만";
+    sub = raining ? `강우 진행 중 (${rn1}mm) · 증수 가능` : "수위 주의선 접근 · 둔치 주의";
+  } else if (rehNum >= 60) {
+    key = "ok"; title = "촬영 윈도우 — 지금 진입 가능";
+    sub = "비 직후 베이스라인 적기 · 강수·특보 없음";
+    note = "정밀 윈도우 판정은 강우 이벤트 기록(M2) 연동 예정 — 현재는 강수·예보·습도 근사";
+  } else {
+    key = "neutral"; title = "평상 — 특이사항 없음";
+    sub = "맑음 · 강수/특보 없음" + (riverAvailable ? " · 수위 안전" : "");
+  }
+  const tk = THEME[key];
 
-  const [lastUpdated, setLastUpdated] = useState("");
-  useEffect(() => {
-    if (ncst.data || fcst.data || river.data) {
-      setLastUpdated(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
-    }
-  }, [ncst.data, fcst.data, river.data]);
+  // ---- 근거 칩 ----
+  const CC = { ok: "#16a34a", watch: "#f59e0b", danger: "#dc2626", gray: "#94a3b8" };
+  const rainEv = !raining ? { v: "없음", c: CC.ok } : rn1num >= 15 ? { v: `비 ${rn1}mm`, c: CC.danger } : { v: rn1num > 0 ? `비 ${rn1}mm` : "비", c: CC.watch };
+  const warnEv = heavyRain ? { v: "호우경보", c: CC.danger } : { v: "없음", c: CC.ok };
+  const lvlEv = !riverAvailable ? { v: "해당없음", c: CC.gray } : level == null ? { v: "수신 대기", c: CC.gray } : levelDanger ? { v: `위험 ${level}m`, c: CC.danger } : levelWatch ? { v: `주의 ${level}m`, c: CC.watch } : { v: `안전 ${level}m`, c: CC.ok };
+  const evidence = [
+    { label: "강수", value: rainEv.v, color: rainEv.c },
+    { label: "특보", value: warnEv.v, color: warnEv.c },
+    { label: "수위", value: lvlEv.v, color: lvlEv.c },
+  ];
+
+  // ---- nowcast ----
+  const nIconColor = raining ? "#2563eb" : "#64748b";
+  const nowcast = {
+    bg: raining ? "#eff6ff" : "#ffffff",
+    borderC: raining ? "#bfdbfe" : "#e2e8f0",
+    iconBg: raining ? "#dbeafe" : "#f1f5f9",
+    accent: raining ? "#1d4ed8" : "#0f172a",
+  };
+
+  // ---- river gauge ----
+  const fillPct = level != null && planFlood ? Math.max(2, Math.min(100, (level / planFlood) * 100)) : 0;
+  const riverColor = levelDanger ? "#dc2626" : levelWatch ? "#f59e0b" : "#16a34a";
+  const watchPct = +Math.min(100, (watchLine / planFlood) * 100).toFixed(1);
+  const statusLabel = levelDanger ? "위험 — 계획홍수위 초과" : levelWatch ? "주의 — 증수 진행" : "안전권";
+  const statusTint = levelDanger ? "#fef2f2" : levelWatch ? "#fffbeb" : "#f0fdf4";
+  const statusBorder = levelDanger ? "#fecaca" : levelWatch ? "#fde68a" : "#bbf7d0";
+  const collectedAt = (hje?.collectedAt as string) ?? `${baseTime} 수집`;
+
+  // ---- forecast ----
+  const forecast = groupForecast(fcstItems).slice(0, 8).map((r) => {
+    const fpty = Number(r.PTY ?? 0);
+    const fsky = Number(r.SKY ?? 0);
+    const pop = Number(r.POP ?? 0);
+    const isRain = fpty !== 0;
+    return {
+      time: r.time ? `${Number(r.time.slice(0, 2))}시` : "",
+      pop,
+      pcp: r.PCP && r.PCP !== "강수없음" ? r.PCP : "",
+      iconName: weatherIconName(fpty, fsky),
+      isRain,
+      bg: isRain ? "#eff6ff" : "#ffffff",
+      borderC: isRain ? "#bfdbfe" : "#f1f5f9",
+      popColor: pop >= 50 ? "#1d4ed8" : "#94a3b8",
+      barH: Math.max(2, Math.round((pop / 100) * 32)),
+      barColor: isRain ? "#3b82f6" : pop >= 50 ? "#93c5fd" : "#e2e8f0",
+      iconColor: isRain ? "#2563eb" : "#94a3b8",
+    };
+  });
+
+  const card: React.CSSProperties = { background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 18, padding: 16 };
+  const chip = (txt: string, color: string, bg: string, border: string) => (
+    <span style={{ fontSize: 10, fontWeight: 700, color, background: bg, border: `1px solid ${border}`, borderRadius: 999, padding: "2px 7px" }}>{txt}</span>
+  );
 
   return (
-    <section className="rounded-3xl border border-neutral-200 bg-neutral-50/70 p-3 sm:p-4" aria-label="실증 운영·안전 대시보드">
-      <StatusBar level={action.level} label={OPS_LABEL[action.level]} site={site.name} lastUpdated={lastUpdated} demo={demo} />
+    <div style={{ background: "#eef2f6", borderRadius: 24 }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "16px 16px 36px", color: "#0f172a" }}>
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <SiteSwitcher value={siteId} onChange={setSiteId} />
-        <span className="text-xs text-neutral-400">10분마다 자동 갱신 · 공개 데이터</span>
-      </div>
-
-      <div className="mt-3 space-y-3">
-        {heavyRain && (
-          <div className="flex items-center gap-2 rounded-2xl border border-danger/40 bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">
-            <WarnIcon className="h-5 w-5 shrink-0" />
-            호우특보 발효 — 붐 비상 철거 절차
+        {/* 헤더 */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 촬영 윈도우 모니터</div>
+            <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-.02em", marginTop: 2 }}>openc.caresea.kr</div>
           </div>
-        )}
-
-        <ActionAlert level={action.level} label={OPS_LABEL[action.level]} detail={OPS_DETAIL[action.level]} />
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <NowcastCard items={ncstItems} base={ncst.data?.base} loading={ncst.loading} demo={ncst.data?.demo} />
-          <RiverGauge site={site} hje={hje} loading={river.loading} demo={river.data?.demo} busanRain={busanRain.data} />
-        </div>
-
-        <SiteMapCard site={site} />
-
-        <ForecastCard items={fcstItems} loading={fcst.loading} />
-        <WarningCard wrn={wrn.data} loading={wrn.loading} />
-        <RainEventTimeline />
-
-        <Sources />
-      </div>
-    </section>
-  );
-}
-
-function SiteSwitcher({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  return (
-    <div className="inline-flex rounded-xl border border-neutral-200 bg-white p-1 shadow-sm" role="tablist" aria-label="관측 지점 선택">
-      {SITES.map((s) => {
-        const active = value === s.id;
-        return (
-          <button
-            key={s.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(s.id)}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-              active ? "bg-brand-700 text-white shadow-sm" : "text-neutral-600 hover:text-neutral-900"
-            }`}
-          >
-            {s.name}
+          <button onClick={refresh} style={{ display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 11, padding: "8px 11px", cursor: "pointer", color: "#475569", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}>
+            <Icon name="refresh" size={14} color="#64748b" />
+            {lastUpdated}
           </button>
-        );
-      })}
-    </div>
-  );
-}
-
-const DOT: Record<ActionLevel, string> = {
-  danger: "bg-danger",
-  watch: "bg-watch",
-  ok: "bg-ok",
-  neutral: "bg-neutral-400",
-};
-
-// 운영·안전 프레이밍 라벨(표시용). 판정 로직(decideAction)은 그대로, 문구만 거치/철거 중심으로.
-const OPS_LABEL: Record<ActionLevel, string> = {
-  danger: "철거 권고",
-  watch: "주의 · 둔치 진입 자제",
-  ok: "거치·측정 적기",
-  neutral: "평상 · 특이사항 없음",
-};
-const OPS_DETAIL: Record<ActionLevel, string> = {
-  danger: "호우특보 또는 수위 위험. 무동력 붐 비상 철거와 둔치 진입 금지.",
-  watch: "강우 또는 증수 진행. 둔치 진입을 피하고 다리 위에서만 관찰.",
-  ok: "비 그친 표층 부유물 측정·베이스라인에 적합. 무동력 붐 거치·수거 작업 적기. 정밀 윈도우는 강우 이벤트 기록 연동 예정.",
-  neutral: "특이사항 없음. 평상 운영.",
-};
-
-function StatusBar({ level, label, site, lastUpdated, demo }: { level: ActionLevel; label: string; site: string; lastUpdated: string; demo: boolean }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 shadow-sm">
-      <div className="flex items-center gap-2 text-sm">
-        <span className={`h-2.5 w-2.5 rounded-full ${DOT[level]}`} aria-hidden />
-        <span className={`font-semibold ${LEVEL_CLASS[level]}`}>{label}</span>
-        <span className="text-neutral-300">|</span>
-        <span className="text-neutral-500">{site}</span>
-      </div>
-      <div className="flex items-center gap-2 text-xs">
-        {demo ? (
-          <span className="rounded-full bg-watch/15 px-2 py-0.5 font-medium text-watch">데모</span>
-        ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-ok/10 px-2 py-0.5 font-medium text-ok">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ok" aria-hidden />실데이터
-          </span>
-        )}
-        <span className="text-neutral-400">갱신 {lastUpdated || "—"}</span>
-      </div>
-    </div>
-  );
-}
-
-function ActionAlert({ level, label, detail }: { level: ActionLevel; label: string; detail: string }) {
-  return (
-    <div className={`rounded-2xl border p-5 sm:p-6 ${LEVEL_BG[level]}`}>
-      <div className="flex items-center gap-2">
-        <span className={`h-2.5 w-2.5 rounded-full ${DOT[level]}`} aria-hidden />
-        <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">현재 의사결정</span>
-      </div>
-      <div className={`mt-1.5 text-2xl font-bold sm:text-3xl ${LEVEL_CLASS[level]}`}>{label}</div>
-      <p className="mt-1.5 text-sm leading-6 text-neutral-600">{detail}</p>
-    </div>
-  );
-}
-
-function Card({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <div className="mb-3 flex items-baseline justify-between gap-2">
-        <h3 className="text-sm font-semibold text-neutral-700">{title}</h3>
-        {hint && <span className="text-xs text-neutral-400">{hint}</span>}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function NowcastCard({ items, base, loading, demo }: any) {
-  if (loading) return <Card title="지금 강수"><Skeleton /></Card>;
-  const pty = pickValue(items, "PTY");
-  const rn1 = pickValue(items, "RN1");
-  const t1h = pickValue(items, "T1H");
-  const reh = pickValue(items, "REH");
-  const raining = isRainingNow(items);
-  return (
-    <Card title="지금 강수" hint="초단기실황">
-      <div className="flex items-center gap-3">
-        <span
-          className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-            raining ? "bg-brand-50 text-brand-600" : "bg-neutral-100 text-neutral-400"
-          }`}
-          aria-hidden
-        >
-          <DropIcon className="h-6 w-6" />
-        </span>
-        <div className={`text-3xl font-bold ${raining ? "text-brand-700" : "text-neutral-800"}`}>
-          {pty != null ? PTY_LABEL[pty] ?? pty : "—"}
         </div>
-      </div>
-      <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
-        <Stat label="1시간 강수" value={rn1 != null ? `${rn1}mm` : "—"} accent={raining} />
-        <Stat label="기온" value={t1h != null ? `${t1h}°` : "—"} />
-        <Stat label="습도" value={reh != null ? `${reh}%` : "—"} />
-      </dl>
-      <p className="mt-3 text-xs text-neutral-400">기준 {base?.base_date ?? "—"} {base?.base_time ?? ""}{demo ? " · 데모" : ""}</p>
-    </Card>
-  );
-}
 
-function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className="rounded-lg bg-neutral-50 py-2">
-      <div className={`text-base font-semibold ${accent ? "text-brand-700" : "text-neutral-800"}`}>{value}</div>
-      <div className="mt-0.5 text-[11px] text-neutral-400">{label}</div>
-    </div>
-  );
-}
-
-function ForecastCard({ items, loading }: any) {
-  if (loading) return <Card title="시간별 예보"><Skeleton /></Card>;
-  const rows = groupForecast(items);
-  return (
-    <Card title="시간별 예보" hint="단기예보 · 가로 스크롤">
-      {rows.length === 0 ? (
-        <p className="text-sm text-neutral-400">데이터 없음</p>
-      ) : (
-        <div className="scroll-x -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-          {rows.map((r) => {
-            const rain = r.PTY && r.PTY !== "0";
+        {/* 사이트 토글 */}
+        <div style={{ display: "flex", gap: 6, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: 5, marginBottom: 12 }}>
+          {SITES.map((s) => {
+            const active = s.id === siteId;
             return (
-              <div
-                key={r.time}
-                className={`min-w-[4.25rem] rounded-xl border p-2.5 text-center text-xs ${
-                  rain ? "border-brand-100 bg-brand-50" : "border-neutral-100 bg-neutral-50"
-                }`}
-              >
-                <div className="font-semibold text-neutral-700">{r.time?.slice(0, 2)}시</div>
-                <div className="mt-0.5 text-neutral-400">{SKY_LABEL[r.SKY ?? ""] ?? ""}</div>
-                <div className={`mt-1 font-medium ${rain ? "text-brand-700" : "text-neutral-500"}`}>{PTY_LABEL[r.PTY ?? "0"]}</div>
-                <div className="mt-1 text-sm font-bold text-neutral-800">{r.POP ?? "0"}%</div>
-                <div className="mt-0.5 text-[11px] text-neutral-500">{pcpText(r.PCP)}</div>
-              </div>
+              <button key={s.id} onClick={() => setSiteId(s.id)} style={{ flex: 1, border: "none", borderRadius: 10, cursor: "pointer", padding: "8px 6px", background: active ? "#0f172a" : "transparent", color: active ? "#fff" : "#475569", textAlign: "center", transition: "background .15s" }}>
+                <div style={{ fontSize: 13, fontWeight: active ? 800 : 600, letterSpacing: "-.01em" }}>{s.label}</div>
+                <div style={{ fontSize: 11, opacity: 0.62, marginTop: 1, fontWeight: 500 }}>{s.region}</div>
+              </button>
             );
           })}
         </div>
-      )}
-    </Card>
-  );
-}
 
-function WarningCard({ wrn, loading }: any) {
-  if (loading) return null;
-  const heavy = !!wrn?.heavyRainWarning;
-  return (
-    <Card title="기상특보" hint="호우특보 = 철거 트리거">
-      {heavy ? (
-        <div className="flex items-center gap-2 rounded-xl bg-danger/10 px-3 py-2.5 text-sm font-semibold text-danger">
-          <WarnIcon className="h-4 w-4 shrink-0" />
-          호우특보 발효 — 철거 절차 진행
+        {/* 호우특보 배너 */}
+        {heavyRain && (
+          <div style={{ background: "#dc2626", color: "#fff", borderRadius: 14, padding: "14px 16px", marginBottom: 12, display: "flex", gap: 12, alignItems: "flex-start", boxShadow: "0 10px 24px -10px rgba(220,38,38,.65)" }}>
+            <span style={{ flex: "0 0 auto", marginTop: 1 }}><Icon name="alert" size={22} color="#fff" /></span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-.01em" }}>호우특보 발효 — 철거 절차 가동</div>
+              <div style={{ opacity: 0.92, fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>하천변·둔치 출입을 통제하고 무동력 붐 비상 철거 절차를 가동하세요.</div>
+            </div>
+          </div>
+        )}
+
+        {/* ActionAlert */}
+        <div style={{ background: tk.tint, border: `1.5px solid ${tk.border}`, borderRadius: 20, padding: 18, display: "flex", gap: 15, alignItems: "center", marginBottom: 12 }}>
+          <div style={{ width: 62, height: 62, borderRadius: 17, background: tk.solid, display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto", boxShadow: `0 10px 22px -10px ${tk.solid}` }}>
+            <Icon name={tk.icon} size={31} color="#fff" />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".08em", color: tk.text }}>{tk.tag}</div>
+            <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-.02em", lineHeight: 1.18, color: "#0f172a", marginTop: 2 }}>{title}</div>
+            <div style={{ fontSize: 13, color: "#475569", marginTop: 4, lineHeight: 1.45 }}>{sub}</div>
+            {note && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 6, lineHeight: 1.45 }}>* {note}</div>}
+          </div>
         </div>
-      ) : (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-ok/10 px-3 py-1.5 text-sm font-medium text-ok">
-          <CheckIcon className="h-4 w-4" /> 현재 특보 없음
-        </span>
-      )}
-    </Card>
+
+        {/* 근거 칩 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 14 }}>
+          {evidence.map((ev) => (
+            <div key={ev.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "9px 11px" }}>
+              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{ev.label}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: ev.color, flex: "0 0 auto" }} />
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", letterSpacing: "-.01em", whiteSpace: "nowrap" }}>{ev.value}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 지금 비? + 하천 수위 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(232px,1fr))", gap: 12, marginBottom: 12 }}>
+
+          <div style={{ background: nowcast.bg, border: `1px solid ${nowcast.borderC}`, borderRadius: 18, padding: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
+              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>지금 비?</div>
+              {ncstDemo ? chip("데모", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0")}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 13, margin: "10px 0 13px" }}>
+              <div style={{ width: 48, height: 48, borderRadius: 13, background: nowcast.iconBg, display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+                <Icon name={weatherIconName(pty, sky)} size={28} color={nIconColor} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 23, fontWeight: 800, letterSpacing: "-.02em", color: nowcast.accent, lineHeight: 1.1 }}>{PTY_TXT[pty] ?? "강수 없음"}</div>
+                <div style={{ fontSize: 12.5, color: "#64748b", marginTop: 2, whiteSpace: "nowrap" }}>최근 1시간 {rn1} mm</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <div style={{ flex: 1, background: "rgba(255,255,255,.55)", border: "1px solid #e8edf2", borderRadius: 10, padding: "8px 10px" }}>
+                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>기온</div>
+                <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-.02em", marginTop: 1 }}>{t1h}°</div>
+              </div>
+              <div style={{ flex: 1, background: "rgba(255,255,255,.55)", border: "1px solid #e8edf2", borderRadius: 10, padding: "8px 10px" }}>
+                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>습도</div>
+                <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-.02em", marginTop: 1 }}>{reh}%</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 11 }}>{baseTime} 기준</div>
+          </div>
+
+          <div style={card}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
+              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>하천 수위</div>
+              {riverAvailable && (riverDemo ? chip("데모", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0"))}
+            </div>
+
+            {riverAvailable ? (
+              <>
+                <div style={{ display: "flex", gap: 15, marginTop: 12 }}>
+                  <div style={{ position: "relative", width: 30, height: 148, background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 9, flex: "0 0 auto", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${fillPct}%`, background: riverColor, transition: "height .45s ease" }} />
+                    <div style={{ position: "absolute", left: -1, right: -1, bottom: "100%", borderTop: "2px dashed #dc2626" }} />
+                    <div style={{ position: "absolute", left: -1, right: -1, bottom: `${watchPct}%`, borderTop: "2px dashed #f59e0b" }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 수위</div>
+                    <div style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.03em", color: level == null ? "#94a3b8" : riverColor, lineHeight: 1, marginTop: 1 }}>
+                      {level ?? "—"}<span style={{ fontSize: 14, fontWeight: 700, marginLeft: 1 }}>m</span>
+                    </div>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 7, background: level == null ? "#f1f5f9" : statusTint, border: `1px solid ${level == null ? "#e2e8f0" : statusBorder}`, color: level == null ? "#64748b" : riverColor, borderRadius: 999, padding: "3px 9px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+                      {level == null ? "수위 데이터 수신 대기" : statusLabel}
+                    </div>
+                    <div style={{ marginTop: 11, fontSize: 11, lineHeight: 1.7, color: "#64748b" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ width: 14, borderTop: "2px dashed #dc2626" }} />위험 {planFlood}m</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ width: 14, borderTop: "2px dashed #f59e0b" }} />주의 {watchLine}m</div>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 13, lineHeight: 1.55 }}>성산2교 · {collectedAt}<br />사천교 게이지 없음 → 하류 성산2교 대체</div>
+              </>
+            ) : (
+              <div style={{ marginTop: 12, background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12, padding: 14, fontSize: 12.5, color: "#64748b", lineHeight: 1.65 }}>
+                학장천은 하천 수위 데이터가 제공되지 않습니다. <b style={{ color: "#475569" }}>강우(사상구) + 현장 자체계측</b>으로 판단하세요.
+                <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 강우</div>
+                <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", color: "#1d4ed8", lineHeight: 1.1, marginTop: 1 }}>
+                  {busanItem?.rainfall ?? "—"}<span style={{ fontSize: 13, marginLeft: 2 }}>mm</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </div>
+
+        {/* 시간별 예보 */}
+        <div style={{ ...card, marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>시간별 예보</div>
+            <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>향후 8시간 · POP 강수확률</span>
+          </div>
+          {forecast.length === 0 ? (
+            <div style={{ fontSize: 13, color: "#94a3b8", padding: "8px 2px" }}>예보 데이터 수신 대기</div>
+          ) : (
+            <div className="scroll-x" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 2px 4px" }}>
+              {forecast.map((f, i) => (
+                <div key={i} style={{ flex: "0 0 auto", width: 64, background: f.bg, border: `1px solid ${f.borderC}`, borderRadius: 13, padding: "9px 6px 8px", textAlign: "center" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#334155" }}>{f.time}</div>
+                  <div style={{ height: 30, display: "flex", alignItems: "center", justifyContent: "center", margin: "5px 0 3px" }}>
+                    <Icon name={f.iconName} size={24} color={f.iconColor} />
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: "-.02em", color: f.popColor }}>{f.pop}%</div>
+                  <div style={{ height: 32, display: "flex", alignItems: "flex-end", justifyContent: "center", marginTop: 5 }}>
+                    <div style={{ width: 8, borderRadius: 4, height: f.barH, background: f.barColor }} />
+                  </div>
+                  <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 5, lineHeight: 1.25, minHeight: 12 }}>{f.pcp}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 관측 지점 지도 (추가) */}
+        <div style={{ ...card, marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>관측 지점 · 하천 위치</div>
+            <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{site.region}</span>
+          </div>
+          <RiverMap lat={site.lat} lng={site.lon} label={site.label} sub={riverAvailable ? `계획홍수위 ${planFlood}m · 무동력 붐 거치 후보` : "자체 IoT 수위 계측 예정 · 거치 후보"} />
+        </div>
+
+        {/* 강우 이벤트 (M2) */}
+        <div style={{ border: "1.5px dashed #cbd5e1", borderRadius: 18, padding: 17, marginBottom: 16, background: "#fafbfc" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 6, padding: "2px 7px" }}>M2 예정</span>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 이벤트 · 촬영 윈도우 카운터</div>
+          </div>
+          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작·종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 촬영 적기를 정밀 판정합니다. 현재는 자리만 잡아둔 상태입니다.</div>
+        </div>
+
+        {/* 출처 */}
+        <div style={{ paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>출처</div>
+          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7 }}>기상청 · 한강홍수통제소 · 서울특별시(공공누리 제2유형, 비상업) · 부산광역시</div>
+          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하세요.</div>
+          <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700, marginTop: 11 }}>powered by 이타시티 · SEA:CUT — openc.caresea.kr</div>
+        </div>
+
+      </div>
+    </div>
   );
 }
 
-function RiverGauge({ site, hje, loading, demo, busanRain }: any) {
-  if (loading) return <Card title="하천 수위"><Skeleton /></Card>;
-  // 부산(학장천): 공공 수위 없음 → 강우 + 자체계측 안내
-  if (!site.seoulRiver) {
-    const r = busanRain?.items?.[0];
-    return (
-      <Card title="하천 수위" hint="학장천">
-        <p className="text-sm text-neutral-600">공공 실시간 수위 없음 (소하천 사각지대)</p>
-        <p className="mt-1.5 text-xs text-neutral-500">자체 IoT 수위계측 예정.{r ? ` 사상구 강우 ${r.rainfall ?? "—"}mm` : ""}</p>
-      </Card>
-    );
+function weatherIconName(pty: number, sky: number): string {
+  if (pty === 1 || pty === 5) return "rain";
+  if (pty === 2 || pty === 6) return "sleet";
+  if (pty === 3 || pty === 7) return "snow";
+  if (pty === 4) return "shower";
+  if (sky === 1) return "sun";
+  return "cloud";
+}
+
+function Icon({ name, size, color }: { name: string; size: number; color: string }) {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: 1.9, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const cloud = "M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25";
+  switch (name) {
+    case "sun":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="4" />
+          <line x1="12" y1="2" x2="12" y2="4" /><line x1="12" y1="20" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="4" y2="12" /><line x1="20" y1="12" x2="22" y2="12" />
+          <line x1="4.6" y1="4.6" x2="6" y2="6" /><line x1="18" y1="18" x2="19.4" y2="19.4" />
+          <line x1="4.6" y1="19.4" x2="6" y2="18" /><line x1="18" y1="6" x2="19.4" y2="4.6" />
+        </svg>
+      );
+    case "cloud":
+      return <svg {...common}><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" /></svg>;
+    case "rain":
+      return <svg {...common}><path d={cloud} /><line x1="16" y1="13" x2="16" y2="18" /><line x1="8" y1="13" x2="8" y2="18" /><line x1="12" y1="15" x2="12" y2="20" /></svg>;
+    case "shower":
+      return <svg {...common}><path d={cloud} /><line x1="8.5" y1="14" x2="7" y2="17" /><line x1="12.5" y1="16" x2="11" y2="19" /><line x1="16.5" y1="14" x2="15" y2="17" /></svg>;
+    case "snow":
+      return <svg {...common}><path d={cloud} /><circle cx="8" cy="19" r="0.6" /><circle cx="12" cy="21" r="0.6" /><circle cx="16" cy="19" r="0.6" /></svg>;
+    case "sleet":
+      return <svg {...common}><path d={cloud} /><line x1="8" y1="14" x2="8" y2="17" /><circle cx="12" cy="20" r="0.6" /><line x1="16" y1="14" x2="16" y2="17" /></svg>;
+    case "camera":
+      return <svg {...common}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>;
+    case "alert":
+      return <svg {...common}><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12" y2="17" /></svg>;
+    case "refresh":
+      return <svg {...common} strokeWidth={2}><path d="M23 4v6h-6" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>;
+    default:
+      return <svg {...common}><circle cx="12" cy="12" r="9" /></svg>;
   }
-  const level = hje?.level;
-  const plan = hje?.planFloodLevel ?? site.planFlood;
-  const st = riverStatus(level, plan);
-  const pct = level && plan ? Math.min(100, Math.round((level / plan) * 100)) : 0;
-  const barColor = st === "danger" ? "bg-danger" : st === "watch" ? "bg-watch" : "bg-brand-500";
-  return (
-    <Card title="하천 수위" hint="홍제천 성산2교">
-      <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-bold ${LEVEL_CLASS[st]}`}>{level ?? "—"}</span>
-        <span className="text-sm font-medium text-neutral-400">m</span>
-      </div>
-
-      {/* 게이지: 현재 수위 + 주의/위험 라인 */}
-      <div className="relative mt-3 h-3 w-full rounded-full bg-neutral-100">
-        <div className={`h-3 rounded-full ${barColor} transition-[width]`} style={{ width: `${pct}%` }} />
-        {/* 주의선(계획홍수위 90%) */}
-        <span className="absolute top-1/2 h-5 w-0.5 -translate-y-1/2 rounded bg-watch" style={{ left: "90%" }} aria-hidden />
-        {/* 위험선(계획홍수위) */}
-        <span className="absolute top-1/2 right-0 h-5 w-0.5 -translate-y-1/2 rounded bg-danger" aria-hidden />
-      </div>
-      <div className="mt-2 flex items-center gap-3 text-[11px]">
-        <span className="inline-flex items-center gap-1 text-watch"><span className="h-2 w-0.5 rounded bg-watch" />주의 {plan ? (plan * 0.9).toFixed(1) : "—"}m</span>
-        <span className="inline-flex items-center gap-1 text-danger"><span className="h-2 w-0.5 rounded bg-danger" />위험 {plan ?? "—"}m</span>
-      </div>
-
-      <p className="mt-3 text-xs text-neutral-500">
-        계획홍수위 {plan ?? "—"}m · 통제수위 {hje?.controlLevel ? `${hje.controlLevel}m` : "미설정"} · {hje?.collectedAt ?? ""}{demo ? " · 데모" : ""}
-      </p>
-      <p className="mt-1 text-xs text-neutral-400">사천교 게이지 없음 → 하류 성산2교 대체</p>
-    </Card>
-  );
-}
-
-function SiteMapCard({ site }: { site: DSite }) {
-  const sub = site.seoulRiver
-    ? `계획홍수위 ${site.planFlood ?? "—"}m · 무동력 차단 붐 거치 후보`
-    : "자체 IoT 수위 계측 예정 · 거치 후보";
-  return (
-    <Card title="관측 지점 · 하천 위치" hint={site.region}>
-      <RiverMap lat={site.lat} lng={site.lon} label={site.name} sub={sub} />
-      <p className="mt-2 text-xs text-neutral-400">지도 OpenStreetMap · CARTO · 무동력 차단 붐 거치 후보 지점</p>
-    </Card>
-  );
-}
-
-function RainEventTimeline() {
-  return (
-    <div className="rounded-2xl border border-dashed border-neutral-300 bg-white/60 p-5">
-      <div className="flex items-center gap-2">
-        <ClockIcon className="h-4 w-4 text-neutral-400" />
-        <p className="text-sm font-medium text-neutral-700">강우 이벤트 타임라인</p>
-        <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500">M2 연동 예정</span>
-      </div>
-      <p className="mt-1.5 text-xs leading-5 text-neutral-500">비 시작·종료·누적량·지속시간 기록 → 촬영 윈도우 카운터와 알림 임계값 캘리브레이션.</p>
-    </div>
-  );
-}
-
-function Sources() {
-  return (
-    <footer className="space-y-1.5 border-t border-neutral-200 pt-4 text-xs leading-5 text-neutral-400">
-      <p>
-        <span className="font-medium text-neutral-500">데이터 출처</span> · 기상청(단기예보·초단기실황·특보) · 한강홍수통제소 · 서울특별시 열린데이터광장(하천수위 OA-1167) · 부산광역시
-      </p>
-      <p>
-        서울·부산 공공데이터는 <span className="font-medium text-neutral-500">공공누리 제2유형</span>(출처표시 + 상업적 이용금지)에 따라 비영리로 표시합니다.
-      </p>
-      <p>예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하십시오. powered by 이타시티 · SEA:CUT.</p>
-    </footer>
-  );
-}
-
-function Skeleton() {
-  return (
-    <div className="animate-pulse space-y-2">
-      <div className="h-7 w-24 rounded bg-neutral-100" />
-      <div className="h-3 w-40 rounded bg-neutral-100" />
-    </div>
-  );
-}
-
-/* ── 인라인 아이콘 (단색 스트로크, 과한 그래픽 지양) ── */
-function DropIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M12 3s6 6.4 6 10.5A6 6 0 0 1 6 13.5C6 9.4 12 3 12 3Z" />
-    </svg>
-  );
-}
-function WarnIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
-      <path d="M12 9v4" /><path d="M12 17h.01" />
-    </svg>
-  );
-}
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  );
-}
-function ClockIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-    </svg>
-  );
 }
