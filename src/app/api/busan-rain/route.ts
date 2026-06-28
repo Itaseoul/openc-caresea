@@ -10,6 +10,21 @@ export const dynamic = "force-dynamic";
 
 const BASE = "https://apis.data.go.kr/6260000/BusanRainfalldepthInfoService";
 
+// 이 서비스는 dataType=JSON을 무시하고 XML로 응답함 → <item> 태그를 객체로 변환(파싱만 보강, 키 처리·로직 불변).
+function parseXmlItems(xml: string): Record<string, string>[] {
+  const items: Record<string, string>[] = [];
+  const itemRe = /<item>([\s\S]*?)<\/item>/g;
+  let m: RegExpExecArray | null;
+  while ((m = itemRe.exec(xml))) {
+    const obj: Record<string, string> = {};
+    const tagRe = /<([A-Za-z0-9_]+)>([\s\S]*?)<\/\1>/g;
+    let t: RegExpExecArray | null;
+    while ((t = tagRe.exec(m[1]))) obj[t[1]] = t[2].trim();
+    items.push(obj);
+  }
+  return items;
+}
+
 export async function GET(req: NextRequest) {
   const key = process.env.KMA_SERVICE_KEY;
   if (!key) {
@@ -32,11 +47,15 @@ export async function GET(req: NextRequest) {
     try {
       json = JSON.parse(text);
     } catch {
-      // 승인 직후 Forbidden(403)/XML 등 → 시차일 수 있음
-      return NextResponse.json(
-        { ok: false, reason: "NON_JSON", note: "승인 직후 활성화 시차(1~24h)일 수 있음", raw: text.slice(0, 300) },
-        { status: 200 }
-      );
+      // dataType=JSON 무시하고 XML로 오는 경우 → XML <item> 직접 파싱
+      const xmlItems = parseXmlItems(text);
+      if (!xmlItems.length) {
+        return NextResponse.json(
+          { ok: false, reason: "NON_JSON", note: "승인 직후 활성화 시차(1~24h) 또는 빈 응답", raw: text.slice(0, 300) },
+          { status: 200 }
+        );
+      }
+      json = { response: { header: { resultCode: "00" }, body: { items: { item: xmlItems } } } };
     }
     const code = json?.response?.header?.resultCode ?? json?.getRainfallInfo?.RESULT?.CODE;
     const rows = json?.response?.body?.items?.item ?? json?.getRainfallInfo?.item ?? [];
