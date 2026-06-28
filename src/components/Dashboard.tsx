@@ -334,9 +334,14 @@ function RainEventTimeline() {
 
 function Sources() {
   return (
-    <footer className="border-t border-neutral-200 pt-4 text-xs leading-6 text-neutral-400">
-      출처: 기상청, 한강홍수통제소, 서울특별시(공공누리 제2유형, 비상업), 부산광역시. powered by 이타시티 · SEA:CUT.
-      <br />예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하십시오.
+    <footer className="space-y-1.5 border-t border-neutral-200 pt-4 text-xs leading-5 text-neutral-400">
+      <p>
+        <span className="font-medium text-neutral-500">데이터 출처</span> · 기상청(단기예보·초단기실황·특보) · 한강홍수통제소 · 서울특별시 열린데이터광장(하천수위 OA-1167) · 부산광역시
+      </p>
+      <p>
+        서울·부산 공공데이터는 <span className="font-medium text-neutral-500">공공누리 제2유형</span>(출처표시 + 상업적 이용금지)에 따라 비영리로 표시합니다.
+      </p>
+      <p>예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하십시오. powered by 이타시티 · SEA:CUT.</p>
     </footer>
   );
 }
