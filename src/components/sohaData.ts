@@ -23,3 +23,22 @@ export const SOHA_DATA: SohaRow[] = [
   { name_eng: "Gyeongsangnam-do", label: "경남", pct: null },
   { name_eng: "Jeju-do", label: "제주", pct: null },
 ];
+
+// 정비율 구간별 색상 — 지도(코로플레스)와 막대 목록이 동일 색계를 공유
+export function colorFor(pct: number | null): string {
+  if (pct == null) return "#cbd5e1";
+  if (pct < 30) return "#dc2626";
+  if (pct < 40) return "#f97316";
+  if (pct < 50) return "#eab308";
+  if (pct < 70) return "#0ea5e9";
+  return "#1d4ed8";
+}
+
+export const LEGEND: { label: string; color: string }[] = [
+  { label: "30% 미만", color: "#dc2626" },
+  { label: "30~39%", color: "#f97316" },
+  { label: "40~49%", color: "#eab308" },
+  { label: "50~69%", color: "#0ea5e9" },
+  { label: "70% 이상", color: "#1d4ed8" },
+  { label: "확인 중", color: "#cbd5e1" },
+];
