@@ -26,6 +26,9 @@ const config: Config = {
           900: "#164e63",
         },
       },
+      fontFamily: {
+        sans: ['"Pretendard Variable"', "Pretendard", "system-ui", "-apple-system", "sans-serif"],
+      },
     },
   },
   plugins: [],
