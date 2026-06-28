@@ -47,6 +47,13 @@ export default function Proposal() {
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-neutral-600 sm:text-lg">
             강이 바다로 쓰레기를 넘기는 그 지점을 시민의 손으로 가로채는 실증 사업입니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원입니다.
           </p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {["연중 단기·무동력 실증", "오픈소스 도면·데이터 공개", "공개 데이터 기반 운영·안전"].map((t) => (
+              <span key={t} className="rounded-full border border-brand-200 bg-brand-50/70 px-3 py-1 text-xs font-medium text-brand-800">
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
       </header>
 
