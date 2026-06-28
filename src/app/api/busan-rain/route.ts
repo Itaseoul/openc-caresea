@@ -65,8 +65,8 @@ export async function GET(req: NextRequest) {
       .map((x: any) => ({
         areaId: x.clientId,
         area: x.clientName,
-        rainfall: x.rainfall ?? x.recentRainfall ?? x["최근강우"],
-        observedAt: x.obsrTime ?? x["강우관측시간"],
+        rainfall: x.accRain ?? x.timeDay ?? x.rainfall ?? x.recentRainfall ?? x["최근강우"],
+        observedAt: x.lastRainDt ?? x.accRainDt ?? x.obsrTime ?? x["강우관측시간"],
         raw: x,
       }));
     return NextResponse.json({ ok: !!items.length, resultCode: code, count: items.length, items });
