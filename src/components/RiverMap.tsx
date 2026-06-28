@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 
-type Props = { lat: number; lng: number; label: string };
+type Props = { lat: number; lng: number; label: string; sub?: string };
 
 // 관측 지점 위치 지도 — 하천이 잘 보이는 CARTO Voyager 베이스맵 + 지점 마커.
 // 부모(Dashboard)에서 next/dynamic ssr:false로 import → leaflet은 클라이언트에서만 로드.
-export default function RiverMap({ lat, lng, label }: Props) {
+export default function RiverMap({ lat, lng, label, sub }: Props) {
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
 
@@ -43,7 +43,8 @@ export default function RiverMap({ lat, lng, label }: Props) {
         fillOpacity: 0.9,
       })
         .addTo(map)
-        .bindTooltip(label, { direction: "top", offset: [0, -6] });
+        .bindTooltip(label, { permanent: true, direction: "top", offset: [0, -8] })
+        .bindPopup(sub ? `<strong>${label}</strong><br/><span style="color:#475569">${sub}</span>` : `<strong>${label}</strong>`);
 
       // 카드 안에서 컨테이너 크기가 늦게 잡히는 경우 보정
       setTimeout(() => {
@@ -57,7 +58,7 @@ export default function RiverMap({ lat, lng, label }: Props) {
       if (m) m.remove();
       mapRef.current = null;
     };
-  }, [lat, lng, label]);
+  }, [lat, lng, label, sub]);
 
   return (
     <div

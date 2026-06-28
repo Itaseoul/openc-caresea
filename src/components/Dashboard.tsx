@@ -280,9 +280,12 @@ function RiverGauge({ site, hje, loading, demo, busanRain }: any) {
 }
 
 function SiteMapCard({ site }: { site: DSite }) {
+  const sub = site.seoulRiver
+    ? `계획홍수위 ${site.planFlood ?? "—"}m · 무동력 차단 붐 거치 후보`
+    : "자체 IoT 수위 계측 예정 · 거치 후보";
   return (
     <Card title="관측 지점 · 하천 위치" hint={site.region}>
-      <RiverMap lat={site.lat} lng={site.lon} label={site.name} />
+      <RiverMap lat={site.lat} lng={site.lon} label={site.name} sub={sub} />
       <p className="mt-2 text-xs text-neutral-400">지도 OpenStreetMap · CARTO · 무동력 차단 붐 거치 후보 지점</p>
     </Card>
   );
