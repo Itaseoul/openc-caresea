@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SEA:CUT 우기 알림 — openc.caresea.kr",
+  title: "SEA:CUT 실증 운영·안전 알리미 — openc.caresea.kr",
   description:
-    "오는 비를 절대 놓치지 않는다. 강수 예보·실황·호우특보·하천 수위로 촬영 윈도우와 철거 트리거를 알린다.",
+    "도시 소하천 부유물 차단 붐의 연중 실증을 위한 운영·안전 대시보드. 강수·하천 수위로 거치·수거·철거 시점을 알린다. 비 직후는 부유물이 폭증하는 보너스 측정창.",
 };
 
 export default function RootLayout({

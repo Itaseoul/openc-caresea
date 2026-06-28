@@ -6,14 +6,26 @@ import {
   PTY_LABEL, SKY_LABEL, pickValue, isRainingNow, groupForecast, pcpText,
   riverStatus, decideAction, LEVEL_BG, LEVEL_CLASS, type ActionLevel,
 } from "@/lib/wx";
+import dynamic from "next/dynamic";
+
+// 관측 지점 위치 지도 (Leaflet) — 클라이언트 전용, SSR 비활성
+const RiverMap = dynamic(() => import("./RiverMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-64 w-full items-center justify-center rounded-xl border border-neutral-200 bg-neutral-100 text-sm text-neutral-400">
+      지도 불러오는 중…
+    </div>
+  ),
+});
 
 type DSite = {
   id: string; name: string; region: string; stnId: string;
   seoulRiver: string | null; busanArea: string | null; planFlood: number | null;
+  lat: number; lon: number;
 };
 const SITES: DSite[] = [
-  { id: "sacheon", name: "홍제천 사천교", region: "서울 서대문", stnId: "109", seoulRiver: "홍제천", busanArea: null, planFlood: 15.3 },
-  { id: "hakjang", name: "학장천 엄궁동", region: "부산 사상", stnId: "159", seoulRiver: null, busanArea: "사상구", planFlood: null },
+  { id: "sacheon", name: "홍제천 사천교", region: "서울 서대문", stnId: "109", seoulRiver: "홍제천", busanArea: null, planFlood: 15.3, lat: 37.5835, lon: 126.9182 },
+  { id: "hakjang", name: "학장천 엄궁동", region: "부산 사상", stnId: "159", seoulRiver: null, busanArea: "사상구", planFlood: null, lat: 35.138, lon: 128.969 },
 ];
 
 export default function Dashboard() {
@@ -61,6 +73,8 @@ export default function Dashboard() {
           <NowcastCard items={ncstItems} base={ncst.data?.base} loading={ncst.loading} demo={ncst.data?.demo} />
           <RiverGauge site={site} hje={hje} loading={river.loading} demo={river.data?.demo} busanRain={busanRain.data} />
         </div>
+
+        <SiteMapCard site={site} />
 
         <ForecastCard items={fcstItems} loading={fcst.loading} />
         <WarningCard wrn={wrn.data} loading={wrn.loading} />
@@ -261,6 +275,15 @@ function RiverGauge({ site, hje, loading, demo, busanRain }: any) {
         계획홍수위 {plan ?? "—"}m · 통제수위 {hje?.controlLevel ? `${hje.controlLevel}m` : "미설정"} · {hje?.collectedAt ?? ""}{demo ? " · 데모" : ""}
       </p>
       <p className="mt-1 text-xs text-neutral-400">사천교 게이지 없음 → 하류 성산2교 대체</p>
+    </Card>
+  );
+}
+
+function SiteMapCard({ site }: { site: DSite }) {
+  return (
+    <Card title="관측 지점 · 하천 위치" hint={site.region}>
+      <RiverMap lat={site.lat} lng={site.lon} label={site.name} />
+      <p className="mt-2 text-xs text-neutral-400">지도 OpenStreetMap · CARTO · 무동력 차단 붐 거치 후보 지점</p>
     </Card>
   );
 }
