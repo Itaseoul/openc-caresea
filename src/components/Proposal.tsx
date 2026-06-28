@@ -111,10 +111,12 @@ export default function Proposal() {
           <p>첫 한 기의 한계는 분명합니다. 그러나 OpenBoom의 가치는 두 번째 병목을 세우는 비용이 얼마나 낮아지는가에 있습니다. 한 곳에서 검증한 도면과 데이터와 운영 절차는 공개되어 있어 다른 하천이 처음부터 다시 설계할 필요가 없습니다. 부산 학장천에서 검증한 방법을 다른 도시 하천이 그대로 가져다 쓰는 것이 이 사업의 끝그림입니다.</p>
         </Section>
 
-        <footer className="border-t border-neutral-200 py-10 text-xs leading-6 text-neutral-400">
-          출처: 기상청, 한강홍수통제소, 서울특별시(공공누리 제2유형, 비상업), 부산광역시.
-          <br />
-          powered by 이타시티 · SEA:CUT · openc.caresea.kr
+        <footer className="space-y-1.5 border-t border-neutral-200 py-10 text-xs leading-5 text-neutral-400">
+          <p>
+            <span className="font-medium text-neutral-500">데이터 출처</span> · 기상청 · 한강홍수통제소 · 서울특별시 열린데이터광장 · 부산광역시
+          </p>
+          <p>서울·부산 공공데이터는 공공누리 제2유형(출처표시 + 상업적 이용금지)에 따라 비영리로 표시합니다.</p>
+          <p>powered by 이타시티 · SEA:CUT · openc.caresea.kr</p>
         </footer>
       </div>
     </main>
