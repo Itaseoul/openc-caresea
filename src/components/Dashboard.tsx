@@ -350,6 +350,9 @@ export default function Dashboard() {
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>출처</div>
           <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7 }}>기상청 · 한강홍수통제소 · 서울특별시(공공누리 제2유형, 비상업) · 부산광역시</div>
           <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하세요.</div>
+          <div style={{ fontSize: 11, color: "#475569", marginTop: 11 }}>
+            정책 컨텍스트 → <a href="/streams" style={{ color: "#0e7490", textDecoration: "underline" }}>전국 소하천 정비율 지도</a> (서울 79.1% ~ 광주 11.5%, 평균 46.5%)
+          </div>
           <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700, marginTop: 11 }}>powered by 이타시티 · SEA:CUT — openc.caresea.kr</div>
         </div>
 
