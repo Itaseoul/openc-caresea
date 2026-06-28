@@ -135,6 +135,26 @@ export default function EulsukdoPage() {
           </div>
         </Section>
 
+        {/* 점용허가 적합성 (요약) */}
+        <Section title="📑 점용허가 적합성 — 「하천점용허가 세부기준」">
+          <div style={{ fontSize: 12.5, color: "#334155", lineHeight: 1.7 }}>
+            <div style={{ marginBottom: 6 }}>
+              <span style={{ fontWeight: 800, color: "#16a34a" }}>유리</span> ·
+              <b> 제28조의2①1호</b> “홍수시 이동 가능하거나 <b>부유식 구조로 설치하는 방안을 우선 고려</b>” → 부유식 붐의 직접 근거.
+              <b> 제5조①3호·제12조8호</b>(수질·하천환경 보전 목적과 정합). <b>하천법 시행령 제44조</b>(공익·기부채납 시 점용료 감면).
+            </div>
+            <div style={{ marginBottom: 6 }}>
+              <span style={{ fontWeight: 800, color: "#b45309" }}>부담</span> ·
+              <b> 제3조②</b>(홍수 시 통수·치수 무지장 <b>입증 책임</b>), <b>제3조②4호·제12조2·3호</b>(수충부·연약지반 회피 → 계류점 제약),
+              <b> 제5조①2호 자·아목</b>(<b>재해복구비 자부담 + 홍수기 긴급철거</b>), <b>1호다·4호</b>(원상회복).
+            </div>
+            <div style={{ fontSize: 11.5, color: "#94a3b8" }}>
+              상세 조문별 검토·점용허가 사업계획서 초안: <b>docs/하천점용허가-적합성검토.md</b> ·
+              소관 환경부, 「하천법」 제33조 위임 (제출 시 2026-03-09 시행 판본 대조 권장).
+            </div>
+          </div>
+        </Section>
+
         {/* 부유물 실태 (정정) */}
         <Section title="부유물 실태 (사업 명분 · 정정)">
           <ul style={ulStyle}>
