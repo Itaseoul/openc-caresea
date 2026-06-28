@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { SOHA_DATA } from "@/components/SohaChoropleth";
+import { SOHA_DATA } from "@/components/sohaData";
 
 const Choro = dynamic(() => import("@/components/SohaChoropleth"), {
   ssr: false,
