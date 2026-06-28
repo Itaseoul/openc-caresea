@@ -30,7 +30,7 @@ type Theme = { tag: string; solid: string; tint: string; border: string; text: s
 const THEME: Record<string, Theme> = {
   danger: { tag: "철거 권고", solid: "#dc2626", tint: "#fef2f2", border: "#fecaca", text: "#b91c1c", icon: "alert" },
   watch: { tag: "주의", solid: "#f59e0b", tint: "#fffbeb", border: "#fde68a", text: "#b45309", icon: "rain" },
-  ok: { tag: "촬영 적기", solid: "#16a34a", tint: "#f0fdf4", border: "#bbf7d0", text: "#15803d", icon: "camera" },
+  ok: { tag: "거치·측정 적기", solid: "#16a34a", tint: "#f0fdf4", border: "#bbf7d0", text: "#15803d", icon: "camera" },
   neutral: { tag: "평상", solid: "#64748b", tint: "#f8fafc", border: "#e2e8f0", text: "#475569", icon: "sun" },
 };
 
@@ -92,7 +92,7 @@ export default function Dashboard() {
     key = "watch"; title = "둔치 진입 주의 — 다리 위만";
     sub = raining ? `강우 진행 중 (${rn1}mm) · 증수 가능` : "수위 주의선 접근 · 둔치 주의";
   } else if (rehNum >= 60) {
-    key = "ok"; title = "촬영 윈도우 — 지금 진입 가능";
+    key = "ok"; title = "측정·거치 윈도우 — 지금 진입 가능";
     sub = "비 직후 베이스라인 적기 · 강수·특보 없음";
     note = "정밀 윈도우 판정은 강우 이벤트 기록(M2) 연동 예정 — 현재는 강수·예보·습도 근사";
   } else {
@@ -163,7 +163,7 @@ export default function Dashboard() {
         {/* 헤더 */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
           <div>
-            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 촬영 윈도우 모니터</div>
+            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 실증 운영·안전 모니터</div>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-.02em", marginTop: 2 }}>openc.caresea.kr</div>
           </div>
           <button onClick={refresh} style={{ display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 11, padding: "8px 11px", cursor: "pointer", color: "#475569", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}>
@@ -335,9 +335,9 @@ export default function Dashboard() {
         <div style={{ border: "1.5px dashed #cbd5e1", borderRadius: 18, padding: 17, marginBottom: 16, background: "#fafbfc" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
             <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 6, padding: "2px 7px" }}>M2 예정</span>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 이벤트 · 촬영 윈도우 카운터</div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 이벤트 · 측정 윈도우 카운터</div>
           </div>
-          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작·종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 촬영 적기를 정밀 판정합니다. 현재는 자리만 잡아둔 상태입니다.</div>
+          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작·종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 거치·측정 적기를 정밀 판정합니다. 현재는 자리만 잡아둔 상태입니다.</div>
         </div>
 
         {/* 출처 */}
