@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { SOHA_DATA } from "@/components/sohaData";
+import { SOHA_DATA, colorFor } from "@/components/sohaData";
 
 const Choro = dynamic(() => import("@/components/SohaChoropleth"), {
   ssr: false,
@@ -53,16 +53,38 @@ export default function StreamsPage() {
         <Choro />
 
         <div style={{ marginTop: 18, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "12px 14px" }}>
-          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 8 }}>시도별 정비율 (확보값, 내림차순)</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>시도별 정비율 (확보값, 내림차순)</div>
+            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>전국 평균 46.5%</div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 7 }}>
             {ranked.map((r) => (
-              <div key={r.name_eng} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 10px", background: "#f8fafc", borderRadius: 8 }}>
+              <div key={r.name_eng} style={{ display: "grid", gridTemplateColumns: "38px 1fr 48px", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 12.5, fontWeight: 700, color: "#334155" }}>{r.label}</span>
-                <span style={{ fontSize: 12.5, fontWeight: 800, color: "#0f172a" }}>{r.pct}%</span>
+                <div style={{ position: "relative", height: 18, background: "#f1f5f9", borderRadius: 5, overflow: "hidden" }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: `${r.pct}%`,
+                      background: colorFor(r.pct),
+                      borderRadius: 5,
+                    }}
+                  />
+                  {/* 전국 평균(46.5%) 기준선 */}
+                  <div style={{ position: "absolute", left: "46.5%", top: 0, bottom: 0, width: 1.5, background: "#0f172a", opacity: 0.45 }} />
+                </div>
+                <span style={{ fontSize: 12.5, fontWeight: 800, color: "#0f172a", textAlign: "right" }}>{r.pct}%</span>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 8, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
+          <div style={{ marginTop: 9, display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#94a3b8" }}>
+            <span style={{ width: 10, height: 0, borderTop: "1.5px solid #0f172a", opacity: 0.55, display: "inline-block" }} />
+            세로선 = 전국 평균 46.5%
+          </div>
+          <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
             확보값 {filled}곳 · 확인 중 {pending}곳 (부산·대구·경기·경북·경남·제주·세종 — 공개 기사·자료에 시도별 수치 명시 안 됨, 행안부 통계 보강 예정)
           </div>
         </div>
@@ -72,7 +94,7 @@ export default function StreamsPage() {
         </div>
 
         <div style={{ marginTop: 18, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>
-          출처: 행정안전부 · 더불어민주당 한병도 의원실 (2024). 지도 GeoJSON southkorea-maps (kostat 2018) · CARTO Voyager 베이스맵. 본 페이지는 공공데이터 기반 정책 컨텍스트이며 안전·정책 자문이 아닙니다.
+          출처: 행정안전부 · 더불어민주당 한병도 의원실 (2024). 지도 GeoJSON southkorea-maps (kostat 2018) · 베이스맵 OpenTopoMap(CC-BY-SA) · CARTO · OpenStreetMap. 본 페이지는 공공데이터 기반 정책 컨텍스트이며 안전·정책 자문이 아닙니다.
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
