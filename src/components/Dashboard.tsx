@@ -21,6 +21,7 @@ type DSite = {
 };
 const SITES: DSite[] = [
   { id: "sacheon", label: "홍제천 사천교", region: "서울", stnId: "109", seoulRiver: "홍제천", busanArea: null, planFlood: 15.3, lat: 37.5835, lon: 126.9182 },
+  { id: "bongwon", label: "봉원천", region: "이대 인근", stnId: "109", seoulRiver: null, busanArea: null, planFlood: 15.3, lat: 37.5663, lon: 126.9438 },
   { id: "hakjang", label: "학장천 엄궁동", region: "부산 사상구", stnId: "159", seoulRiver: null, busanArea: "사상구", planFlood: 15.3, lat: 35.138, lon: 128.969 },
 ];
 
@@ -83,7 +84,7 @@ export default function Dashboard() {
   const riverDemo = !!river.data?.demo;
   const busanItem = busanRain.data?.items?.[0];
 
-  // ---- ActionAlert 판정 (철거 > 주의 > 촬영적기 > 평상) ----
+  // ---- ActionAlert 판정 (철거 > 주의 > 거치측정적기 > 평상) ----
   let key = "neutral", title = "평상 — 특이사항 없음", sub = "", note = "";
   if (heavyRain || levelDanger) {
     key = "danger"; title = "붐 비상 철거 — 둔치 장비 철수";
@@ -144,9 +145,9 @@ export default function Dashboard() {
       isRain,
       bg: isRain ? "#eff6ff" : "#ffffff",
       borderC: isRain ? "#bfdbfe" : "#f1f5f9",
-      popColor: pop >= 50 ? "#1d4ed8" : "#94a3b8",
+      popColor: pop >= 60 ? "#1d4ed8" : pop >= 30 ? "#0284c7" : "#94a3b8",
       barH: Math.max(2, Math.round((pop / 100) * 32)),
-      barColor: isRain ? "#3b82f6" : pop >= 50 ? "#93c5fd" : "#e2e8f0",
+      barColor: isRain ? "#3b82f6" : pop >= 50 ? "#93c5fd" : pop >= 30 ? "#bae6fd" : "#e2e8f0",
       iconColor: isRain ? "#2563eb" : "#94a3b8",
     };
   });
@@ -284,11 +285,15 @@ export default function Dashboard() {
               </>
             ) : (
               <div style={{ marginTop: 12, background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12, padding: 14, fontSize: 12.5, color: "#64748b", lineHeight: 1.65 }}>
-                학장천은 하천 수위 데이터가 제공되지 않습니다. <b style={{ color: "#475569" }}>강우(사상구) + 현장 자체계측</b>으로 판단하세요.
-                <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 강우</div>
-                <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", color: "#1d4ed8", lineHeight: 1.1, marginTop: 1 }}>
-                  {busanItem?.rainfall ?? "—"}<span style={{ fontSize: 13, marginLeft: 2 }}>mm</span>
-                </div>
+                {site.label} 구간은 공공 실시간 수위 데이터가 없습니다. <b style={{ color: "#475569" }}>자체 IoT 수위 계측{site.busanArea ? " + 강우" : ""}</b>으로 판단하세요.
+                {site.busanArea && (
+                  <>
+                    <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 강우 ({site.busanArea})</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", color: "#1d4ed8", lineHeight: 1.1, marginTop: 1 }}>
+                      {busanItem?.rainfall ?? "—"}<span style={{ fontSize: 13, marginLeft: 2 }}>mm</span>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
