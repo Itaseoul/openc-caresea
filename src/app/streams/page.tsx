@@ -97,7 +97,7 @@ export default function StreamsPage() {
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
-          ← <a href="/" style={{ color: "#0e7490", textDecoration: "underline" }}>openc 메인 (제안서)</a> · <a href="/dashboard" style={{ color: "#0e7490", textDecoration: "underline" }}>운영·안전 대시보드</a>
+          ← <a href="/" style={{ color: "#0e7490", textDecoration: "underline" }}>openc 메인 (제안서)</a> · <a href="/eulsukdo" style={{ color: "#0e7490", textDecoration: "underline" }}>을숙도 하구 후보지</a> · <a href="/dashboard" style={{ color: "#0e7490", textDecoration: "underline" }}>운영·안전 대시보드</a>
         </div>
       </div>
     </main>
