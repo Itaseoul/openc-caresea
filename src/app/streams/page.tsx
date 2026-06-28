@@ -25,7 +25,6 @@ export const metadata = {
 
 export default function StreamsPage() {
   const filled = SOHA_DATA.filter((d) => d.pct != null).length;
-  const pending = SOHA_DATA.length - filled;
   const ranked = SOHA_DATA.filter((d) => d.pct != null).sort((a, b) => (b.pct! - a.pct!));
 
   return (
@@ -85,7 +84,7 @@ export default function StreamsPage() {
             세로선 = 전국 평균 46.5%
           </div>
           <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
-            확보값 {filled}곳 · 확인 중 {pending}곳 (부산·대구·경기·경북·경남·제주·세종 — 공개 기사·자료에 시도별 수치 명시 안 됨, 행안부 통계 보강 예정)
+            17개 시도 전체 ({filled}곳) · 출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준)
           </div>
         </div>
 
@@ -94,7 +93,7 @@ export default function StreamsPage() {
         </div>
 
         <div style={{ marginTop: 18, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>
-          출처: 행정안전부 · 더불어민주당 한병도 의원실 (2024). 지도 GeoJSON southkorea-maps (kostat 2018) · 베이스맵 OpenTopoMap(CC-BY-SA) · CARTO · OpenStreetMap. 본 페이지는 공공데이터 기반 정책 컨텍스트이며 안전·정책 자문이 아닙니다.
+          출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준) p.305 「지역별 소하천 정비」 (동일 데이터가 한병도 의원실 2024 국정감사로도 인용). 지도 GeoJSON southkorea-maps (kostat 2018) · 베이스맵 OpenTopoMap(CC-BY-SA) · CARTO · OpenStreetMap. 본 페이지는 공공데이터 기반 정책 컨텍스트이며 안전·정책 자문이 아닙니다.
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
