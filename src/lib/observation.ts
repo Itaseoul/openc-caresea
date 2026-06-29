@@ -63,6 +63,7 @@ export interface SeacutObservation {
   risk_score?: number | null; // 퇴적 위험 점수 0~1
   risk_level?: string | null; // 등급(낮음/관심/주의/높음)
   risk_model_ver?: string | null; // 예측 모델 버전
+  anchored_at?: string | null; // 수거 중량(정답) 결합 시각 — (예측, 정답) 쌍 완성 표시
   deid_flag: boolean; // 얼굴·번호판 비식별 처리 여부
   is_estimate: boolean; // 값이 추정치인지(자동 정확집계 미보장)
 }
