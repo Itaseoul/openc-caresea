@@ -144,14 +144,9 @@ export default function NakdongMap() {
         }),
       }).addTo(map);
 
-      // 지점 마커 + 합류 전 '가로채는' 유입 흐름 점선
+      // 지점 마커 (실제 물길은 OSM 오버레이로 표시 — 합성 직선 점선은 혼란을 줘 제거)
       SPOTS.forEach((s) => {
         const tk = TRACK[s.track];
-        // 소하천 → 본류 방향(서남) 유입 흐름 점선
-        const toMain: [number, number] = [s.lat - 0.004, s.lon - 0.018];
-        L.polyline([[s.lat, s.lon], toMain], {
-          color: tk.color, weight: 2, opacity: 0.5, dashArray: "4 4",
-        }).addTo(map);
 
         L.circleMarker([s.lat, s.lon], {
           radius: tk.r, color: "#ffffff", weight: 2.5, fillColor: tk.fill, fillOpacity: 0.95,
@@ -196,9 +191,6 @@ export default function NakdongMap() {
         ))}
         <span className="inline-flex items-center gap-1.5">
           <span className="text-sky-500">▼</span> 낙동강 → 남해 흐름
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="text-neutral-400">┄</span> 합류 전 가로채는 지점
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개)</span>
