@@ -12,3 +12,7 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 
 .vercel
+
+# 공공자료 원본(대용량 PDF/zip) — 로컬 참고용. 분석 요약은 docs/공공자료/*.md 로 커밋.
+docs/공공자료/**/*.pdf
+docs/공공자료/**/*.zip
