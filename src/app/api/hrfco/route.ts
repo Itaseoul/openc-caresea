@@ -10,6 +10,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// 한국 정부 API(api.hrfco.go.kr)가 해외(iad1) 리전 egress를 막는 정황 → 서울 리전에서 호출.
+export const preferredRegion = "icn1";
 
 export async function GET(req: NextRequest) {
   const key = process.env.HRFCO_KEY;

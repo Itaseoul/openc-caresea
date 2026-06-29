@@ -1,5 +1,6 @@
 "use client";
 import { useApi } from "@/lib/useApi";
+import CctvPlayer from "@/components/CctvPlayer";
 
 // 을숙도/낙동강 하구 실시간 수문 상황판 (MVP)
 // 출처: 한강홍수통제소(HRFCO) 오픈API — 전국 국가·지방하천 수위·유량(실시간).
@@ -78,6 +79,12 @@ export default function EulsukdoStatusBoard() {
   // 제원(이름·좌표·기준수위) + 실시간(수위·유량)을 각각 조회해 코드로 조인.
   const info = useApi<any>("/api/hrfco?type=waterlevel&info=1");
   const live = useApi<any>("/api/hrfco?type=waterlevel");
+  // ITS CCTV(HLS) — 키 발급 시 영상 표시, 미발급이면 ok:false(NO_KEY)
+  const cctv = useApi<any>("/api/cctv");
+  const cctvStreams: any[] = cctv.data?.ok && Array.isArray(cctv.data?.content)
+    ? cctv.data.content.filter((c: any) => c.cctvurl).slice(0, 4)
+    : [];
+  const cctvNoKey = cctv.data && cctv.data.ok === false && cctv.data.reason === "NO_KEY";
 
   const loading = info.loading || live.loading;
   const infoOk = info.data?.ok && Array.isArray(info.data?.content);
@@ -167,6 +174,24 @@ export default function EulsukdoStatusBoard() {
           ) : (
             <><b>실시간 데이터 대기 중.</b> HRFCO 키가 등록 도메인(openc.caresea.kr)·IP에 바인딩돼 <b>로컬에서는 940 인증 실패</b>가 정상입니다. 배포 환경에서 실데이터가 표시됩니다. (그 전까지는 아래 외부 링크로 확인)</>
           )}
+        </div>
+      )}
+
+      {/* CCTV 라이브(HLS) — ITS 키 발급 시 영상 직접 표시(리버캠과 동일 원리) */}
+      {cctvStreams.length > 0 && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>📹 현장 CCTV 라이브 (ITS · 낙동강 하구 인근)</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 8 }}>
+            {cctvStreams.map((c, i) => (
+              <CctvPlayer key={i} src={c.cctvurl} name={c.cctvname} />
+            ))}
+          </div>
+        </div>
+      )}
+      {cctvNoKey && (
+        <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.6, background: "#f1f5f9", border: "1px dashed #cbd5e1", borderRadius: 10, padding: "9px 11px" }}>
+          📹 <b>CCTV 영상 플레이어 준비 완료</b> — <b>ITS 인증키</b>만 발급해 Vercel 환경변수 <code style={{ fontSize: 11 }}>ITS_KEY</code>에 넣으면 낙동강 하구 인근 도로·교량 CCTV가 <b>이 자리에 바로 재생</b>됩니다(리버캠과 동일 방식).{" "}
+          <a href="https://www.its.go.kr" target="_blank" rel="noopener noreferrer" style={{ color: "#0e7490", fontWeight: 700, textDecoration: "underline" }}>its.go.kr 인증키 신청 ↗</a>
         </div>
       )}
 
