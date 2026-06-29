@@ -32,6 +32,10 @@ const NAKDONG: [number, number][] = [
 ];
 const SEA = { lat: 35.036, lon: 128.958, label: "남해 · 다대포 연안" };
 
+// 클라이언트 지도 타일 키(공개 전제). 없으면 해당 베이스맵은 컨트롤에서 생략.
+const VKEY = process.env.NEXT_PUBLIC_VWORLD_KEY;
+const MTOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
 const TRACK: Record<Track, { color: string; fill: string; label: string; r: number }> = {
   data: { color: "#0e7490", fill: "#06b6d4", label: "데이터 실증 (우선)", r: 11 },
   boom: { color: "#b45309", fill: "#f59e0b", label: "OpenBoom 물리 실증", r: 11 },
@@ -61,13 +65,37 @@ export default function NakdongMap() {
       });
       mapRef.current = map;
 
-      // 심플 라이트 베이스맵 (Ocean Cleanup 라이트 느낌)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 19,
-      }).addTo(map);
+      // 베이스맵 비교 — 우측 상단 컨트롤에서 전환(VWorld 한글 하천 / Mapbox / 심플 / 지형)
+      const bases: Record<string, any> = {
+        "심플 라이트 (CARTO)": L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+          subdomains: "abcd", maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        }),
+        "하천·지형 (OpenTopoMap)": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+          subdomains: "abc", maxZoom: 17,
+          attribution: '&copy; OSM · SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+        }),
+      };
+      if (VKEY) {
+        bases["VWorld 일반 (한글 하천)"] = L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${VKEY}/Base/{z}/{y}/{x}.png`, {
+          maxZoom: 19, attribution: '&copy; <a href="https://www.vworld.kr">VWorld</a> (국토교통부)',
+        });
+        bases["VWorld 하이브리드 (위성+라벨)"] = L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${VKEY}/Hybrid/{z}/{y}/{x}.png`, {
+          maxZoom: 19, attribution: '&copy; <a href="https://www.vworld.kr">VWorld</a> (국토교통부)',
+        });
+      }
+      if (MTOKEN) {
+        bases["Mapbox 거리 (하천 강조)"] = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${MTOKEN}`, {
+          tileSize: 512, zoomOffset: -1, maxZoom: 19, attribution: '&copy; <a href="https://www.mapbox.com/">Mapbox</a> &copy; OSM',
+        });
+        bases["Mapbox 라이트"] = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/light-v11/tiles/{z}/{x}/{y}?access_token=${MTOKEN}`, {
+          tileSize: 512, zoomOffset: -1, maxZoom: 19, attribution: '&copy; <a href="https://www.mapbox.com/">Mapbox</a> &copy; OSM',
+        });
+      }
+      // 기본은 하천명이 보이는 VWorld 일반(없으면 심플 라이트)
+      const defaultBase = bases["VWorld 일반 (한글 하천)"] ?? bases["심플 라이트 (CARTO)"];
+      defaultBase.addTo(map);
+      L.control.layers(bases, {}, { collapsed: false, position: "topright" }).addTo(map);
 
       // 낙동강 본류 흐름 — 굵고 옅은 청록 라인
       L.polyline(NAKDONG, { color: "#38bdf8", weight: 8, opacity: 0.45, lineCap: "round" }).addTo(map);
@@ -150,8 +178,9 @@ export default function NakdongMap() {
         </span>
       </div>
       <p className="mt-2 text-[11px] leading-5 text-neutral-400">
+        우측 상단에서 베이스맵을 바꿔 비교하세요 — <b className="font-semibold text-neutral-500">VWorld 일반</b>(한글 하천명·소하천), VWorld 하이브리드(위성), Mapbox, 심플, 지형.
         지점 위치는 합류부 길목 기준 검토 단계 근사이며, 정확한 지점·하천구역은 부산시·관할 구청 협의로 확정합니다.
-        베이스맵 © OpenStreetMap · CARTO.
+        베이스맵 © VWorld · Mapbox · OpenStreetMap · CARTO.
       </p>
     </div>
   );
