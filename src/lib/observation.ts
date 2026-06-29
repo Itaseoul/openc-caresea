@@ -58,6 +58,11 @@ export interface SeacutObservation {
   collected_mass_kg?: number | null; // 수거 실측 중량(영상지표 보정 앵커)
   model_ver?: string | null;
   confidence?: number | null;
+  // 예측 스냅샷 — 하류 퇴적 위험 예측기(litterRisk.ts) 출력을 함께 적재해
+  // 이후 collected_mass_kg(정답)와 (예측, 결과) 쌍으로 학습/교정한다.
+  risk_score?: number | null; // 퇴적 위험 점수 0~1
+  risk_level?: string | null; // 등급(낮음/관심/주의/높음)
+  risk_model_ver?: string | null; // 예측 모델 버전
   deid_flag: boolean; // 얼굴·번호판 비식별 처리 여부
   is_estimate: boolean; // 값이 추정치인지(자동 정확집계 미보장)
 }
@@ -176,6 +181,9 @@ export function buildObservation(input: BuildInput): SeacutObservation {
     collected_mass_kg: null,
     model_ver: null,
     confidence: null,
+    risk_score: null,
+    risk_level: null,
+    risk_model_ver: null,
     deid_flag: true,
     is_estimate: true,
   };

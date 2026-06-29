@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { HOTSPOTS, predictAccumulationRisk, type RiskSignal } from "@/lib/litterRisk";
-import { kstIso } from "@/lib/observation";
+import { HOTSPOTS, predictAccumulationRisk, hotspotToObservation, MODEL_VER, type RiskSignal } from "@/lib/litterRisk";
+import { kstIso, toJsonl } from "@/lib/observation";
 
 // 하류 퇴적 쓰레기 위험 예측 — "지금 이 시간" 핫스팟 순위.
 //  GET /api/litter-risk
@@ -50,10 +50,52 @@ export async function GET(req: NextRequest) {
 
   const predictions = predictAccumulationRisk(HOTSPOTS, signalsByArea);
 
+  // 예측 로깅 연결: format=observations → 관측 레코드 JSONL, log=1 → /api/observations로 적재.
+  const wantObs = req.nextUrl.searchParams.get("format") === "observations";
+  const wantLog = req.nextUrl.searchParams.get("log") === "1";
+  if (wantObs || wantLog) {
+    const ts = kstIso();
+    const records = predictions.map((pr) => {
+      const prof = HOTSPOTS.find((h) => h.id === pr.id)!;
+      return hotspotToObservation(prof, pr, signalsByArea[prof.busanRainArea] ?? { rainfall_mm: null }, ts);
+    });
+    if (wantObs && !wantLog) {
+      return new NextResponse(toJsonl(records), {
+        status: 200,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
+    }
+    // log=1 → 내부적으로 /api/observations POST(검증+적재).
+    let logged: any = null;
+    try {
+      const r = await fetch(new URL("/api/observations", origin), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(records),
+        cache: "no-store",
+      });
+      logged = await r.json();
+    } catch (e) {
+      logged = { ok: false, error: String(e) };
+    }
+    return NextResponse.json({
+      ok: logged?.ok ?? true,
+      generatedAt: ts,
+      model: MODEL_VER,
+      logged: {
+        acceptedCount: logged?.acceptedCount,
+        rejected: logged?.rejected,
+        persisted: logged?.persisted,
+      },
+      count: records.length,
+      observations: records,
+    });
+  }
+
   return NextResponse.json({
     ok: true,
     generatedAt: kstIso(),
-    model: "physical-heuristic-v0 (결정형 0단계 — 라벨 누적 후 학습형으로 교정)",
+    model: `${MODEL_VER} (결정형 0단계 — 라벨 누적 후 학습형으로 교정)`,
     method: "퇴적 ≈ 발생원 × 트랩(합류부·복개출구·조석) × (정체 + 강우 first-flush 펄스)",
     signals: areas.map((a) => ({ area: a, ...signalsByArea[a], source: rainSources[a] })),
     count: predictions.length,

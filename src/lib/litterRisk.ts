@@ -17,6 +17,10 @@
 //   · 트랩: 흐름이 느려지거나 막히는 곳에 모인다 — 합류부, 복개 출구, 저구배, 하구 조석 정체.
 //   · 건기에도 직전 이벤트의 정체 퇴적(standing)이 남아 평시 순위의 바닥을 만든다.
 
+import { kstIso, type SeacutObservation, type Regime, type RiverGrade } from "@/lib/observation";
+
+export const MODEL_VER = "physical-heuristic-v0";
+
 export type RiskLevel = "낮음" | "관심" | "주의" | "높음";
 
 // 정적 물리 사전(0~1). 근거는 docs/하류-퇴적-예측-0단계.md. 데이터 누적 후 학습으로 보정 대상.
@@ -27,6 +31,9 @@ export interface HotspotProfile {
   river: string;
   lat: number;
   lon: number;
+  regime: Regime; // 수리 레짐(estuary 기수·조석 / urban_stream 도시소하천)
+  river_code: string;
+  river_grade: RiverGrade;
   busanRainArea: string; // 강우 신호 매핑(/api/busan-rain?area=)
   catchment_load: number; // 상류 발생원 강도(산단/도심/시장 → 높음)
   trap_score: number; // 트랩 기하(합류부/복개출구/저구배 → 높음)
@@ -70,6 +77,9 @@ export const HOTSPOTS: HotspotProfile[] = [
     river: "감전천",
     lat: 35.1326,
     lon: 128.9706,
+    regime: "urban_stream",
+    river_code: "GAMJEON",
+    river_grade: "지방하천",
     busanRainArea: "사상구",
     catchment_load: 0.8, // 사상공단+도심 발생원
     trap_score: 0.85, // 합류부 정체(두 물길 합산 부하)
@@ -83,6 +93,9 @@ export const HOTSPOTS: HotspotProfile[] = [
     river: "학장천",
     lat: 35.1299,
     lon: 128.9695,
+    regime: "urban_stream",
+    river_code: "HAKJANG",
+    river_grade: "지방하천",
     busanRainArea: "사상구",
     catchment_load: 0.75, // 학장천+감전천 합산
     trap_score: 0.7, // 본류 합류 직전 정체
@@ -96,6 +109,9 @@ export const HOTSPOTS: HotspotProfile[] = [
     river: "괴정천",
     lat: 35.1028,
     lon: 128.9716,
+    regime: "urban_stream",
+    river_code: "GOEJEONG",
+    river_grade: "지방하천",
     busanRainArea: "사하구",
     catchment_load: 0.7, // 도심 발생원
     trap_score: 0.8, // 복개 출구 급변·저구배
@@ -109,6 +125,9 @@ export const HOTSPOTS: HotspotProfile[] = [
     river: "낙동강 하구",
     lat: 35.097,
     lon: 128.94,
+    regime: "estuary",
+    river_code: "NAKDONG_ESTUARY",
+    river_grade: "국가하천",
     busanRainArea: "사하구",
     catchment_load: 0.5, // 본류 광역 부하
     trap_score: 0.6,
@@ -199,4 +218,53 @@ export function predictAccumulationRisk(
   return profiles
     .map((p) => scoreHotspot(p, signalsByArea[p.busanRainArea] ?? { rainfall_mm: null }, now))
     .sort((a, b) => b.score - a.score);
+}
+
+// 예측 → 관측 레코드. 예측 점수(risk_*)를 함께 적재해 이후 collected_mass_kg(정답)와
+// (예측, 결과) 쌍으로 학습/교정한다. count_est 등 계측치는 0단계라 null(is_estimate=true).
+export function hotspotToObservation(
+  p: HotspotProfile,
+  pred: RiskPrediction,
+  signal: RiskSignal,
+  ts?: string
+): SeacutObservation {
+  const t = ts ?? kstIso();
+  const rain = signal.rainfall_mm ?? null;
+  return {
+    site_id: p.id,
+    boom_id: null,
+    lat: p.lat,
+    lon: p.lon,
+    river_code: p.river_code,
+    river_grade: p.river_grade,
+    hrfco_obs_code: null,
+    regime: p.regime,
+    camera_calib: null,
+    ts: t,
+    segment_sec: null,
+    rain_event_id: rain != null && rain > 0 ? `rain-${t.slice(0, 10)}` : null,
+    count_est: null,
+    count_ci: null,
+    area_ratio: null,
+    flux_est: null,
+    surface_velocity_est: null,
+    class_dist: null,
+    water_level_hrfco: null,
+    water_level_self: null,
+    water_level_source: "none",
+    water_level_diff: null,
+    boom_tension: null,
+    boom_tilt: null,
+    rainfall_mm: rain,
+    weather: rain != null ? (rain > 0 ? "rain" : "clear") : null,
+    illum: null,
+    collected_mass_kg: null,
+    model_ver: null,
+    confidence: null,
+    risk_score: pred.score,
+    risk_level: pred.level,
+    risk_model_ver: MODEL_VER,
+    deid_flag: true,
+    is_estimate: true,
+  };
 }
