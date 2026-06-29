@@ -25,9 +25,9 @@
 ## 2. 한강홍수통제소 (api.hrfco.go.kr) — ④수위 ③홍수특보 ②강우 [TODO: /api/hrfco]
 - 신청: https://www.hrfco.go.kr/web/openapiPage/reference.do · 키관리 http://www.hrfco.go.kr/web/openapi/CertifyKeyMgr.do · ★**hrfco 자체 발급**(data.go.kr와 별개), 신청 폼 불안정 시 **전화 02-590-9999**. ★키가 **등록 URL/IP 바인딩** → 배포 도메인/IP 등록 필요
 - 엔드포인트(키는 path):
-  - 수위 10분: `https://api.hrfco.go.kr/{KEY}/waterlevel/list/_10M/{관측소코드}/{시작}/{종료}.json`
-  - 수위 최신 전체: `…/waterlevel/list/_10M.json`
-  - 강우 10분: `…/rainfall/list/_10M/{코드}.json`
+  - 수위 10분: `https://api.hrfco.go.kr/{KEY}/waterlevel/list/10M/{관측소코드}/{시작}/{종료}.json` ★시간구분은 `10M`(언더스코어 X). `_10M`은 code:910 오류
+  - 수위 최신 전체: `…/waterlevel/list/10M.json`
+  - 강우 10분: `…/rainfall/list/10M/{코드}.json`
   - 홍수특보: `…/fldfct/list.json`
   - 관측소 메타: `…/waterlevel/info.json`
 - 필드: `WL`(수위m) `YMDHM` `FW`(유량) **`ATTWL`(주의)·`WRNWL`(경계/경보)·`ALMWL`(위험)·`SRSWL`(심각/계획홍수위)** ← 통제 임계. 특보: `KIND`·`OBSNM`·`FCTDT`
