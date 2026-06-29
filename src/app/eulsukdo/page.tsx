@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import EulsukdoStatusBoard from "@/components/EulsukdoStatusBoard";
 import {
   SITES,
   CANDIDATES,
@@ -73,6 +74,9 @@ export default function EulsukdoPage() {
         <div style={{ marginTop: 18 }}>
           <EulMap />
         </div>
+
+        {/* 실시간 수문 상황판 (MVP) — 낙동강 하구 국가·지방하천 */}
+        <EulsukdoStatusBoard />
 
         {/* 핀 범례 */}
         <div style={{ marginTop: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "12px 14px" }}>
