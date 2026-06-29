@@ -1,0 +1,8 @@
+# AIHub 원본 데이터·라벨은 라이선스상 커밋 금지
+data/
+runs/
+*.pt
+*.onnx
+*.hef
+*.engine
+__pycache__/
