@@ -29,7 +29,7 @@ Before litter reaches the sea, we monitor it at the choke points of small stream
 
 ## Site
 
-We propose Gamjeon Stream in Sasang-gu first. As a local river its permit authority sits clearly with the district office, it connects directly to the Nakdong main stem, and a restored channel with reported water-quality issues makes the data demand clear. Goejeong Stream in Saha-gu is the alternative.
+We propose Gamjeon Stream in Sasang-gu first. As a local river its permit authority sits clearly with the district office, it connects directly to the Nakdong main stem, and a restored channel with reported water-quality issues makes the data demand clear. Goejeong Stream in Saha-gu runs on a separate track, where the interception boom is physically demonstrated under the Microsoft fund. In short, Goejeong carries the boom demonstration and Gamjeon carries the data demonstration with the city, two roles under one organization.
 
 ## The ask
 
