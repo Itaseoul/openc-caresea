@@ -32,6 +32,8 @@
 | 지표 | weather, illum | 날씨, 조도 상태(day/night/ir) |
 | 앵커·품질 | collected_mass_kg | 수거 실측 중량(영상지표 보정 앵커) |
 | 앵커·품질 | model_ver, confidence | 추론 모델 버전, 신뢰도 |
+| 예측·학습 | risk_score, risk_level, risk_model_ver | 하류 퇴적 위험 예측 스냅샷(litterRisk.ts) |
+| 예측·학습 | anchored_at | 수거 중량(정답) 결합 시각 — (예측, 정답) 쌍 완성 표시 |
 | 앵커·품질 | deid_flag, is_estimate | 비식별 처리 여부, 추정치 여부 |
 
 ## JSON Schema (draft-07)
@@ -88,6 +90,10 @@
     "collected_mass_kg": { "type": ["number", "null"], "description": "수거 실측, 영상지표 보정 앵커" },
     "model_ver": { "type": ["string", "null"] },
     "confidence": { "type": ["number", "null"] },
+    "risk_score": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "하류 퇴적 위험 예측 점수" },
+    "risk_level": { "type": ["string", "null"], "enum": ["낮음", "관심", "주의", "높음", null] },
+    "risk_model_ver": { "type": ["string", "null"] },
+    "anchored_at": { "type": ["string", "null"], "description": "수거 중량(정답) 결합 시각" },
     "deid_flag": { "type": "boolean", "description": "얼굴·번호판 비식별 처리 여부" },
     "is_estimate": { "type": "boolean", "description": "값이 추정치인지(자동 정확집계 미보장)" }
   }
