@@ -231,6 +231,7 @@ export default function EulsukdoPage() {
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
           ← <a href="/" style={{ color: "#0e7490", textDecoration: "underline" }}>openc 메인 (제안서)</a> ·{" "}
+          <a href="/permit" style={{ color: "#0e7490", textDecoration: "underline" }}>행정 허가 에이전트</a> ·{" "}
           <a href="/streams" style={{ color: "#0e7490", textDecoration: "underline" }}>전국 소하천 정비율</a> ·{" "}
           <a href="/dashboard" style={{ color: "#0e7490", textDecoration: "underline" }}>운영·안전 대시보드</a>
         </div>
