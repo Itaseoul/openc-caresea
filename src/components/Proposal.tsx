@@ -1,4 +1,5 @@
 import Dashboard from "@/components/Dashboard";
+import NakdongMap from "@/components/NakdongMap";
 
 // SEA:CUT 로그프레임 제안 페이지. 콘텐츠 출처 docs/CHANGEX_PAGE_CONTENT.md.
 // 서버 컴포넌트(정적) + 근거3 섹션에 클라이언트 Dashboard 임베드.
@@ -123,6 +124,22 @@ export default function Proposal() {
           </a>
         </div>
       </header>
+
+      {/* ───────── 소하천 특화 지도 — 가장 메인 ───────── */}
+      <section className="border-b border-neutral-100 bg-white">
+        <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
+          <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">실증 무대 · 소하천 길목</div>
+          <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">
+            낙동강 하구로 흘러드는 소하천 길목에서 가로챈다
+          </h2>
+          <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
+            바다로 들어오기 직전, 낙동강 지류 소하천 합류부가 SEA:CUT의 무대입니다. 사상구 감전천은 부산시 협력 데이터 실증을, 사하구 괴정천은 무동력 붐 물리 실증을 맡고, 학장천 엄궁동은 운영·안전 대시보드의 관측 지점입니다. 을숙도 하구는 4중 중첩 규제를 풀며 단계적으로 확장합니다.
+          </p>
+          <div className="mt-6">
+            <NakdongMap />
+          </div>
+        </div>
+      </section>
 
       {/* ───────── 준비 현황 스트립 — "이 준비들이 가시적으로 보이는" 핵심 ───────── */}
       <section id="ready" className="border-b border-neutral-100 bg-gradient-to-b from-brand-50/70 to-white">
