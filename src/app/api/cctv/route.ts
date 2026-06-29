@@ -12,6 +12,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// 한국 정부 API(openapi.its.go.kr)가 해외 리전 egress를 막는 정황 → 서울 리전에서 호출.
+export const preferredRegion = "icn1";
 
 // 낙동강 하구·을숙도 일대 기본 bbox (을숙도 ≈ 128.95E / 35.10N)
 const DEF = { minX: 128.8, maxX: 129.15, minY: 35.0, maxY: 35.3 };
