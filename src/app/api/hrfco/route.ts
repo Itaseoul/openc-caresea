@@ -40,11 +40,22 @@ export async function GET(req: NextRequest) {
   } else {
     path = obs ? `${key}/waterlevel/list/_10M/${obs}.json` : `${key}/waterlevel/list/_10M.json`;
   }
-  const url = `https://api.hrfco.go.kr/${path}`;
+  // ★한국 정부 사이트의 불완전 TLS 체인을 Vercel(undici)이 거부 → "fetch failed".
+  //   https 우선, 실패 시 http 폴백(HRFCO API는 http도 지원).
+  const fetchText = async (): Promise<string> => {
+    for (const proto of ["https", "http"] as const) {
+      try {
+        const r = await fetch(`${proto}://api.hrfco.go.kr/${path}`, { next: { revalidate: 300 } });
+        return await r.text();
+      } catch (e) {
+        if (proto === "http") throw e;
+      }
+    }
+    throw new Error("unreachable");
+  };
 
   try {
-    const r = await fetch(url, { next: { revalidate: 300 } });
-    const text = await r.text();
+    const text = await fetchText();
     let json: any;
     try {
       json = JSON.parse(text);
