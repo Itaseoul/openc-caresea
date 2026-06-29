@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 
 // 낙동강 하구 소하천 실증 지도 — Ocean Cleanup식 심플 라이트(CARTO Positron) 베이스 위에
@@ -43,9 +43,22 @@ const TRACK: Record<Track, { color: string; fill: string; label: string; r: numb
   estuary: { color: "#1d4ed8", fill: "#93c5fd", label: "하구 (확장 검토)", r: 9 },
 };
 
+// 지점(SPOT) → 퇴적 위험 핫스팟(litterRisk.ts) id 매핑
+const RISK_ID: Record<string, string> = {
+  gamjeon: "gamjeon-confluence",
+  hakjang: "hakjang-nakdong",
+  goejeong: "goejeong-culvert",
+  eulsukdo: "eulsukdo-estuary",
+};
+// 위험 등급 색(후광 링)
+const RISK_COLOR: Record<string, string> = {
+  낮음: "#94a3b8", 관심: "#eab308", 주의: "#f97316", 높음: "#dc2626",
+};
+
 export default function NakdongMap() {
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
+  const [riskInfo, setRiskInfo] = useState<{ at: string; top: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -145,22 +158,57 @@ export default function NakdongMap() {
       }).addTo(map);
 
       // 지점 마커 (실제 물길은 OSM 오버레이로 표시 — 합성 직선 점선은 혼란을 줘 제거)
+      const markersById: Record<string, { marker: any; base: string }> = {};
       SPOTS.forEach((s) => {
         const tk = TRACK[s.track];
-
-        L.circleMarker([s.lat, s.lon], {
+        const base =
+          `<div style="font-weight:800;color:#0f172a">${s.name} <span style="font-weight:600;color:#64748b">· ${s.gu}</span></div>` +
+          `<div style="margin-top:2px;font-size:11px;color:${tk.color};font-weight:700">${tk.label} · ${s.grade}</div>` +
+          `<div style="margin-top:4px;font-size:12px;color:#475569;line-height:1.5;max-width:220px">${s.note}</div>`;
+        const marker = L.circleMarker([s.lat, s.lon], {
           radius: tk.r, color: "#ffffff", weight: 2.5, fillColor: tk.fill, fillOpacity: 0.95,
         })
           .addTo(map)
           .bindTooltip(s.name, {
             permanent: true, direction: "right", offset: [10, 0], className: "nak-tt",
           })
-          .bindPopup(
-            `<div style="font-weight:800;color:#0f172a">${s.name} <span style="font-weight:600;color:#64748b">· ${s.gu}</span></div>` +
-            `<div style="margin-top:2px;font-size:11px;color:${tk.color};font-weight:700">${tk.label} · ${s.grade}</div>` +
-            `<div style="margin-top:4px;font-size:12px;color:#475569;line-height:1.5;max-width:220px">${s.note}</div>`
-          );
+          .bindPopup(base);
+        markersById[s.id] = { marker, base };
       });
+
+      // 지금 이 시간 퇴적 위험 — /api/litter-risk 실데이터 오버레이(후광 링 + 팝업 보강)
+      try {
+        const rr = await fetch("/api/litter-risk");
+        const rj = await rr.json();
+        if (!cancelled && map && rj?.ok && Array.isArray(rj.hotspots)) {
+          rj.hotspots.forEach((h: any) => {
+            const color = RISK_COLOR[h.level as string] ?? "#94a3b8";
+            // 점수로 크기 조절한 위험 후광 링(클릭은 지점 마커로 통과)
+            L.circleMarker([h.lat, h.lon], {
+              radius: 12 + (Number(h.score) || 0) * 22,
+              color, weight: 3, opacity: 0.9, fill: false, interactive: false,
+            }).addTo(map);
+            const spotId = Object.keys(RISK_ID).find((k) => RISK_ID[k] === h.id);
+            if (spotId && markersById[spotId]) {
+              const { marker, base } = markersById[spotId];
+              const rain = h.rainfall_mm != null ? `강우 ${h.rainfall_mm}mm` : "강우 정보 없음";
+              marker.bindPopup(
+                base +
+                  `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #e2e8f0;font-size:12px">` +
+                  `<b style="color:${color}">지금 퇴적 위험 ${h.level} · ${h.score}</b>` +
+                  `<div style="color:#64748b;margin-top:2px">${rain} · ${h.why ?? ""}</div></div>`
+              );
+            }
+          });
+          const top = rj.hotspots[0];
+          setRiskInfo({
+            at: typeof rj.generatedAt === "string" ? rj.generatedAt.slice(11, 16) : "",
+            top: top ? `${top.name} · ${top.level} ${top.score}` : "",
+          });
+        }
+      } catch {
+        /* 위험 오버레이 실패 — 베이스 지도는 정상, 치명적 아님 */
+      }
 
       setTimeout(() => { if (!cancelled && map) map.invalidateSize(); }, 0);
     })();
@@ -195,7 +243,16 @@ export default function NakdongMap() {
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개)</span>
         </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-full border-2 border-orange-500" /> 지금 퇴적 위험 후광 <span className="text-neutral-400">(관심·주의·높음)</span>
+        </span>
       </div>
+      {riskInfo && (
+        <div className="mt-2 rounded-lg bg-rose-50/70 px-3 py-2 text-xs text-rose-900">
+          <b>지금 이 시간 퇴적 위험</b> · {riskInfo.top || "데이터 없음"}{" "}
+          <span className="text-rose-400">({riskInfo.at} 기준 · 강우 first-flush 반영, 추정)</span>
+        </div>
+      )}
       <p className="mt-2 text-[11px] leading-5 text-neutral-400">
         우측 상단에서 베이스맵을 바꿔 비교하세요 — <b className="font-semibold text-neutral-500">VWorld 일반</b>(한글 하천명·소하천), VWorld 하이브리드(위성), Mapbox, 심플, 지형.
         지점 위치는 합류부 길목 기준 검토 단계 근사이며, 정확한 지점·하천구역은 부산시·관할 구청 협의로 확정합니다.
