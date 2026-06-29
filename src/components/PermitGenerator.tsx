@@ -7,10 +7,15 @@ import {
   pathway,
   requirements,
   docBusinessPlan,
+  docCctvPlan,
+  docAdminNotice,
+  docPrivacyNotice,
+  docMou,
   docFoiaLocal,
   docFoiaHeritage,
   docConsultLetter,
   type Spot,
+  type UseType,
 } from "./permitData";
 
 const zoneStyle: Record<string, { bg: string; fg: string }> = {
@@ -59,15 +64,43 @@ function CopyBlock({ title, text }: { title: string; text: string }) {
 
 export default function PermitGenerator() {
   const [id, setId] = useState<string>(SPOTS.find((s) => s.recommended)?.id ?? SPOTS[0].id);
+  const [use, setUse] = useState<UseType>("boom");
   const spot: Spot = SPOTS.find((s) => s.id === id) ?? SPOTS[0];
   const z = zoneStyle[spot.zone];
-  const permits = requiredPermits(spot);
-  const steps = pathway(spot);
-  const reqs = requirements(spot);
+  const permits = requiredPermits(spot, use);
+  const steps = pathway(spot, use);
+  const reqs = requirements(spot, use);
   const foiaHeritage = docFoiaHeritage(spot);
+
+  const useTabs: { key: UseType; label: string }[] = [
+    { key: "boom", label: "부유식 붐 실증" },
+    { key: "cctv", label: "환경감시 CCTV" },
+  ];
 
   return (
     <div>
+      {/* 용도 토글 */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+        {useTabs.map((t) => {
+          const on = t.key === use;
+          return (
+            <button
+              key={t.key}
+              onClick={() => setUse(t.key)}
+              style={{
+                fontSize: 12.5, fontWeight: 800,
+                color: on ? "#fff" : "#475569",
+                background: on ? "#0f172a" : "#f1f5f9",
+                border: "1px solid " + (on ? "#0f172a" : "#e2e8f0"),
+                borderRadius: 9, padding: "7px 14px", cursor: "pointer",
+              }}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* 스팟 선택 */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {SPOTS.map((s) => {
@@ -130,7 +163,7 @@ export default function PermitGenerator() {
       </Block>
 
       {/* 요건 체크리스트 */}
-      <Block title="요건 체크리스트 (「하천점용허가 세부기준」)">
+      <Block title={use === "cctv" ? "요건 체크리스트 (개인정보 보호법 §25 · 프라이버시 · 점용)" : "요건 체크리스트 (「하천점용허가 세부기준」)"}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 4 }}>
           {reqs.map((r) => (
             <div key={r.clause} style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12 }}>
@@ -147,10 +180,24 @@ export default function PermitGenerator() {
         <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 4 }}>
           스팟 데이터로 자동 채움. 〔 〕 항목과 수치는 현장값으로 보완하고, 제출 전 최신 판본·처분청을 확인하세요.
         </div>
-        <CopyBlock title="① 점용허가 사업계획서" text={docBusinessPlan(spot)} />
-        <CopyBlock title={"② 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
-        {foiaHeritage && <CopyBlock title="③ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
-        <CopyBlock title="④ 사전 협의 요청 공문" text={docConsultLetter(spot)} />
+        {use === "cctv" ? (
+          <>
+            <CopyBlock title="① CCTV 설치 사업(점용)계획서" text={docCctvPlan(spot)} />
+            <CopyBlock title="② 행정예고문 (개인정보 보호법 §25)" text={docAdminNotice(spot)} />
+            <CopyBlock title="③ 안내판 문구" text={docPrivacyNotice(spot)} />
+            <CopyBlock title="④ 민관 데이터 공유 협약(MOU) 초안" text={docMou(spot)} />
+            <CopyBlock title={"⑤ 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
+            {foiaHeritage && <CopyBlock title="⑥ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
+            <CopyBlock title="⑦ 사전 협의 요청 공문" text={docConsultLetter(spot, "cctv")} />
+          </>
+        ) : (
+          <>
+            <CopyBlock title="① 점용허가 사업계획서" text={docBusinessPlan(spot)} />
+            <CopyBlock title={"② 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
+            {foiaHeritage && <CopyBlock title="③ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
+            <CopyBlock title="④ 사전 협의 요청 공문" text={docConsultLetter(spot, "boom")} />
+          </>
+        )}
       </Block>
     </div>
   );
