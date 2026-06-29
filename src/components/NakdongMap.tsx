@@ -16,11 +16,11 @@ type Spot = {
 
 // 좌표는 합류부 길목 기준 검토 단계 근사 — 정확한 지점·하천구역은 부산시·관할 구청 협의로 확정.
 const SPOTS: Spot[] = [
-  { id: "gamjeon", name: "감전천", gu: "사상구", lat: 35.158, lon: 128.969, track: "data", grade: "지방하천",
+  { id: "gamjeon", name: "감전천", gu: "사상구", lat: 35.1326, lon: 128.9706, track: "data", grade: "지방하천",
     note: "낙동강 본류 직결 · 처분청 사상구청 · 부산시 협력 데이터 실증(우선)" },
-  { id: "hakjang", name: "학장천 엄궁동", gu: "사상구", lat: 35.138, lon: 128.969, track: "obs", grade: "지방하천",
+  { id: "hakjang", name: "학장천 엄궁동", gu: "사상구", lat: 35.1299, lon: 128.9695, track: "obs", grade: "지방하천",
     note: "운영·안전 대시보드 관측 지점 · 자체 IoT 수위 계측 후보" },
-  { id: "goejeong", name: "괴정천", gu: "사하구", lat: 35.102, lon: 128.966, track: "boom", grade: "지방하천",
+  { id: "goejeong", name: "괴정천", gu: "사하구", lat: 35.1028, lon: 128.9716, track: "boom", grade: "지방하천",
     note: "OpenBoom 무동력 붐 물리 실증 트랙(마이크로소프트 기금 응모 중)" },
   { id: "eulsukdo", name: "을숙도 하구", gu: "사하구", lat: 35.097, lon: 128.940, track: "estuary", grade: "국가하천 하구",
     note: "4중 중첩 규제(천연기념물 제179호 등) · 단계적 확장 검토" },
@@ -57,9 +57,9 @@ export default function NakdongMap() {
       if (cancelled || !elRef.current) return;
 
       map = L.map(elRef.current, {
-        center: [35.118, 128.952],
+        center: [35.114, 128.958],
         zoom: 12,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
         zoomControl: true,
         attributionControl: true,
       });
@@ -92,10 +92,34 @@ export default function NakdongMap() {
           tileSize: 512, zoomOffset: -1, maxZoom: 19, attribution: '&copy; <a href="https://www.mapbox.com/">Mapbox</a> &copy; OSM',
         });
       }
-      // 기본은 하천명이 보이는 VWorld 일반(없으면 심플 라이트)
-      const defaultBase = bases["VWorld 일반 (한글 하천)"] ?? bases["심플 라이트 (CARTO)"];
+      // 기본은 심플 라이트 — 하천망을 직접 얹으므로 베이스는 깔끔하게(Ocean Cleanup 느낌)
+      const defaultBase = bases["심플 라이트 (CARTO)"];
       defaultBase.addTo(map);
       L.control.layers(bases, {}, { collapsed: false, position: "topright" }).addTo(map);
+
+      // 하천망 오버레이 — OSM 추출(감전천·학장천 수면 폴리곤, 괴정천 선/복개). 베이스맵과 무관하게 물길을 또렷이.
+      try {
+        const res = await fetch("/data/busan-streams.geojson");
+        const gj = await res.json();
+        if (!cancelled && map) {
+          L.geoJSON(gj, {
+            style: (f: any) => {
+              const p = f.properties || {};
+              if (p.tunnel === "culvert" || p.covered === "yes")
+                return { color: "#38bdf8", weight: 2.5, opacity: 0.55, dashArray: "3 5", fill: false }; // 복개=점선
+              if (f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon")
+                return { color: "#0ea5e9", weight: 1, fillColor: "#7dd3fc", fillOpacity: 0.6 }; // 수면
+              return { color: "#0ea5e9", weight: 3.5, opacity: 0.85 }; // 개방 물길
+            },
+            onEachFeature: (f: any, lyr: any) => {
+              const nm = f.properties?.name;
+              if (nm) lyr.bindTooltip(nm, { sticky: true, direction: "top", className: "nak-river-tt", opacity: 0.95 });
+            },
+          }).addTo(map);
+        }
+      } catch {
+        /* 하천망 로드 실패 시 베이스맵만 — 치명적 아님 */
+      }
 
       // 낙동강 본류 흐름 — 굵고 옅은 청록 라인
       L.polyline(NAKDONG, { color: "#38bdf8", weight: 8, opacity: 0.45, lineCap: "round" }).addTo(map);
@@ -175,6 +199,9 @@ export default function NakdongMap() {
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="text-neutral-400">┄</span> 합류 전 가로채는 지점
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개)</span>
         </span>
       </div>
       <p className="mt-2 text-[11px] leading-5 text-neutral-400">
