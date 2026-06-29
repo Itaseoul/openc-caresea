@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openc.caresea.kr/schema/seacut-observation.schema.json",
+  "title": "SEACUT Observation Record",
+  "description": "SEA:CUT physical AI 0단계 관측 레코드. 어디서·언제·무엇을 + 수거 중량 앵커. 상세 설명은 docs/physical-ai-데이터-스키마.md.",
+  "type": "object",
+  "required": ["site_id", "ts", "regime", "is_estimate", "deid_flag"],
+  "additionalProperties": false,
+  "properties": {
+    "site_id": { "type": "string" },
+    "boom_id": { "type": "string" },
+    "lat": { "type": "number" },
+    "lon": { "type": "number" },
+    "river_code": { "type": "string" },
+    "river_grade": { "type": "string", "enum": ["지방하천", "소하천", "기타하천", "국가하천"] },
+    "hrfco_obs_code": { "type": "string" },
+    "regime": { "type": "string", "enum": ["estuary", "urban_stream"] },
+    "camera_calib": { "type": "string" },
+    "ts": { "type": "string", "format": "date-time" },
+    "segment_sec": { "type": "number" },
+    "rain_event_id": { "type": ["string", "null"] },
+    "count_est": { "type": ["number", "null"] },
+    "count_ci": { "type": ["array", "null"], "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "area_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "flux_est": { "type": ["number", "null"] },
+    "surface_velocity_est": { "type": ["number", "null"] },
+    "class_dist": {
+      "type": ["object", "null"],
+      "properties": {
+        "plastic": { "type": "number" },
+        "styrofoam": { "type": "number" },
+        "wood": { "type": "number" },
+        "other": { "type": "number" },
+        "confidence": { "type": "number" }
+      }
+    },
+    "water_level_hrfco": { "type": ["number", "null"] },
+    "water_level_diff": { "type": ["number", "null"] },
+    "boom_tension": { "type": ["number", "null"] },
+    "boom_tilt": { "type": ["number", "null"] },
+    "weather": { "type": ["string", "null"] },
+    "illum": { "type": ["string", "null"], "enum": ["day", "night", "ir", null] },
+    "collected_mass_kg": { "type": ["number", "null"] },
+    "model_ver": { "type": ["string", "null"] },
+    "confidence": { "type": ["number", "null"] },
+    "deid_flag": { "type": "boolean" },
+    "is_estimate": { "type": "boolean" }
+  }
+}
