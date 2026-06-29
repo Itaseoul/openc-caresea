@@ -11,6 +11,7 @@ import {
   docAdminNotice,
   docPrivacyNotice,
   docMou,
+  docRestorationPlan,
   docFoiaLocal,
   docFoiaHeritage,
   docConsultLetter,
@@ -183,19 +184,21 @@ export default function PermitGenerator() {
         {use === "cctv" ? (
           <>
             <CopyBlock title="① CCTV 설치 사업(점용)계획서" text={docCctvPlan(spot)} />
-            <CopyBlock title="② 행정예고문 (개인정보 보호법 §25)" text={docAdminNotice(spot)} />
-            <CopyBlock title="③ 안내판 문구" text={docPrivacyNotice(spot)} />
-            <CopyBlock title="④ 민관 데이터 공유 협약(MOU) 초안" text={docMou(spot)} />
-            <CopyBlock title={"⑤ 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
-            {foiaHeritage && <CopyBlock title="⑥ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
-            <CopyBlock title="⑦ 사전 협의 요청 공문" text={docConsultLetter(spot, "cctv")} />
+            <CopyBlock title="② 원상복구계획서" text={docRestorationPlan(spot, "cctv")} />
+            <CopyBlock title="③ 행정예고문 (개인정보 보호법 §25)" text={docAdminNotice(spot)} />
+            <CopyBlock title="④ 안내판 문구" text={docPrivacyNotice(spot)} />
+            <CopyBlock title="⑤ 민관 데이터 공유 협약(MOU) 초안" text={docMou(spot)} />
+            <CopyBlock title={"⑥ 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
+            {foiaHeritage && <CopyBlock title="⑦ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
+            <CopyBlock title="⑧ 사전 협의 요청 공문" text={docConsultLetter(spot, "cctv")} />
           </>
         ) : (
           <>
             <CopyBlock title="① 점용허가 사업계획서" text={docBusinessPlan(spot)} />
-            <CopyBlock title={"② 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
-            {foiaHeritage && <CopyBlock title="③ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
-            <CopyBlock title="④ 사전 협의 요청 공문" text={docConsultLetter(spot, "boom")} />
+            <CopyBlock title="② 원상복구계획서" text={docRestorationPlan(spot, "boom")} />
+            <CopyBlock title={"③ 정보공개청구서 — " + spot.region + "청"} text={docFoiaLocal(spot)} />
+            {foiaHeritage && <CopyBlock title="④ 정보공개청구서 — 국가유산청" text={foiaHeritage} />}
+            <CopyBlock title="⑤ 사전 협의 요청 공문" text={docConsultLetter(spot, "boom")} />
           </>
         )}
       </Block>

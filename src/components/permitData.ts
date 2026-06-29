@@ -365,6 +365,27 @@ export function docMou(s: Spot): string {
    ${s.region}청장 〔 〕 / (사)이타서울 대표 〔 〕 / 협약일 〔 〕`;
 }
 
+// 원상복구계획서 — 점용허가 필수 첨부. 비굴착·가역이 강점으로 드러나는 문서.
+export function docRestorationPlan(s: Spot, use: UseType = "boom"): string {
+  const sb = streamBasis(s);
+  const facility = use === "cctv" ? "환경감시 CCTV 지주·관로" : "부유식 차단 붐(OpenBoom)";
+  const detach = use === "cctv"
+    ? "지주·관로 분리(비굴착 자립형 또는 기존 구조물 활용 시 기초 굴착 없음), 장비 회수, 케이블 철거"
+    : "계류 앵커·로프 분리, 붐 본체 인양, 부속 회수";
+  return `[원상복구계획서 초안]
+1. 시설: ${facility} (${s.stream}, ${s.region})
+2. 위치: ${s.coord}
+3. 설계 원칙: 비굴착·가역·탈착. 하상과 제방을 굴착하지 않아 원상복구 부담이 최소.
+4. 철거(원상복구) 절차:
+   - ${detach}
+   - 굴착이 없으므로 되메우기·재포장이 불요하거나 최소
+   - 현장 청소·잔재물 회수 후 원상 상태 확인
+5. 원상복구 시점: 점용기간 만료, 홍수기 긴급철거, 처분청의 원상회복 명령 시
+6. 확인: 처분청 입회 점검, 사진·기록 보관, 완료 보고
+7. 비용·보증: 원상복구비 자부담(재해복구비 국고지원 배제 수용), 처분청 요구 시 이행보증
+근거: ${sb.basis} 점용허가 부관(원상회복)${s.grade !== "소하천" && s.grade !== "기타하천" ? " · 「하천점용허가 세부기준」 제5조①1호다·4호" : ""}`;
+}
+
 export function docFoiaLocal(s: Spot): string {
   return `[정보공개청구서 — ${s.region}청]
 근거: 공공기관의 정보공개에 관한 법률 제10조 / 별지 제1호 서식
