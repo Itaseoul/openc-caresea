@@ -16,10 +16,10 @@ type Spot = {
 
 // 좌표는 합류부 길목 기준 검토 단계 근사 — 정확한 지점·하천구역은 부산시·관할 구청 협의로 확정.
 const SPOTS: Spot[] = [
-  { id: "gamjeon", name: "감전천", gu: "사상구", lat: 35.1326, lon: 128.9706, track: "data", grade: "지방하천",
-    note: "낙동강 본류 직결 · 처분청 사상구청 · 부산시 협력 데이터 실증(우선)" },
+  { id: "gamjeon", name: "감전천 합류부", gu: "사상구", lat: 35.1326, lon: 128.9706, track: "data", grade: "지방하천",
+    note: "감전천이 엄궁동에서 학장천에 합류 · 낙동강 유입 직전 마지막 마디 · 처분청 사상구청 · 부산시 협력 데이터 실증(우선)" },
   { id: "hakjang", name: "학장천 엄궁동", gu: "사상구", lat: 35.1299, lon: 128.9695, track: "obs", grade: "지방하천",
-    note: "운영·안전 대시보드 관측 지점 · 자체 IoT 수위 계측 후보" },
+    note: "감전천 합류 뒤 엄궁동에서 낙동강 본류로 유입 · 운영·안전 대시보드 관측 · 자체 IoT 수위 계측 후보" },
   { id: "goejeong", name: "괴정천", gu: "사하구", lat: 35.1028, lon: 128.9716, track: "boom", grade: "지방하천",
     note: "OpenBoom 무동력 붐 물리 실증 트랙(마이크로소프트 기금 응모 중)" },
   { id: "eulsukdo", name: "을숙도 하구", gu: "사하구", lat: 35.097, lon: 128.940, track: "estuary", grade: "국가하천 하구",

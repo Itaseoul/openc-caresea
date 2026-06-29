@@ -156,7 +156,7 @@ export const ALT_PILOTS: AltSite[] = [
     permit: "사상구청",
     zone: "확인 필요",
     timely: "2026.3 '250억 복원 무색·수질 나쁨' 보도",
-    sea: "낙동강 본류 경유 하구",
+    sea: "엄궁동서 학장천 합류→낙동강 경유 하구",
     fit: "중상",
   },
   {
