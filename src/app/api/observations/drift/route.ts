@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
-import {
-  validateDriftTrack,
-  toJsonl,
-  kstIso,
-  type DriftTrack,
-  type DriftPoint,
-} from "@/lib/observation";
+import { validateDriftTrack, toJsonl, kstIso, type DriftTrack } from "@/lib/observation";
+import { trackDistanceM } from "@/lib/geo";
 
 // GPS 드리프터 궤적 적재 — 표류 예측의 "어디로·어떻게" 정답 라벨(학습 루프 보강).
 //  POST /api/observations/drift  (본문: 궤적 1건 또는 배열, DriftTrack 스키마)
@@ -23,25 +18,6 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "icn1";
 
 const SINK_ENV = "DRIFT_SINK_PATH";
-
-// 두 좌표 간 대권 거리(m). 소하천 규모라 구면 근사로 충분.
-function haversineM(a: DriftPoint, b: DriftPoint): number {
-  const R = 6371000;
-  const toRad = (d: number) => (d * Math.PI) / 180;
-  const dLat = toRad(b.lat - a.lat);
-  const dLon = toRad(b.lon - a.lon);
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
-}
-
-// 궤적 누적 이동 거리(m) — 드리프터의 핵심 산출.
-function trackDistanceM(points: DriftPoint[]): number {
-  let d = 0;
-  for (let i = 1; i < points.length; i++) d += haversineM(points[i - 1], points[i]);
-  return Math.round(d * 10) / 10;
-}
 
 async function readSink(path: string): Promise<DriftTrack[]> {
   try {
