@@ -1,5 +1,6 @@
 import Dashboard from "@/components/Dashboard";
 import NakdongMap from "@/components/NakdongMap";
+import LitterRiskLoop from "@/components/LitterRiskLoop";
 
 // SEA:CUT 로그프레임 제안 페이지. 콘텐츠 출처 docs/CHANGEX_PAGE_CONTENT.md.
 // 서버 컴포넌트(정적) + 근거3 섹션에 클라이언트 Dashboard 임베드.
@@ -301,6 +302,12 @@ export default function Proposal() {
             <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계 · 도메인 갭</div>
             <p className="mt-1.5 text-[13px] leading-6 text-amber-900/80">위성·외해·대형 선단의 성능 수치(예: 수거효율 60% 향상, 탐지 F1 0.84)는 측정 환경이 달라 <b>우리 소하천 성능으로 직접 인용하지 않습니다.</b> SEA:CUT의 강점은 위성 해상도가 아니라, 발생원에 가까운 <b>상류 차단 위치</b>와 고정 붐의 <b>연속 시계열</b>입니다.</p>
           </div>
+        </Section>
+
+        {/* ───────── 데이터 루프 작동 — 예측·검증 폐루프 ───────── */}
+        <Section eyebrow="데이터 루프" title="예측하고, 실측으로 검증한다 — 작동하는 폐루프">
+          <p>글로벌 동향의 데이터 루프를 우리도 이미 돌리고 있습니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다. 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
+          <LitterRiskLoop />
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}
