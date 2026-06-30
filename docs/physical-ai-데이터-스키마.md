@@ -14,6 +14,7 @@
 | 공간 | hrfco_obs_code | 한강홍수통제소 수위관측소 코드(매핑) |
 | 공간 | regime | 수리 레짐(estuary 기수·조석 / urban_stream 도시소하천) |
 | 공간 | camera_calib | 카메라 시점·정사보정 파라미터 참조 |
+| 공간 | track_id | 연계 GPS 드리프터 궤적(DriftTrack) 참조 — 표류 실측 라벨과 묶음 |
 | 시간 | ts | 관측 시각(ISO8601, +09:00) |
 | 시간 | segment_sec | 집계 구간 길이(초) |
 | 시간 | rain_event_id | 강우 이벤트 식별자(있으면) |
@@ -34,6 +35,7 @@
 | 앵커·품질 | model_ver, confidence | 추론 모델 버전, 신뢰도 |
 | 예측·학습 | risk_score, risk_level, risk_model_ver | 하류 퇴적 위험 예측 스냅샷(litterRisk.ts) |
 | 예측·학습 | anchored_at | 수거 중량(정답) 결합 시각 — (예측, 정답) 쌍 완성 표시 |
+| 앵커·품질 | photo_verified | 시민 관측 사진 검증 통과 여부(PlasticPirates식 4팀 검증) — 라벨 승격 게이트 |
 | 앵커·품질 | deid_flag, is_estimate | 비식별 처리 여부, 추정치 여부 |
 
 ## JSON Schema (draft-07)
@@ -54,6 +56,7 @@
     "hrfco_obs_code": { "type": "string" },
     "regime": { "type": "string", "enum": ["estuary", "urban_stream"] },
     "camera_calib": { "type": "string", "description": "정사보정 파라미터 셋 참조 ID" },
+    "track_id": { "type": ["string", "null"], "description": "연계 GPS 드리프터 궤적(DriftTrack.track_id) 참조" },
     "ts": { "type": "string", "format": "date-time" },
     "segment_sec": { "type": "number" },
     "rain_event_id": { "type": ["string", "null"] },
@@ -94,6 +97,7 @@
     "risk_level": { "type": ["string", "null"], "enum": ["낮음", "관심", "주의", "높음", null] },
     "risk_model_ver": { "type": ["string", "null"] },
     "anchored_at": { "type": ["string", "null"], "description": "수거 중량(정답) 결합 시각" },
+    "photo_verified": { "type": ["boolean", "null"], "description": "시민 관측 사진 검증 통과 여부(PlasticPirates식) — 라벨 승격 게이트" },
     "deid_flag": { "type": "boolean", "description": "얼굴·번호판 비식별 처리 여부" },
     "is_estimate": { "type": "boolean", "description": "값이 추정치인지(자동 정확집계 미보장)" }
   }
@@ -177,6 +181,92 @@
   "is_estimate": true
 }
 ```
+
+## 드리프터 궤적 스키마 (DriftTrack)
+
+추가 2026.06.30. GPS 드리프터(추적 부표·재사용 PET병)는 탐지·예측을 대체하지 않고, 하류 퇴적 위험 예측(litterRisk.ts)의 **"어디로·어떻게" 정답 라벨**을 저비용으로 만든다. 수거 중량 앵커(collected_mass_kg)가 "얼마나"의 라벨이라면, 드리프터 궤적은 경로의 라벨이다. 관측 레코드는 `track_id`로 궤적과 연결한다. 근거·선례는 [[GPS-드리프터-표류실측-심층스터디]]에 있고, 발생원 역추적 지표(VSC·풍속계수 α)는 제주 4개 하구 연구(동아대, 2025)를 따른다. 소하천은 고정 붐이 드리프터의 종점이라 회수·재사용이 전제이며(외해 dummy plastic 윤리 논란 회피), 통신은 셀룰러(NB-IoT/LTE-M)로 충분하다.
+
+| 그룹 | 필드 | 의미 |
+|---|---|---|
+| 식별 | track_id | 궤적 식별자(관측 레코드 track_id와 연결) |
+| 식별 | drifter_id | 물리 드리프터 기기 ID(재사용 추적) |
+| 식별 | site_id, comm | 연계 사이트, 통신 방식(nbiot/ltem/gprs/satellite) |
+| 투하·회수 | release_ts, release_lat, release_lon | 투하 시각·좌표 |
+| 투하·회수 | recovered_ts, recovered_at_boom | 회수 시각, 종점이 우리 붐인지 |
+| 궤적 | points | 좌표 시계열 [{ts, lat, lon, speed_est}] |
+| 지표 | distance_m, stranded | 총 이동 거리(m), 제방·식생 고착 여부(갠지스 고착률 40% 통찰) |
+| 지표 | vsc_current, vsc_wind | 벡터유사계수 — 해류·풍 방향 일치도(제주 방법론) |
+| 지표 | wind_factor_alpha | 풍속계수 α = \|드리프트속도-해류속도\|/풍속(제주 방법론) |
+| 품질 | is_estimate | 표본 한계 — 단일 궤적은 전체 흐름의 추정 표본 |
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SEACUT Drift Track",
+  "type": "object",
+  "required": ["track_id", "site_id", "release_ts", "release_lat", "release_lon", "points", "is_estimate"],
+  "properties": {
+    "track_id": { "type": "string" },
+    "drifter_id": { "type": ["string", "null"] },
+    "site_id": { "type": "string" },
+    "comm": { "type": ["string", "null"], "enum": ["nbiot", "ltem", "gprs", "satellite", null] },
+    "release_ts": { "type": "string", "format": "date-time" },
+    "release_lat": { "type": "number" },
+    "release_lon": { "type": "number" },
+    "recovered_ts": { "type": ["string", "null"] },
+    "recovered_at_boom": { "type": ["boolean", "null"] },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ts", "lat", "lon"],
+        "properties": {
+          "ts": { "type": "string", "format": "date-time" },
+          "lat": { "type": "number" },
+          "lon": { "type": "number" },
+          "speed_est": { "type": ["number", "null"], "description": "구간 표류 속도(m/s)" }
+        }
+      }
+    },
+    "distance_m": { "type": ["number", "null"] },
+    "stranded": { "type": ["boolean", "null"], "description": "제방·식생 고착 여부" },
+    "vsc_current": { "type": ["number", "null"], "description": "벡터유사계수(해류)" },
+    "vsc_wind": { "type": ["number", "null"], "description": "벡터유사계수(풍)" },
+    "wind_factor_alpha": { "type": ["number", "null"], "description": "풍속계수 α" },
+    "is_estimate": { "type": "boolean" }
+  }
+}
+```
+
+샘플은 괴정천 붐을 종점으로 상류에서 드리프터를 투하해 붐에서 회수한 1회 캠페인이다. 해류보다 강우 유하가 지배적이라 vsc_current는 낮고, 고착 없이 붐에 도달했다.
+
+```json
+{
+  "track_id": "drift-goejeong-2026-07-15-01",
+  "drifter_id": "dft-a3",
+  "site_id": "goejeong-boom",
+  "comm": "ltem",
+  "release_ts": "2026-07-15T13:00:00+09:00",
+  "release_lat": 35.1075,
+  "release_lon": 128.9740,
+  "recovered_ts": "2026-07-15T14:12:00+09:00",
+  "recovered_at_boom": true,
+  "points": [
+    { "ts": "2026-07-15T13:00:00+09:00", "lat": 35.1075, "lon": 128.9740, "speed_est": 0.0 },
+    { "ts": "2026-07-15T13:30:00+09:00", "lat": 35.1056, "lon": 128.9731, "speed_est": 0.21 },
+    { "ts": "2026-07-15T14:00:00+09:00", "lat": 35.1034, "lon": 128.9721, "speed_est": 0.28 },
+    { "ts": "2026-07-15T14:12:00+09:00", "lat": 35.1028, "lon": 128.9716, "speed_est": 0.18 }
+  ],
+  "distance_m": 560.0,
+  "stranded": false,
+  "vsc_current": 0.12,
+  "vsc_wind": 0.31,
+  "wind_factor_alpha": 0.018,
+  "is_estimate": true
+}
+```
+
+TS 계약은 `src/lib/observation.ts`의 `DriftTrack`·`DriftPoint` 타입과 `validateDriftTrack`(경량 검증)에 있다. 직렬화는 관측과 같은 `toJsonl`(제네릭)을 쓴다. 활용: litter-risk가 예측한 핫스팟·경로 vs 드리프터 실측 궤적을 비교해 트랩 계수(고착률)와 표류 가중치를 보정한다 — 예측-실측 폐루프.
 
 ## 지금 시작하는 방법 (0단계)
 
