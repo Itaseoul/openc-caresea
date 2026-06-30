@@ -13,6 +13,8 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "icn1";
 
 const BADANURI = "http://www.khoa.go.kr/api/oceangrid";
+// data.go.kr #15142507 국립해양조사원 조위관측소 실측·예측 조위(org 1192136). 100만 호출/일.
+const DATAGO_TIDE = "https://apis.data.go.kr/1192136/surveyTideLevel/GetSurveyTideLevelApiService";
 
 function num(v: unknown): number | null {
   if (v == null) return null;
@@ -55,12 +57,20 @@ async function viaBadanuri(key: string, obs: string, date: string | null) {
   return NextResponse.json({ ok: level != null, source: "badanuri", obs, level, factor, high, low });
 }
 
-// 경로 ② data.go.kr(#15142507) — 기존 KMA_SERVICE_KEY 재사용, 새 키 불필요.
-async function viaDataGo(key: string, tmpl: string, obs: string, date: string | null) {
-  const url = tmpl
-    .replace("{key}", encodeURIComponent(key))
-    .replace("{obs}", encodeURIComponent(obs))
-    .replace("{date}", encodeURIComponent(date ?? ""));
+// 경로 ② data.go.kr(#15142507 GetSurveyTideLevelApiService) — 기존 KMA_SERVICE_KEY 재사용, 새 키 불필요.
+// 기본 엔드포인트 내장 → 활용신청 후 KHOA_DATAGO=1 만으로 동작. KHOA_DATAGO_URL(토큰 {key}{obs}{date})로 override 가능.
+async function viaDataGo(key: string, obs: string, date: string | null, tmpl?: string) {
+  let url: string;
+  if (tmpl) {
+    url = tmpl
+      .replace("{key}", encodeURIComponent(key))
+      .replace("{obs}", encodeURIComponent(obs))
+      .replace("{date}", encodeURIComponent(date ?? ""));
+  } else {
+    const params = new URLSearchParams({ serviceKey: key, ResultType: "json", ObsCode: obs });
+    if (date) params.set("Date", date);
+    url = `${DATAGO_TIDE}?${params.toString()}`;
+  }
   const j = await getJson(url);
   // 방어적 파싱: 실측+예측 조위가 함께 온다. 조위 필드 후보를 폭넓게 본다.
   const items: any[] = j?.response?.body?.items?.item ?? j?.result?.data ?? j?.items ?? [];
@@ -89,10 +99,11 @@ export async function GET(req: NextRequest) {
 
   const khoaKey = process.env.KHOA_KEY; // 바다누리 전용
   const datagoKey = process.env.KMA_SERVICE_KEY; // data.go.kr 공용(기존)
-  const datagoUrl = process.env.KHOA_DATAGO_URL; // data.go.kr 조위 요청 URL({key}{obs}{date})
+  const datagoUrl = process.env.KHOA_DATAGO_URL; // (선택) data.go.kr 요청 URL override({key}{obs}{date})
+  const datagoOn = process.env.KHOA_DATAGO === "1" || !!datagoUrl; // 활용신청 후 켜는 플래그
 
   if (khoaKey) return viaBadanuri(khoaKey, obs, date);
-  if (datagoKey && datagoUrl) return viaDataGo(datagoKey, datagoUrl, obs, date);
+  if (datagoKey && datagoOn) return viaDataGo(datagoKey, obs, date, datagoUrl);
 
   return NextResponse.json(
     {
@@ -100,7 +111,7 @@ export async function GET(req: NextRequest) {
       reason: "NO_KEY",
       hint:
         "두 옵션(새 키 없이 ② 권장). ① KHOA_KEY=바다누리 무료 키(khoa.go.kr/oceangrid). " +
-        "② 기존 KMA_SERVICE_KEY로 data.go.kr #15142507(조위관측소 실측·예측) 활용신청 후, 요청 URL을 KHOA_DATAGO_URL에 설정(토큰 {key}{obs}{date}).",
+        "② 새 키 없이: 기존 KMA_SERVICE_KEY로 data.go.kr #15142507(GetSurveyTideLevelApiService) 활용신청 후 env에 KHOA_DATAGO=1 추가(엔드포인트 내장). 필요시 KHOA_DATAGO_URL로 override.",
     },
     { status: 200 }
   );

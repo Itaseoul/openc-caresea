@@ -58,7 +58,8 @@ export async function GET(req: NextRequest) {
     estuaryHotspots.forEach((h) => (tideByHotspot[h.id] = f));
     tideSource = `manual(${f})`;
   } else if (
-    (process.env.KHOA_KEY || (process.env.KMA_SERVICE_KEY && process.env.KHOA_DATAGO_URL)) &&
+    (process.env.KHOA_KEY ||
+      (process.env.KMA_SERVICE_KEY && (process.env.KHOA_DATAGO === "1" || process.env.KHOA_DATAGO_URL))) &&
     estuaryHotspots.length
   ) {
     const date = kstIso().slice(0, 10).replace(/-/g, "");
