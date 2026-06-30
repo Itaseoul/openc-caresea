@@ -18,6 +18,7 @@
 //   · 건기에도 직전 이벤트의 정체 퇴적(standing)이 남아 평시 순위의 바닥을 만든다.
 
 import { kstIso, type SeacutObservation, type Regime, type RiverGrade } from "@/lib/observation";
+import { haversineM } from "@/lib/geo";
 
 export const MODEL_VER = "physical-heuristic-v0";
 
@@ -289,5 +290,98 @@ export function hotspotToObservation(
     risk_model_ver: MODEL_VER,
     deid_flag: true,
     is_estimate: true,
+  };
+}
+
+// ───────── 예측-실측 폐루프 검증(드리프터 궤적 vs 예측 핫스팟) ─────────
+// GPS 드리프터(observation.ts의 DriftTrack)가 실제로 흘러가 멈춘 종점이, 예측이 고위험으로
+// 지목한 핫스팟 반경 내에 도달했는지로 예측을 약하게(weak) 검증한다. 라벨 0단계에서
+// 수거 중량 앵커(collected_mass_kg, "얼마나")를 보완하는 경로 라벨("어디로")이다.
+
+export interface DriftEndpoint {
+  track_id: string;
+  lat: number;
+  lon: number;
+  stranded?: boolean | null;
+  recovered_at_boom?: boolean | null;
+}
+
+export interface DriftMatch {
+  track_id: string;
+  nearest_id: string;
+  nearest_name: string;
+  distance_m: number; // 종점에서 가장 가까운 핫스팟까지(m)
+  predicted_rank: number; // 그 핫스팟의 예측 순위(1=최고위험)
+  predicted_score: number;
+  predicted_level: RiskLevel;
+  within_radius: boolean; // distance ≤ radius
+  hit: boolean; // within_radius && rank ≤ top_n
+}
+
+export interface DriftValidationReport {
+  tracks: number;
+  matched: number; // 반경 내 도달 수
+  hits: number; // 상위 예측 핫스팟에 도달 수
+  match_rate: number;
+  hit_rate: number;
+  mean_distance_m: number | null;
+  radius_m: number;
+  top_n: number;
+  matches: DriftMatch[];
+  note: string;
+}
+
+// predictions는 위험 내림차순(predictAccumulationRisk 출력)이어야 순위가 맞다.
+export function validateRiskAgainstDrift(
+  predictions: RiskPrediction[],
+  endpoints: DriftEndpoint[],
+  opts: { radius_m?: number; top_n?: number } = {}
+): DriftValidationReport {
+  const radius_m = opts.radius_m ?? 500;
+  const top_n = opts.top_n ?? 2;
+  const rankById = new Map(predictions.map((p, i) => [p.id, i + 1]));
+
+  const matches: DriftMatch[] = endpoints.map((ep) => {
+    let best: RiskPrediction | undefined;
+    let bestD = Infinity;
+    for (const p of predictions) {
+      const d = haversineM(ep, p);
+      if (d < bestD) {
+        bestD = d;
+        best = p;
+      }
+    }
+    const rank = best ? rankById.get(best.id) ?? 0 : 0;
+    const within = Number.isFinite(bestD) && bestD <= radius_m;
+    return {
+      track_id: ep.track_id,
+      nearest_id: best?.id ?? "",
+      nearest_name: best?.name ?? "",
+      distance_m: Number.isFinite(bestD) ? Math.round(bestD * 10) / 10 : -1,
+      predicted_rank: rank,
+      predicted_score: best?.score ?? 0,
+      predicted_level: best?.level ?? "낮음",
+      within_radius: within,
+      hit: within && rank > 0 && rank <= top_n,
+    };
+  });
+
+  const matched = matches.filter((m) => m.within_radius).length;
+  const hits = matches.filter((m) => m.hit).length;
+  const dists = matches.map((m) => m.distance_m).filter((d) => d >= 0);
+  const mean = dists.length ? round2(dists.reduce((a, b) => a + b, 0) / dists.length) : null;
+
+  return {
+    tracks: endpoints.length,
+    matched,
+    hits,
+    match_rate: endpoints.length ? round2(matched / endpoints.length) : 0,
+    hit_rate: endpoints.length ? round2(hits / endpoints.length) : 0,
+    mean_distance_m: mean,
+    radius_m,
+    top_n,
+    matches,
+    note:
+      "건기 baseline 예측(트랩 기하 위주) 기준 — 드리프터 종점이 상위 예측 핫스팟 반경 내 도달했는지. 라벨 0단계의 약지도(weak) 검증이며, 표본 수가 적어 추세 확인용이다.",
   };
 }
