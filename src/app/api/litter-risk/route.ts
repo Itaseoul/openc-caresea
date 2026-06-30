@@ -57,7 +57,10 @@ export async function GET(req: NextRequest) {
     const f = Math.max(0, Math.min(1, Number(manualTide)));
     estuaryHotspots.forEach((h) => (tideByHotspot[h.id] = f));
     tideSource = `manual(${f})`;
-  } else if (process.env.KHOA_KEY && estuaryHotspots.length) {
+  } else if (
+    (process.env.KHOA_KEY || (process.env.KMA_SERVICE_KEY && process.env.KHOA_DATAGO_URL)) &&
+    estuaryHotspots.length
+  ) {
     const date = kstIso().slice(0, 10).replace(/-/g, "");
     const t = await fetchJson(origin, `/api/khoa-tide?date=${date}`);
     if (t?.ok && t.factor != null) {
