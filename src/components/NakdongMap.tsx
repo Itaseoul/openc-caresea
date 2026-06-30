@@ -134,9 +134,8 @@ export default function NakdongMap() {
         /* 하천망 로드 실패 시 베이스맵만 — 치명적 아님 */
       }
 
-      // 낙동강 본류 흐름 — 굵고 옅은 청록 라인
+      // 낙동강 본류 흐름 — 굵고 옅은 청록 밴드(장식 점선은 제거, 방향은 ▼ 화살표로)
       L.polyline(NAKDONG, { color: "#38bdf8", weight: 8, opacity: 0.45, lineCap: "round" }).addTo(map);
-      L.polyline(NAKDONG, { color: "#0ea5e9", weight: 2, opacity: 0.55, dashArray: "1 10", lineCap: "round" }).addTo(map);
 
       // 흐름 방향 화살표(남향 ▼) — 본류 중간 지점들
       const arrow = (label = "") =>
