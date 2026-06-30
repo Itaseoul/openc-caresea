@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 // 국립해양조사원(KHOA) 바다누리 해양정보 OpenAPI 프록시 — 실시간 조위.
 // 키: www.khoa.go.kr → 오픈API 신청 후 .env.local 과 Vercel 환경변수 KHOA_KEY 설정.
-// ObsCode: 조위관측소 코드. 낙동강 하구·을숙도 인근은 부산 조위관측소 — ★코드 확인 필요(기본 DT_0001은 미검증).
+// ObsCode 기본=가덕도(DT_0063, 35.024/128.811) — 낙동강 하구·을숙도 최근접 조위관측소(KHOA 검증).
+//   ⚠️ DT_0001은 인천이므로 쓰지 않는다. 부산항 조위관측소는 별도 코드(동측, 하구 대표성 낮음).
+//   하굿둑 영향이 있어 가덕도 개방연안 조위는 외력 기준 근사다(0단계 휴리스틱엔 충분).
 // 엔드포인트: tideObsRecent(실시간 조위), tideObsPreTab(당일 고/저조). ResultType=json.
 // 응답 파싱은 best-effort(스키마는 키 발급 후 실응답으로 확정). factor=당일 고/저조 정규화(0 간조~1 만조).
 
@@ -31,12 +33,12 @@ export async function GET(req: NextRequest) {
   const key = process.env.KHOA_KEY;
   if (!key) {
     return NextResponse.json(
-      { ok: false, reason: "NO_KEY", hint: "KHOA_KEY 설정(www.khoa.go.kr 오픈API). ObsCode=부산 조위관측소 코드 확인 필요." },
+      { ok: false, reason: "NO_KEY", hint: "KHOA_KEY 설정(www.khoa.go.kr 오픈API). ObsCode 기본=가덕도 DT_0063(낙동강 하구 최근접)." },
       { status: 200 }
     );
   }
   const sp = req.nextUrl.searchParams;
-  const obs = sp.get("obs") ?? "DT_0001"; // ★부산 조위관측소 코드 — 확인 필요
+  const obs = sp.get("obs") ?? "DT_0063"; // 가덕도(낙동강 하구 최근접). DT_0001=인천이라 쓰지 않음.
   const date = sp.get("date"); // yyyymmdd (고/저조 정규화용, 선택)
   const k = encodeURIComponent(key);
   const o = encodeURIComponent(obs);
