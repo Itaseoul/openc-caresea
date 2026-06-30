@@ -44,6 +44,7 @@ export interface HotspotProfile {
 export interface RiskSignal {
   rainfall_mm: number | null; // 최근 강우 실값(mm)
   rain_observed_at?: string | null; // 강우 관측 시각(있으면 recency 감쇠)
+  tide_factor?: number | null; // 0~1 현재 조위 트랩 강도(하구). null이면 중립 0.5(정적 tide_sensitive와 동일)
 }
 
 export interface RiskPrediction {
@@ -61,6 +62,7 @@ export interface RiskPrediction {
     rain: number; // 강우 포화 인자
     flush: number; // first-flush 인자
     trap: number; // 트랩(+조석)
+    tide: number; // 조석 현재 강도(0~1, null이면 0.5)
     catchment: number; // 발생원
   };
   why: string; // 지배 인자 기반 설명
@@ -158,16 +160,17 @@ export function scoreHotspot(p: HotspotProfile, s: RiskSignal, now: Date = new D
   const rain = s.rainfall_mm ?? 0;
   const rainF = sat(rain, 10); // 10mm 근방에서 포화
   const flushF = flushFactor(rain, s.rain_observed_at, now);
-  const trap = clamp01(p.trap_score * (1 + 0.5 * p.tide_sensitive)); // 조석은 트랩 보강
+  const tideNow = s.tide_factor ?? 0.5; // 라이브 조위 없으면 중립 0.5(정적 tide_sensitive와 동일 결과)
+  const trap = clamp01(p.trap_score * (1 + p.tide_sensitive * tideNow)); // 조석이 트랩 보강(실시간 가능)
   const base = p.catchment_load * trap;
   const standing = base; // 평시 정체 퇴적(건기에도 존재)
   const pulse = base * rainF * (0.4 + 0.6 * flushF); // 강우 펄스
-  const score = clamp01(0.35 * standing + 0.65 * pulse);
+  const score = round2(clamp01(0.35 * standing + 0.65 * pulse)); // 표시값과 등급 일관성 위해 먼저 반올림
 
   const level: RiskLevel =
     score >= 0.6 ? "높음" : score >= 0.38 ? "주의" : score >= 0.18 ? "관심" : "낮음";
 
-  const why = buildWhy(p, rain, flushF, pulse, standing);
+  const why = buildWhy(p, rain, flushF, pulse, standing, s.tide_factor ?? null);
 
   return {
     id: p.id,
@@ -176,7 +179,7 @@ export function scoreHotspot(p: HotspotProfile, s: RiskSignal, now: Date = new D
     river: p.river,
     lat: p.lat,
     lon: p.lon,
-    score: round2(score),
+    score,
     level,
     factors: {
       standing: round2(standing),
@@ -184,6 +187,7 @@ export function scoreHotspot(p: HotspotProfile, s: RiskSignal, now: Date = new D
       rain: round2(rainF),
       flush: round2(flushF),
       trap: round2(trap),
+      tide: round2(tideNow),
       catchment: round2(p.catchment_load),
     },
     why,
@@ -192,7 +196,14 @@ export function scoreHotspot(p: HotspotProfile, s: RiskSignal, now: Date = new D
   };
 }
 
-function buildWhy(p: HotspotProfile, rain: number, flushF: number, pulse: number, standing: number): string {
+function buildWhy(
+  p: HotspotProfile,
+  rain: number,
+  flushF: number,
+  pulse: number,
+  standing: number,
+  tideLive: number | null = null
+): string {
   const parts: string[] = [p.trap_kind];
   if (rain > 0) {
     parts.push(`강우 ${rain}mm`);
@@ -201,7 +212,9 @@ function buildWhy(p: HotspotProfile, rain: number, flushF: number, pulse: number
   } else {
     parts.push("건기(직전 이벤트 정체 퇴적 위주)");
   }
-  if (p.tide_sensitive >= 0.6) parts.push("하구 조석 정체");
+  if (p.tide_sensitive >= 0.6) {
+    parts.push(tideLive != null ? `하구 조석 실시간 ${Math.round(tideLive * 100)}%` : "하구 조석 정체");
+  }
   const driver = pulse > standing ? "강우 이송이 지배" : "평시 정체가 지배";
   return `${parts.join(" · ")} — ${driver}`;
 }
@@ -213,10 +226,20 @@ const round2 = (x: number) => Math.round(x * 100) / 100;
 export function predictAccumulationRisk(
   profiles: HotspotProfile[],
   signalsByArea: Record<string, RiskSignal>,
+  tideByHotspot: Record<string, number> = {}, // 하구 핫스팟 id → 실시간 조위 트랩 강도(0~1)
   now: Date = new Date()
 ): RiskPrediction[] {
   return profiles
-    .map((p) => scoreHotspot(p, signalsByArea[p.busanRainArea] ?? { rainfall_mm: null }, now))
+    .map((p) =>
+      scoreHotspot(
+        p,
+        {
+          ...(signalsByArea[p.busanRainArea] ?? { rainfall_mm: null }),
+          tide_factor: p.id in tideByHotspot ? tideByHotspot[p.id] : null,
+        },
+        now
+      )
+    )
     .sort((a, b) => b.score - a.score);
 }
 
