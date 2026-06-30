@@ -1,4 +1,4 @@
-# One-Page Brief — River-to-Sea Litter Monitoring Pilot (Busan Marine Policy Division)
+# One-Page Brief — River-to-Sea Litter Monitoring Pilot (Busan Marine Metropolis Policy Division — Marine Environment Team)
 
 ITASEOUL (nonprofit) · 2026-06-29 · Live: openc.caresea.kr
 
