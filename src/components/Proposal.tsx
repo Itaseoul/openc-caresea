@@ -24,6 +24,10 @@ const IMG: Record<string, ImgMeta> = {
   bubble: { src: "/img/bubble-barrier.jpg", place: "네덜란드 암스테르담 Great Bubble Barrier", by: "The Great Bubble Barrier", lic: "CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Bubble_Barrier_Amsterdam.jpg" },
   wheel: { src: "/img/trash-wheel.jpg", place: "미국 볼티모어 Inner Harbor Water Wheel", by: "U.S. Army Corps of Engineers", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:Army_Corps_of_Engineers_-_Inner_Harbor_Water_Wheel_-_26723076854.jpg" },
   cleanup: { src: "/img/river-cleanup.jpg", place: "시민 하천 참여·모니터링", by: "U.S. Fish and Wildlife Service", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:River_cleanup_(53625668820).jpg" },
+  satellite: { src: "/img/sat-sentinel2.jpg", place: "Copernicus Sentinel-2 위성의 해안 관측", by: "European Space Agency", lic: "CC BY-SA 3.0 IGO", href: "https://commons.wikimedia.org/wiki/File:South_Georgia_Island_as_seen_by_Sentinel-2.jpg" },
+  drifter: { src: "/img/gps-drifter.jpg", place: "GPS 드리프터(추적 부표) 투하 — NOAA 표류 실측", by: "U.S. Navy / Lt. Cmdr. C. M. Bell", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:US_Navy_080120-N-0493B-005_Mineman_2nd_Class_Matthew_Rishovd,_left,_works_with_an_unidentified_Sailor_to_deploy_a_National_Oceanic_and_Atmospheric_Administration_drifter_buoy_off_the_coast_of_Senegal.jpg" },
+  edgeShip: { src: "/img/edge-ship.jpg", place: "상업선 기반 해양 모니터링(흑해)", by: "HopsonRoad", lic: "CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Container_ship_Reecon_Whale_on_Black_Sea_near_Constan%C8%9Ba_Romania.jpg" },
+  debris: { src: "/img/marine-debris.jpg", place: "수상 부유 쓰레기 집적 — NOAA Marine Debris", by: "NOAA Marine Debris Program", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:A_trash-laden_marina_(8009117813).jpg" },
 };
 
 // 상단 "지금 바로 확인 가능한 준비" — 사이트가 실제로 보유한 자산을 한 곳에 모은 인덱스(전부 실재 페이지·앵커).
@@ -48,6 +52,30 @@ const PROBLEM_STATS: { v: string; l: string }[] = [
 const BOOM_SPECS = [
   "재생 HDPE 밀폐 부체", "폐스티로폼 미사용", "표층만 차단", "어류·조류 통과",
   "홍수 시 한쪽 분리 안전", "비굴착 고정", "폭 3~4m 최소 복제 단위", "1~2인 하루 설치·철거",
+];
+
+// 글로벌 AI·데이터 정화 동향 — 검증 사례(원문 직접 확인).
+// 근거: docs/글로벌-AI-정화사례-벤치마킹-심층스터디.md, docs/GPS-드리프터-표류실측-심층스터디.md.
+// world=세계가 하는 것, take=SEA:CUT이 소하천·시민 규모로 가져오는 것.
+const GLOBAL_CASES: { tag: string; title: string; who: string; world: string; take: string }[] = [
+  { tag: "시민과학·데이터", title: "유럽 14개국 청소년의 강 플라스틱 추적", who: "PlasticPiratesEU · DLR",
+    world: "공통 과학 프로토콜과 사진 검증으로 청소년 2.5만 명이 390개 강을 측정해 오픈데이터로 공개.",
+    take: "시민 수거를 표준 관측·라벨로 승격(사진 검증 게이트)." },
+  { tag: "엣지 AI", title: "상업선의 저전력 AI 카메라 부유물 탐지", who: "ADIS · The Ocean Cleanup",
+    world: "약 6W NPU 카메라가 배 위에서 직접 탐지하고, 원본 영상 대신 잘린 탐지·메타데이터만 전송.",
+    take: "OpenBoom 엣지 카메라도 영상 미전송·메타데이터만(비식별·저전력)." },
+  { tag: "위성 탐지·예측", title: "위성으로 부유물 탐지하고 표류를 예측", who: "ADOPT · ESA·EPFL",
+    world: "Sentinel-2 위성 영상에 머신러닝을 얹어 24시간 표류를 예측하고 정화팀을 그 지점으로 보낸다.",
+    take: "위성 대신 근접 카메라가 cm급으로 본다 — 우리는 발생원에 더 가깝다." },
+  { tag: "탐지→표류", title: "위성 분할 + 표류 모델로 누적 구역 식별", who: "DEEP-PLAST · 흑해",
+    world: "U-Net++ 분할과 Lagrangian 표류 모델로 쓰레기가 쌓이는 곳을 짚는다.",
+    take: "하류 퇴적 위험 예측(litter-risk)의 아키텍처 참조." },
+  { tag: "경로 최적화", title: "수거선 동선 최적화로 회수 효율 향상", who: "INFORMS · Operations Research",
+    world: "비선형 경로 최적화로 같은 비용에 더 많이, 더 짧은 시간에 걷어낸다.",
+    take: "시민 수거 동선·붐 비움 출동의 우선순위 최적화." },
+  { tag: "표류 실측 (ground truth)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA · 제주 하구 · 갠지스",
+    world: "GPS 드리프터를 흘려 실제 표류 경로를 좌표로 기록 — 예측의 정답지를 만든다.",
+    take: "고정 붐이 드리프터의 종점 — 발생원→붐 전 경로를 라벨로(회수·재사용)." },
 ];
 
 function Section({
@@ -232,6 +260,46 @@ export default function Proposal() {
               <Figure img={IMG.bubble} ratio="aspect-[4/3]" caption={IMG.bubble.place} note="네덜란드 암스테르담 · 기포막 차단(Bubble Barrier)" />
               <Figure img={IMG.wheel} ratio="aspect-[4/3]" caption={IMG.wheel.place} note="미국 볼티모어 · 수차식 부유물 수거(Trash Wheel)" />
             </div>
+          </div>
+        </Section>
+
+        {/* ───────── 글로벌 동향 = AI·데이터 정화 루프 ───────── */}
+        <Section eyebrow="글로벌 동향" title="세계는 'AI·데이터로 닫는 정화 루프'로 간다">
+          <p>세계의 하천·해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서, <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집·위성 탐지·표류 예측·수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
+          <p>SEA:CUT은 이 흐름을 외해·위성이 아니라 <b>소하천·하구 규모로, 시민·무동력으로</b> 가져옵니다. OpenBoom은 단순한 차단막이 아니라 그 데이터 루프의 첫 계측점입니다.</p>
+
+          {/* 글로벌 사례 이미지 갤러리(자유 라이선스, 출처 표기) */}
+          <div className="not-prose">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <Figure img={IMG.satellite} ratio="aspect-[4/3]" caption={IMG.satellite.place} note="위성 탐지 — Sentinel-2(ADOPT·DEEP-PLAST)" />
+              <Figure img={IMG.drifter} ratio="aspect-[4/3]" caption={IMG.drifter.place} note="GPS 드리프터 — 표류 실측 라벨" />
+              <Figure img={IMG.edgeShip} ratio="aspect-[4/3]" caption={IMG.edgeShip.place} note="상업선 엣지 AI(ADIS)" />
+              <Figure img={IMG.debris} ratio="aspect-[4/3]" caption={IMG.debris.place} note="해양 부유 쓰레기 실태" />
+            </div>
+          </div>
+
+          {/* 사례 카드 — 세계가 하는 것 → SEA:CUT이 가져오는 것 */}
+          <div className="not-prose grid gap-3 sm:grid-cols-2">
+            {GLOBAL_CASES.map((c) => (
+              <div key={c.title} className="rounded-2xl border border-neutral-200 bg-white p-5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">{c.tag}</span>
+                  <span className="text-[11px] text-neutral-400">{c.who}</span>
+                </div>
+                <div className="mt-2.5 text-[14.5px] font-bold tracking-tight text-neutral-900">{c.title}</div>
+                <p className="mt-1.5 text-[13px] leading-5 text-neutral-600">{c.world}</p>
+                <p className="mt-2 flex gap-1.5 text-[13px] leading-5 text-brand-800">
+                  <span className="font-bold text-brand-500">→</span>
+                  <span><b>SEA:CUT</b> {c.take}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* 정직 경계 — 도메인 갭(타 도메인 수치 직접 인용 금지) */}
+          <div className="not-prose rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
+            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계 · 도메인 갭</div>
+            <p className="mt-1.5 text-[13px] leading-6 text-amber-900/80">위성·외해·대형 선단의 성능 수치(예: 수거효율 60% 향상, 탐지 F1 0.84)는 측정 환경이 달라 <b>우리 소하천 성능으로 직접 인용하지 않습니다.</b> SEA:CUT의 강점은 위성 해상도가 아니라, 발생원에 가까운 <b>상류 차단 위치</b>와 고정 붐의 <b>연속 시계열</b>입니다.</p>
           </div>
         </Section>
 

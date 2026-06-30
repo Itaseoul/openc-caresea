@@ -40,5 +40,33 @@
     "license": "CC0",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "source": "https://commons.wikimedia.org/wiki/File:Eunpyeong-gu_2023-11-07.jpg"
+  },
+  "sat-sentinel2": {
+    "title": "South Georgia Island as seen by Sentinel-2.jpg",
+    "artist": "European Space Agency — contains modified Copernicus Sentinel data (2018), processed by ESA",
+    "license": "CC BY-SA 3.0 IGO",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/igo/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:South_Georgia_Island_as_seen_by_Sentinel-2.jpg"
+  },
+  "gps-drifter": {
+    "title": "US Navy 080120-N-0493B-005 ... deploy a NOAA drifter buoy off the coast of Senegal.jpg",
+    "artist": "U.S. Navy photo by Lt. Cmdr. Charles M. Bell",
+    "license": "Public domain",
+    "license_url": "",
+    "source": "https://commons.wikimedia.org/wiki/File:US_Navy_080120-N-0493B-005_Mineman_2nd_Class_Matthew_Rishovd,_left,_works_with_an_unidentified_Sailor_to_deploy_a_National_Oceanic_and_Atmospheric_Administration_drifter_buoy_off_the_coast_of_Senegal.jpg"
+  },
+  "edge-ship": {
+    "title": "Container ship Reecon Whale on Black Sea near Constanța Romania.jpg",
+    "artist": "HopsonRoad",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Container_ship_Reecon_Whale_on_Black_Sea_near_Constan%C8%9Ba_Romania.jpg"
+  },
+  "marine-debris": {
+    "title": "A trash-laden marina (8009117813).jpg",
+    "artist": "NOAA Marine Debris Program",
+    "license": "Public domain",
+    "license_url": "",
+    "source": "https://commons.wikimedia.org/wiki/File:A_trash-laden_marina_(8009117813).jpg"
   }
 }
