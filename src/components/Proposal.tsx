@@ -3,6 +3,8 @@ import NakdongMap from "@/components/NakdongMap";
 import LitterRiskLoop from "@/components/LitterRiskLoop";
 import HomeHeroCctv from "@/components/HomeHeroCctv";
 import MembersRow from "@/components/MembersRow";
+import Reveal from "@/components/Reveal";
+import SectionNav from "@/components/SectionNav";
 
 // 연락/전환 경로. ⚠️ 공개 문의 이메일·후원 링크는 운영자 확정 후 교체 필요(현재 실사용 가능한 주소로 임시 설정).
 const CONTACT = {
@@ -94,12 +96,17 @@ function Section({
   id, eyebrow, title, children,
 }: { id?: string; eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="border-t border-neutral-100 py-12 sm:py-14">
-      {eyebrow && (
-        <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">{eyebrow}</div>
-      )}
-      <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">{title}</h2>
-      <div className="space-y-4 text-[15px] leading-7 text-neutral-700">{children}</div>
+    <section id={id} className="scroll-mt-16 border-t border-neutral-100 py-12 sm:py-14">
+      <Reveal>
+        {eyebrow && (
+          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
+            <span className="h-px w-8 bg-brand-600" aria-hidden />
+            {eyebrow}
+          </div>
+        )}
+        <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">{title}</h2>
+        <div className="space-y-4 text-[15px] leading-7 text-neutral-700">{children}</div>
+      </Reveal>
     </section>
   );
 }
@@ -192,6 +199,9 @@ export default function Proposal() {
         </div>
       </header>
 
+      {/* 스티키 앵커 내비 — 심사자 섹션 점프 */}
+      <SectionNav />
+
       {/* ───────── 소하천 특화 지도 — 가장 메인 ───────── */}
       <section className="border-b border-neutral-100 bg-white">
         <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
@@ -246,7 +256,7 @@ export default function Proposal() {
 
       <div className="mx-auto max-w-5xl px-5">
         {/* ───────── 문제 ───────── */}
-        <Section eyebrow="문제" title="아무도 상시 측정하지 않는 소하천">
+        <Section id="problem" eyebrow="문제" title="아무도 상시 측정하지 않는 소하천">
           <Figure
             img={IMG.seoul}
             caption="도시의 작은 하천 — 콘크리트 고가 아래를 흐르는 도심 소하천"
@@ -256,9 +266,9 @@ export default function Proposal() {
           <p>국가하천과 지방하천은 실시간 수위 관측망이 있지만, 작은 하천은 별도 법으로 관리되고 전국 이만 이천여 곳에 이릅니다. 일부에 자동 계측이 설치되고 있으나 목표는 전체의 십분의 일이며 그 데이터도 기관 내부에서만 흐릅니다. 공개된 실시간 수위 자료는 사실상 없습니다.</p>
           <div className="not-prose grid grid-cols-2 gap-3 sm:grid-cols-4">
             {PROBLEM_STATS.map((s) => (
-              <div key={s.l} className="rounded-2xl border border-neutral-200 bg-neutral-50/60 p-4 text-center">
-                <div className="text-2xl font-extrabold tracking-tight text-brand-700 sm:text-[1.7rem]">{s.v}</div>
-                <div className="mt-1.5 text-[11.5px] leading-4 text-neutral-500">{s.l}</div>
+              <div key={s.l} className="rounded-2xl border border-neutral-200 border-t-2 border-t-brand-600 bg-neutral-50/60 p-4 text-center">
+                <div className="text-2xl font-extrabold tabular-nums tracking-tight text-brand-700 sm:text-3xl">{s.v}</div>
+                <div className="mt-1.5 text-xs leading-4 text-neutral-500">{s.l}</div>
               </div>
             ))}
           </div>
@@ -303,7 +313,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 글로벌 동향 = AI·데이터 정화 루프 ───────── */}
-        <Section eyebrow="글로벌 동향" title="세계는 데이터로 정화 루프를 닫는다">
+        <Section id="context" eyebrow="글로벌 동향" title="세계는 데이터로 정화 루프를 닫는다">
           <p>세계의 하천·해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서, <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집·위성 탐지·표류 예측·수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
           <p>SEA:CUT은 이 흐름을 외해·위성이 아니라 <b>소하천·하구 규모로, 시민·무동력으로</b> 가져옵니다. OpenBoom은 단순한 차단막이 아니라 그 데이터 루프의 첫 계측점입니다.</p>
 
@@ -349,7 +359,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}
-        <Section eyebrow="설계" title="사업 설계 — 로그프레임">
+        <Section id="design" eyebrow="설계" title="사업 설계 — 로그프레임">
           <p className="not-prose -mt-1 text-[13px] text-neutral-500">투입에서 사명까지, 결과의 사슬(results chain)로 설계했습니다.</p>
           <div className="not-prose space-y-2.5">
             {LOGFRAME.map((r, i) => (

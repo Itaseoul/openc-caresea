@@ -15,7 +15,8 @@ export default function HomeHeroCctv() {
   const [regionKey, setRegionKey] = useState<string>("");
   const [regionLabel, setRegionLabel] = useState<string>("");
   const [cams, setCams] = useState<Cam[]>([]);
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(0); // 선택(즉시 하이라이트)
+  const [playIdx, setPlayIdx] = useState(0); // 실제 재생(디바운스) — 빠른 연속 클릭이 스트림을 버스트로 쏘지 않게
   const [dead, setDead] = useState<Set<number>>(new Set());
   const [rain, setRain] = useState<Record<string, Rain>>({});
   const [loadingRegion, setLoadingRegion] = useState(true);
@@ -23,6 +24,7 @@ export default function HomeHeroCctv() {
   const loadRegion = useCallback((key: string) => {
     setLoadingRegion(true);
     setIdx(0);
+    setPlayIdx(0);
     setDead(new Set());
     const q = key ? `?region=${encodeURIComponent(key)}` : "";
     fetch(`/api/cctv${q}`)
@@ -107,13 +109,20 @@ export default function HomeHeroCctv() {
     setIdx(i);
   };
 
+  // 선택(idx)을 350ms 디바운스 후에만 실제 재생(playIdx)에 반영 — 연속 클릭 시 마지막 채널만 스트림 로드.
+  const safeIdx = Math.min(idx, Math.max(0, cams.length - 1));
+  useEffect(() => {
+    const t = setTimeout(() => setPlayIdx(safeIdx), 350);
+    return () => clearTimeout(t);
+  }, [safeIdx]);
+
   const sortedRegions = [...regions].sort((a, b) => Number(!!rain[b.key]?.raining) - Number(!!rain[a.key]?.raining));
   const curRaining = rain[regionKey]?.raining;
   const curMm = rain[regionKey]?.rain_mm;
   const allDead = cams.length > 0 && dead.size >= cams.length;
   const noCams = !loadingRegion && cams.length === 0; // 빈 상태(무한 스켈레톤 버그 방지)
-  const safeIdx = Math.min(idx, Math.max(0, cams.length - 1));
-  const cur = cams[safeIdx];
+  const playSafe = Math.min(playIdx, Math.max(0, cams.length - 1));
+  const cur = cams[playSafe];
 
   return (
     <div style={{ width: "100%" }}>
@@ -173,7 +182,7 @@ export default function HomeHeroCctv() {
       ) : allDead ? (
         <FallbackPanel onRetry={retryAll} poster={cams[0]?.thumb} />
       ) : cur ? (
-        <CctvPlayer key={`${regionKey}-${safeIdx}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big poster={cur.thumb} onFail={() => handleFail(safeIdx)} />
+        <CctvPlayer key={`${regionKey}-${playSafe}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big poster={cur.thumb} onFail={() => handleFail(playSafe)} />
       ) : (
         <SkeletonPlayer />
       )}
