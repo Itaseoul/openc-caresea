@@ -11,15 +11,21 @@ export default function CctvPlayer({
   src,
   name,
   big = false,
+  onFail,
 }: {
   src: string;
   name?: string;
   big?: boolean;
+  onFail?: () => void; // 이 카메라가 끝내 실패했을 때(상위에서 다음 카메라로 스킵)
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [needTap, setNeedTap] = useState(false); // 자동재생 차단 시 수동 재생 오버레이
+
+  // onFail 신원이 매 렌더 바뀌어도 플레이어가 리마운트되지 않도록 ref 로 고정
+  const onFailRef = useRef(onFail);
+  onFailRef.current = onFail;
 
   useEffect(() => {
     const video = videoRef.current;
@@ -27,6 +33,9 @@ export default function CctvPlayer({
 
     let hls: any;
     let cancelled = false;
+    let netRetry = 0; // 네트워크 에러 누적(startLoad 재개 횟수)
+    let hardRetry = 0; // 그 외 치명 에러 → 전체 재생성 횟수
+    let recoverTimer: any;
     setErr(null);
     setLoading(true);
     setNeedTap(false);
@@ -46,7 +55,15 @@ export default function CctvPlayer({
       video.src = src;
       video.addEventListener("loadeddata", () => !cancelled && setLoading(false), { once: true });
       video.addEventListener("canplay", tryPlay, { once: true });
-      video.addEventListener("error", () => !cancelled && setErr("스트림 연결 실패"), { once: true });
+      video.addEventListener(
+        "error",
+        () => {
+          if (cancelled) return;
+          if (onFailRef.current) onFailRef.current();
+          else setErr("스트림 연결 실패");
+        },
+        { once: true }
+      );
       return () => {
         cancelled = true;
       };
@@ -61,52 +78,74 @@ export default function CctvPlayer({
           setLoading(false);
           return;
         }
-        hls = new Hls({
-          liveDurationInfinity: true,
-          // 라이브 지연 관리(과도한 재요청 없이 최신 근처 유지)
-          liveSyncDurationCount: 3,
-          // 상류 간헐 실패 흡수: 재시도 넉넉히
-          manifestLoadingMaxRetry: 6,
-          manifestLoadingRetryDelay: 1000,
-          manifestLoadingMaxRetryTimeout: 8000,
-          levelLoadingMaxRetry: 6,
-          levelLoadingRetryDelay: 1000,
-          levelLoadingMaxRetryTimeout: 8000,
-          fragLoadingMaxRetry: 10,
-          fragLoadingRetryDelay: 800,
-          fragLoadingMaxRetryTimeout: 8000,
-        });
 
-        hls.loadSource(src);
-        hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        const giveUp = () => {
           if (cancelled) return;
-          setLoading(false);
-          tryPlay();
-        });
-        hls.on(Hls.Events.FRAG_BUFFERED, () => {
-          if (!cancelled) setLoading(false);
-        });
+          try {
+            hls?.destroy();
+          } catch {}
+          if (onFailRef.current) onFailRef.current(); // 상위가 다음 카메라로 스킵
+          else setErr("스트림 연결 실패");
+        };
 
-        hls.on(Hls.Events.ERROR, (_e: any, data: any) => {
-          if (cancelled || !data?.fatal) return;
-          // 치명적 에러는 곧바로 포기하지 말고 종류별로 복구 시도
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              // 상류 502/타임아웃 등 → 로딩 재개
-              hls.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              hls.recoverMediaError();
-              break;
-            default:
-              setErr("스트림 연결 실패");
-              try {
-                hls.destroy();
-              } catch {}
-          }
-        });
+        const setup = () => {
+          if (cancelled) return;
+          hls = new Hls({
+            liveDurationInfinity: true,
+            liveSyncDurationCount: 3,
+            // 상류 간헐 실패 흡수: 재시도 넉넉히
+            manifestLoadingMaxRetry: 6,
+            manifestLoadingRetryDelay: 1000,
+            manifestLoadingMaxRetryTimeout: 8000,
+            levelLoadingMaxRetry: 6,
+            levelLoadingRetryDelay: 1000,
+            levelLoadingMaxRetryTimeout: 8000,
+            fragLoadingMaxRetry: 10,
+            fragLoadingRetryDelay: 800,
+            fragLoadingMaxRetryTimeout: 8000,
+          });
+
+          hls.loadSource(src);
+          hls.attachMedia(video);
+
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            if (cancelled) return;
+            netRetry = 0;
+            hardRetry = 0;
+            setLoading(false);
+            tryPlay();
+          });
+          hls.on(Hls.Events.FRAG_BUFFERED, () => {
+            if (cancelled) return;
+            netRetry = 0;
+            setLoading(false);
+          });
+
+          hls.on(Hls.Events.ERROR, (_e: any, data: any) => {
+            if (cancelled || !data?.fatal) return;
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                // 상류 502/타임아웃 등 → 로딩 재개, 과도 반복이면 포기
+                if (netRetry++ < 8) {
+                  recoverTimer = setTimeout(() => !cancelled && hls.startLoad(), 800);
+                } else giveUp();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                hls.recoverMediaError();
+                break;
+              default:
+                // 기타 치명 에러 → 전체 재생성 2회까지 시도 후 포기
+                try {
+                  hls.destroy();
+                } catch {}
+                if (hardRetry++ < 2) {
+                  recoverTimer = setTimeout(setup, 1000);
+                } else giveUp();
+            }
+          });
+        };
+
+        setup();
       })
       .catch(() => {
         if (!cancelled) {
@@ -117,6 +156,7 @@ export default function CctvPlayer({
 
     return () => {
       cancelled = true;
+      if (recoverTimer) clearTimeout(recoverTimer);
       if (hls) {
         try {
           hls.destroy();
