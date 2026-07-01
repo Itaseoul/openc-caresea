@@ -49,6 +49,7 @@ const READY: { href: string; tag: string; title: string; desc: string; icon: Ico
   { href: "#dashboard", tag: "가동 중", title: "라이브 운영·안전 대시보드", desc: "강수·하천 수위·호우특보를 한 화면에서 보고 거치·수거·철거를 판단합니다.", icon: "monitor" },
   { href: "#dashboard", tag: "공개데이터 4종", title: "데이터 파이프라인 연동", desc: "기상청·한강홍수통제소·서울특별시·부산광역시를 프록시로 안전 연동.", icon: "data" },
   { href: "/streams", tag: "전국 지도", title: "소하천 정비율 지도", desc: "서울 79.1% ~ 광주 11.5% · 전국 평균 46.5%의 정책 사각지대를 시각화.", icon: "map" },
+  { href: "/protocol", tag: "시민과학 표준", title: "시민 수거 → 표준 관측·라벨", desc: "EU Plastic Pirates(14개국·2.5만 명·390개 강) 벤치마크로 사진 검증 게이트를 설계.", icon: "globe" },
   { href: "/permit", tag: "문서팩", title: "하천 점용허가 생성기", desc: "거치 스팟별 행정 사전 협의·점용 허가 문서를 자동 구성합니다.", icon: "doc" },
   { href: "/eulsukdo", tag: "실증 후보지", title: "부산 낙동강 하구 입지 검토", desc: "을숙도·학장천 거치 후보와 규제·허가 선결 조건을 사전 분석.", icon: "pin" },
   { href: "https://www.unep.org/", tag: "국제 정합", title: "UNEP 글로벌 플라스틱 허브 회원", desc: "사단법인 이타서울은 등록 회원으로 source to sea 원칙 위에서 활동합니다.", icon: "globe" },
