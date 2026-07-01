@@ -216,6 +216,26 @@ export default function Proposal() {
           <div className="mt-6">
             <NakdongMap />
           </div>
+
+          {/* 정책 정렬 — 하류(부산시 드론 관측) ↔ 상류(SEA:CUT 무동력 차단) */}
+          <div className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-brand-50/40">
+            <div className="grid gap-px bg-brand-100 sm:grid-cols-2">
+              <div className="bg-white p-5">
+                <div className="text-xs font-bold uppercase tracking-wider text-brand-600">하류 · 관측</div>
+                <div className="mt-1 text-[15px] font-bold text-neutral-900">부산시 — 드론·AI로 하구를 본다</div>
+                <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
+                  부산시는 사하구 다대동 홍티항 드론 스테이션과 AI 영상분석으로 낙동강 하구로 유입되는 해양쓰레기의 경로·유입량을 <b>하류에서</b> 관측·분석합니다. 을숙도·다대포 등 연안 거점을 순회합니다. <span className="text-neutral-400">(부산시 발표, 2026 · 자동 스테이션은 출범 단계)</span>
+                </p>
+              </div>
+              <div className="bg-white p-5">
+                <div className="text-xs font-bold uppercase tracking-wider text-brand-700">상류 · 차단</div>
+                <div className="mt-1 text-[15px] font-bold text-neutral-900">SEA:CUT — 발생원에서 가로챈다</div>
+                <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
+                  같은 낙동강 하구 문제를, 우리는 쓰레기가 바다로 나가기 <b>전</b>의 소하천 길목에서 무동력 붐으로 차단·기록합니다. <b>하류 관측(부산시)과 상류 차단(SEA:CUT)이 만나</b> source-to-sea 한 축을 완성합니다.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
