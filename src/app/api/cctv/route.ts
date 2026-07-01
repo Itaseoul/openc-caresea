@@ -46,44 +46,47 @@ export async function GET(req: NextRequest) {
     `&type=${type}&cctvType=${cctvType}` +
     `&minX=${minX}&maxX=${maxX}&minY=${minY}&maxY=${maxY}&getType=json`;
 
-  try {
-    const results = await Promise.all(
-      roads.map(async (type) => {
-        const r = await fetch(build(type), { next: { revalidate: 120 } });
-        const text = await r.text();
-        let json: any;
-        try {
-          json = JSON.parse(text);
-        } catch {
-          return { type, error: "NON_JSON", raw: text.slice(0, 200) };
-        }
-        const data: any[] = json?.response?.data ?? [];
-        return { type, data };
-      })
-    );
+  // 도로별 조회는 서로 독립 → allSettled 로 한쪽(ex 또는 its)이 실패해도 나머지는 반환.
+  // (Vercel→ITS :9443 은 간헐 타임아웃이 있어 Promise.all 이면 한 번의 실패가 전체를 죽였음)
+  const settled = await Promise.allSettled(
+    roads.map(async (type) => {
+      const r = await fetch(build(type), { next: { revalidate: 120 } });
+      const text = await r.text();
+      let json: any;
+      try {
+        json = JSON.parse(text);
+      } catch {
+        return { type, error: "NON_JSON", raw: text.slice(0, 200) };
+      }
+      const data: any[] = json?.response?.data ?? [];
+      return { type, data };
+    })
+  );
 
-    const content = results.flatMap((res: any) =>
-      (res.data ?? []).map((d: any) => ({
-        cctvname: d.cctvname,
-        coordx: Number(d.coordx),
-        coordy: Number(d.coordy),
-        cctvformat: d.cctvformat, // HLS 등
-        cctvurl: d.cctvurl, // 원본 스트림 주소(http) — 참고용
-        // 실제 재생용: 동일출처 프록시. 원본이 http라 https 라이브에선 이걸 써야 혼합콘텐츠 차단을 피함.
-        stream: d.cctvurl ? `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}` : null,
-        road: res.type, // ex | its
-      }))
-    );
+  const results = settled.map((s, i) =>
+    s.status === "fulfilled" ? s.value : { type: roads[i], error: "FETCH_ERROR", message: String(s.reason) }
+  );
 
-    const errors = results.filter((r: any) => r.error);
-    return NextResponse.json({
-      ok: true,
-      count: content.length,
-      bbox: { minX, maxX, minY, maxY },
-      ...(errors.length ? { errors } : {}),
-      content,
-    });
-  } catch (e) {
-    return NextResponse.json({ ok: false, reason: "FETCH_ERROR", message: String(e) }, { status: 200 });
-  }
+  const content = results.flatMap((res: any) =>
+    (res.data ?? []).map((d: any) => ({
+      cctvname: d.cctvname,
+      coordx: Number(d.coordx),
+      coordy: Number(d.coordy),
+      cctvformat: d.cctvformat, // HLS 등
+      cctvurl: d.cctvurl, // 원본 스트림 주소(http) — 참고용
+      // 실제 재생용: 동일출처 프록시. 원본이 http라 https 라이브에선 이걸 써야 혼합콘텐츠 차단을 피함.
+      stream: d.cctvurl ? `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}` : null,
+      road: res.type, // ex | its
+    }))
+  );
+
+  const errors = results.filter((r: any) => r.error);
+  // 전부 실패했을 때만 ok:false. 일부라도 성공하면 그 결과 + errors 로 응답.
+  return NextResponse.json({
+    ok: content.length > 0 || errors.length < results.length,
+    count: content.length,
+    bbox: { minX, maxX, minY, maxY },
+    ...(errors.length ? { errors } : {}),
+    content,
+  });
 }
