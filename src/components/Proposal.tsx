@@ -179,7 +179,7 @@ export default function Proposal() {
       <section id="ready" className="border-b border-neutral-100 bg-gradient-to-b from-brand-50/70 to-white">
         <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
           <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">지금 바로 확인 가능한 준비</div>
-          <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">계획서가 아니라, 이미 굴러가는 자산</h2>
+          <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">말이 아니라, 지금 바로 작동합니다</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
             아래는 심사 시점에 주소를 열어 바로 확인할 수 있는 결과물입니다. 라이브 대시보드, 공개 데이터 연동, 정책 지도, 행정 문서 생성기, 실증지 분석이 모두 작동합니다.
           </p>

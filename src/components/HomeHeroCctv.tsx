@@ -7,7 +7,7 @@ import CctvPlayer from "@/components/CctvPlayer";
 // 스트림이 죽어도 스켈레톤/폴백으로 우아하게 처리하고, 다음 카메라로 자동 스킵한다.
 // "비 오는 지역"은 first-flush 관측 적기 → 배지·우선 정렬·자동 전환.
 
-type Cam = { cctvname?: string; stream?: string; cctvurl?: string; water?: boolean };
+type Cam = { cctvname?: string; stream?: string; cctvurl?: string; water?: boolean; thumb?: string | null };
 type Region = { key: string; label: string; river: string };
 type Rain = { key: string; raining: boolean; rain_mm: number | null };
 
@@ -119,7 +119,7 @@ export default function HomeHeroCctv() {
         <div>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: ".06em", color: "#dc2626" }}>● 지금, 현장</div>
           <h2 style={{ margin: "4px 0 0", fontSize: 22, fontWeight: 900, color: "#0f172a", lineHeight: 1.25 }}>
-            계획서가 아니라, <span style={{ color: "#0e7490" }}>이미 굴러가는 자산</span>
+            지금 이 순간에도 <span style={{ color: "#0e7490" }}>현장은 흐르고 있습니다</span>
           </h2>
         </div>
         {curRaining && (
@@ -170,9 +170,9 @@ export default function HomeHeroCctv() {
           {loadingRegion ? (
             <SkeletonPlayer />
           ) : allDead ? (
-            <FallbackPanel onRetry={retryAll} />
+            <FallbackPanel onRetry={retryAll} poster={cams[0]?.thumb} />
           ) : cur ? (
-            <CctvPlayer key={`${regionKey}-${safeIdx}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big onFail={() => handleFail(safeIdx)} />
+            <CctvPlayer key={`${regionKey}-${safeIdx}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big poster={cur.thumb} onFail={() => handleFail(safeIdx)} />
           ) : (
             <SkeletonPlayer />
           )}
@@ -200,7 +200,7 @@ export default function HomeHeroCctv() {
                           display: "flex",
                           alignItems: "center",
                           gap: 8,
-                          padding: "7px 9px",
+                          padding: "5px 7px",
                           borderRadius: 8,
                           cursor: "pointer",
                           border: active ? "1px solid #0e7490" : "1px solid #eef2f6",
@@ -208,12 +208,24 @@ export default function HomeHeroCctv() {
                           color: isDead ? "#94a3b8" : "#334155",
                         }}
                       >
-                        <span style={{ width: 6, height: 6, borderRadius: 999, flex: "none", background: isDead ? "#cbd5e1" : "#16a34a" }} />
-                        <span style={{ fontSize: 12.5, fontWeight: active ? 800 : 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {c.cctvname || `채널 ${i + 1}`}
+                        {/* 유튜브식 썸네일 */}
+                        <span style={{ position: "relative", width: 64, height: 36, flex: "none", borderRadius: 5, overflow: "hidden", background: "#0f172a" }}>
+                          {c.thumb ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={c.thumb} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: isDead ? 0.4 : 1 }} />
+                          ) : (
+                            <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>📷</span>
+                          )}
+                          {active && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 8, fontWeight: 800, color: "#fff", background: "rgba(220,38,38,.9)", padding: "1px 4px", borderRadius: 3 }}>LIVE</span>}
                         </span>
-                        {c.water && !isDead && <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 800, color: "#0369a1" }}>하천</span>}
-                        {isDead && <span style={{ marginLeft: "auto", fontSize: 10, color: "#cbd5e1" }}>오프라인</span>}
+                        <span style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
+                          <span style={{ fontSize: 12, fontWeight: active ? 800 : 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {c.cctvname || `채널 ${i + 1}`}
+                          </span>
+                          <span style={{ fontSize: 10, color: isDead ? "#cbd5e1" : c.water ? "#0369a1" : "#94a3b8", fontWeight: 700 }}>
+                            {isDead ? "오프라인 · 다시 시도" : c.water ? "하천 · LIVE" : "LIVE"}
+                          </span>
+                        </span>
                       </button>
                     </li>
                   );
@@ -242,17 +254,25 @@ function SkeletonRow() {
   return <div style={{ height: 34, borderRadius: 8, background: "linear-gradient(100deg,#f1f5f9 30%,#e2e8f0 50%,#f1f5f9 70%)", backgroundSize: "200% 100%", animation: "cctvshimmer 1.3s linear infinite" }} />;
 }
 
-// 전 카메라 연결 불가 시 폴백(레이아웃 유지)
-function FallbackPanel({ onRetry }: { onRetry: () => void }) {
+// 전 카메라 연결 불가 시 폴백(레이아웃 유지) — 정지영상이 있으면 배경으로
+function FallbackPanel({ onRetry, poster }: { onRetry: () => void; poster?: string | null }) {
   return (
-    <div style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: 14, overflow: "hidden", border: "1px solid #e2e8f0", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, textAlign: "center", padding: 20 }}>
-      <div style={{ fontSize: 32 }}>🌊</div>
-      <div style={{ fontSize: 14, fontWeight: 800, color: "#e2e8f0" }}>현장 영상이 일시적으로 연결되지 않습니다</div>
-      <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.6, maxWidth: 380 }}>
-        공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다. 잠시 후 자동으로 복구됩니다 — 지금 바로 다시 시도할 수도 있어요.
+    <div style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: 14, overflow: "hidden", border: "1px solid #e2e8f0", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 11, textAlign: "center", padding: 20 }}>
+      {poster && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={poster} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.4)" }} />
+      )}
+      <div style={{ position: "relative", fontSize: 30 }}>{poster ? "🖼" : "🌊"}</div>
+      <div style={{ position: "relative", fontSize: 14, fontWeight: 800, color: "#e2e8f0" }}>
+        {poster ? "실시간 영상이 잠시 끊겼습니다" : "현장 영상이 일시적으로 연결되지 않습니다"}
       </div>
-      <button onClick={onRetry} style={{ marginTop: 2, padding: "8px 16px", borderRadius: 999, border: "none", background: "#0e7490", color: "#fff", fontSize: 12.5, fontWeight: 800, cursor: "pointer" }}>
-        ↻ 다시 시도
+      <div style={{ position: "relative", fontSize: 12, color: "#cbd5e1", lineHeight: 1.6, maxWidth: 380 }}>
+        {poster
+          ? "최근 정지영상을 보여드리고 있어요. 공공 CCTV 스트림이 곧 복구됩니다 — 지금 바로 다시 시도할 수도 있습니다."
+          : "공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다. 잠시 후 자동으로 복구됩니다."}
+      </div>
+      <button onClick={onRetry} style={{ position: "relative", marginTop: 2, padding: "8px 16px", borderRadius: 999, border: "none", background: "#0e7490", color: "#fff", fontSize: 12.5, fontWeight: 800, cursor: "pointer" }}>
+        ↻ 실시간 다시 시도
       </button>
     </div>
   );

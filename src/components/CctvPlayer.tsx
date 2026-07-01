@@ -13,11 +13,13 @@ export default function CctvPlayer({
   name,
   big = false,
   onFail,
+  poster,
 }: {
   src: string;
   name?: string;
   big?: boolean;
   onFail?: () => void; // 이 카메라가 끝내 실패했을 때(상위에서 다음 카메라로 스킵)
+  poster?: string | null; // 정지영상(https) — 로딩/폴백 배경으로 사용
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -191,6 +193,7 @@ export default function CctvPlayer({
         autoPlay
         playsInline
         controls
+        poster={poster ?? undefined}
         style={{ width: "100%", height: "100%", display: err ? "none" : "block", objectFit: "cover", background: "#000" }}
       />
 
@@ -235,11 +238,15 @@ export default function CctvPlayer({
         </div>
       )}
 
-      {/* 스켈레톤 로더(로딩 중) */}
+      {/* 스켈레톤 로더(로딩 중) — 정지영상 포스터가 있으면 그 위에, 없으면 shimmer */}
       {loading && !err && (
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(100deg,#0f172a 30%,#1e293b 50%,#0f172a 70%)", backgroundSize: "200% 100%", animation: "cctvshimmer 1.3s linear infinite", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "#94a3b8", fontSize: 12, fontWeight: 600 }}>
-            <span style={{ width: 15, height: 15, border: "2px solid rgba(148,163,184,.35)", borderTopColor: "#e2e8f0", borderRadius: 999, display: "inline-block", animation: "cctvspin .8s linear infinite" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", ...(poster ? { background: "#000" } : { background: "linear-gradient(100deg,#0f172a 30%,#1e293b 50%,#0f172a 70%)", backgroundSize: "200% 100%", animation: "cctvshimmer 1.3s linear infinite" }) }}>
+          {poster && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={poster} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.55)" }} />
+          )}
+          <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: 8, color: "#e2e8f0", fontSize: 12, fontWeight: 700, background: "rgba(2,6,23,.45)", padding: "5px 11px", borderRadius: 999 }}>
+            <span style={{ width: 14, height: 14, border: "2px solid rgba(226,232,240,.4)", borderTopColor: "#fff", borderRadius: 999, display: "inline-block", animation: "cctvspin .8s linear infinite" }} />
             현장 영상 연결 중…
           </span>
         </div>
@@ -252,17 +259,23 @@ export default function CctvPlayer({
         </button>
       )}
 
-      {/* 폴백(연결 불가) — 레이아웃 유지 + 다시 시도 */}
+      {/* 폴백(연결 불가) — 정지영상이 있으면 그걸 배경으로(현장은 여전히 보임) + 다시 시도 */}
       {err && (
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: 16, textAlign: "center", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)" }}>
-          <div style={{ fontSize: 26 }}>📴</div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>{name ?? "현장 CCTV"}</div>
-          <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5, maxWidth: 300 }}>{err}. 공공 스트림 서버가 일시적으로 응답하지 않습니다.</div>
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 9, padding: 16, textAlign: "center", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)" }}>
+          {poster && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={poster} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.4)" }} />
+          )}
+          <div style={{ position: "relative", fontSize: 22 }}>{poster ? "🖼" : "📴"}</div>
+          <div style={{ position: "relative", fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>{name ?? "현장 CCTV"}</div>
+          <div style={{ position: "relative", fontSize: 11.5, color: "#cbd5e1", lineHeight: 1.5, maxWidth: 320 }}>
+            {poster ? "실시간 영상이 잠시 끊겨 최근 정지영상을 보여줍니다." : `${err}. 공공 스트림 서버가 일시적으로 응답하지 않습니다.`}
+          </div>
           <button
             onClick={() => setRetryNonce((n) => n + 1)}
-            style={{ marginTop: 2, padding: "6px 14px", borderRadius: 999, border: "1px solid #334155", background: "#0e7490", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+            style={{ position: "relative", marginTop: 2, padding: "6px 14px", borderRadius: 999, border: "1px solid #334155", background: "#0e7490", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
           >
-            ↻ 다시 시도
+            ↻ 실시간 다시 시도
           </button>
         </div>
       )}
