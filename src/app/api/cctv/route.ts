@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CCTV_REGIONS, DEFAULT_REGION_KEY, getRegion, isWaterCam } from "@/lib/cctvRegions";
 import cctvSnapshot from "@/lib/cctvSnapshot.json";
+import { SEOGWIPO_CAMS } from "@/lib/seogwipoRivers";
 
 // Vercel→ITS(:9443) 는 간헐적으로 연결 자체가 실패(TypeError: fetch failed, 대량요청 시 IP 스로틀 추정).
 // 짧은 재시도로 흡수하고, 그래도 비면 커밋된 스냅샷으로 폴백해 히어로가 절대 비지 않게 한다.
@@ -42,15 +43,37 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "icn1";
 
 export async function GET(req: NextRequest) {
+  const regionsMeta = CCTV_REGIONS.map((r) => ({ key: r.key, label: r.label, river: r.river }));
+  const reqRegion = getRegion(req.nextUrl.searchParams.get("region"));
+
+  // ★고정 목록 지역(서귀포 하천 등)은 ITS 키 없이도 동작 — 지자체 공개 HLS를 프록시로 재생.
+  if (reqRegion?.static) {
+    const content = SEOGWIPO_CAMS.map((d) => ({
+      cctvname: d.cctvname,
+      coordx: d.coordx,
+      coordy: d.coordy,
+      cctvformat: "HLS",
+      cctvurl: d.cctvurl,
+      stream: `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}`,
+      thumb: d.thumb,
+      road: "river",
+      water: true,
+    }));
+    return NextResponse.json({
+      ok: true,
+      count: content.length,
+      source: "gov-open",
+      region: { key: reqRegion.key, label: reqRegion.label, river: reqRegion.river },
+      regions: regionsMeta,
+      note: "서귀포시가 공개하는 하천 재난 CCTV(HLS) — 지자체 하천 영상 개방 실증 사례",
+      content,
+    });
+  }
+
   const key = process.env.ITS_KEY;
   if (!key) {
     return NextResponse.json(
-      {
-        ok: false,
-        reason: "NO_KEY",
-        hint: ".env.local 에 ITS_KEY 설정. its.go.kr 회원가입 → 마이페이지 → 인증키 신청(무료).",
-        regions: CCTV_REGIONS.map((r) => ({ key: r.key, label: r.label, river: r.river })),
-      },
+      { ok: false, reason: "NO_KEY", hint: ".env.local 에 ITS_KEY 설정.", regions: regionsMeta },
       { status: 200 }
     );
   }
