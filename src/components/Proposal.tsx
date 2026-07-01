@@ -1,4 +1,5 @@
 import React from "react";
+import { estuaryLeadtimes } from "@/lib/litterRisk";
 import Dashboard from "@/components/Dashboard";
 import NakdongMap from "@/components/NakdongMap";
 import LitterRiskLoop from "@/components/LitterRiskLoop";
@@ -397,6 +398,32 @@ export default function Proposal() {
         <Section id="predict" eyebrow="핵심 · 데이터 루프" title="언제·어디서 정체되는지를 먼저 안다">
           <p>이 사업의 심장은 붐이 아니라 <b>부산 하천망에서 언제·어떻게 수거 가능한 쓰레기가 하류에 정체되는지 아는 것</b>입니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), 강우 직후 first-flush 타이밍과 합류부·복개출구·하구 조석 같은 <b>트랩 기하</b>로 "지금 이 시간 가장 걸려 있을 길목"을 순위로 냅니다. <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다 — 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
           <LitterRiskLoop />
+
+          {/* 상·하류 정합 — 하구 도달 전 리드타임(예방 시간) */}
+          <div className="not-prose mt-2 rounded-2xl border border-brand-100 bg-brand-50/40 p-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <div className="text-[13px] font-bold text-neutral-800">상·하류 정합 — 하구 도달 전 리드타임</div>
+              <div className="text-[11px] text-neutral-400">표면유속 0.2~0.6 m/s 가정 · 추정</div>
+            </div>
+            <p className="mt-1 text-[12px] leading-5 text-neutral-500">
+              상류 길목에서 막으면 <b>바다에 닿기 전 이만큼의 시간</b>이 확보됩니다. 상류 고위험 알림은 부산시·KIOST의 하구 관측보다 이 리드타임만큼 <b>앞섭니다</b>. 이것이 상류 차단의 값 — 관측이 아니라 예방입니다.
+            </p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {estuaryLeadtimes().map((lt) => (
+                <div key={lt.id} className="rounded-xl border border-neutral-200 bg-white p-3">
+                  <div className="truncate text-[12.5px] font-semibold text-neutral-800">{lt.name}</div>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-lg font-extrabold tabular-nums text-brand-700">{lt.lead_lo_h}–{lt.lead_hi_h}</span>
+                    <span className="text-[11px] text-neutral-500">시간 리드</span>
+                  </div>
+                  <div className="text-[10.5px] text-neutral-400">하구까지 {(lt.distance_m / 1000).toFixed(1)}km</div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-2.5 text-[11px] leading-4 text-neutral-400">
+              ⚠️ 유속 가정 기반 추정치입니다. <a href="/permit" className="font-semibold text-brand-600 hover:underline">MOU 데이터 교환</a>으로 하구 관측(부산시·KIOST)과 연결되면, 상류 알림 → 하구 유입 확인의 <b>실측 지연</b>으로 교정합니다.
+            </p>
+          </div>
         </Section>
 
         {/* ───────── 예측 → 알림 → 연대 — 운영 거버넌스 척추 ───────── */}

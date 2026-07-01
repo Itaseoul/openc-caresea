@@ -326,6 +326,42 @@ export function hotspotToObservation(
   };
 }
 
+// ───────── 상·하류 정합 — 하구 도달 전 리드타임(예방 시간) ─────────
+// 상류 소하천 길목에서 하구까지 표면 이송에 걸리는 시간 = 상류 차단이 확보하는 예방 시간.
+// "언제 하류에 정체되는가"를 상류 관점에서 선행 지표로 환산한다.
+// ⚠️ 표면유속 가정 범위 기반 추정(측정 아님). [[busan-marine-policy-outreach]] MOU로 부산시·KIOST 하구
+//    관측과 교환되면, 상류 고위험 알림 → 하구 유입 확인의 실측 지연으로 이 리드타임을 교정한다.
+export interface LeadtimeEstimate {
+  id: string;
+  name: string;
+  distance_m: number; // 길목 → 하구 직선 거리
+  lead_lo_h: number; // 빠른 유속(강우 flush) 가정 → 짧은 리드타임
+  lead_hi_h: number; // 느린 유속(평시) 가정 → 긴 리드타임
+}
+
+// 하구 기준 노드(을숙도). v 범위 0.2~0.6 m/s = 도시 소하천 평시~강우 표면 이송 가정.
+export function estuaryLeadtimes(
+  profiles: HotspotProfile[] = HOTSPOTS,
+  vFast = 0.6,
+  vSlow = 0.2
+): LeadtimeEstimate[] {
+  const estuary = profiles.find((p) => p.regime === "estuary");
+  if (!estuary) return [];
+  return profiles
+    .filter((p) => p.regime !== "estuary")
+    .map((p) => {
+      const d = haversineM(p, estuary);
+      return {
+        id: p.id,
+        name: p.name,
+        distance_m: Math.round(d),
+        lead_lo_h: round2(d / vFast / 3600),
+        lead_hi_h: round2(d / vSlow / 3600),
+      };
+    })
+    .sort((a, b) => a.distance_m - b.distance_m);
+}
+
 // ───────── 예측-실측 폐루프 검증(드리프터 궤적 vs 예측 핫스팟) ─────────
 // GPS 드리프터(observation.ts의 DriftTrack)가 실제로 흘러가 멈춘 종점이, 예측이 고위험으로
 // 지목한 핫스팟 반경 내에 도달했는지로 예측을 약하게(weak) 검증한다. 라벨 0단계에서
