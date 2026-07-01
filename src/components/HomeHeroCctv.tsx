@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CctvPlayer from "@/components/CctvPlayer";
 
 // 홈 최상단 히어로 — 대상 하천 하류(낙동강·장수천·한강·금강 등)의 라이브 CCTV.
@@ -8,6 +8,7 @@ import CctvPlayer from "@/components/CctvPlayer";
 
 type Cam = { cctvname?: string; stream?: string; cctvurl?: string; water?: boolean };
 type Region = { key: string; label: string; river: string };
+type Rain = { key: string; raining: boolean; rain_mm: number | null };
 
 export default function HomeHeroCctv() {
   const [regions, setRegions] = useState<Region[]>([]);
@@ -15,6 +16,24 @@ export default function HomeHeroCctv() {
   const [cams, setCams] = useState<Cam[]>([]);
   const [idx, setIdx] = useState(0);
   const [dead, setDead] = useState<Set<number>>(new Set()); // 재생 실패한 카메라 인덱스
+  const [rain, setRain] = useState<Record<string, Rain>>({}); // 지역별 강수(우기 관측 적기)
+
+  // 지역별 "지금 비" 상태 — first-flush 관측 적기 배지·정렬용
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/rain-regions")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!alive || !d?.ok || !Array.isArray(d.regions)) return;
+        const map: Record<string, Rain> = {};
+        for (const r of d.regions) map[r.key] = { key: r.key, raining: !!r.raining, rain_mm: r.rain_mm };
+        setRain(map);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // 지역 카메라 로드
   const loadRegion = useCallback((key: string) => {
@@ -60,9 +79,27 @@ export default function HomeHeroCctv() {
     [cams.length, dead]
   );
 
+  // 최초 1회: 대상지(부산)가 비 안 오고 다른 지역이 비 오면 그 지역으로 자동 전환(우기 관측 우선)
+  const autoRef = useRef(false);
+  useEffect(() => {
+    if (autoRef.current || !regionKey || !Object.keys(rain).length) return;
+    if (rain[regionKey]?.raining) {
+      autoRef.current = true;
+      return;
+    }
+    const wet = regions.find((r) => rain[r.key]?.raining);
+    autoRef.current = true;
+    if (wet && wet.key !== regionKey) loadRegion(wet.key);
+  }, [rain, regions, regionKey, loadRegion]);
+
   if (cams.length === 0) return null;
   const safeIdx = Math.min(idx, cams.length - 1);
   const cur = cams[safeIdx];
+
+  // 비 오는 지역을 앞으로 정렬(우기 관측 적기 우선 노출)
+  const sortedRegions = [...regions].sort((a, b) => Number(!!rain[b.key]?.raining) - Number(!!rain[a.key]?.raining));
+  const curRaining = rain[regionKey]?.raining;
+  const curMm = rain[regionKey]?.rain_mm;
 
   return (
     <section style={{ maxWidth: 1120, margin: "0 auto", padding: "20px 16px 4px" }}>
@@ -73,29 +110,45 @@ export default function HomeHeroCctv() {
             계획서가 아니라, <span style={{ color: "#0e7490" }}>이미 굴러가는 자산</span>
           </h2>
         </div>
+        {curRaining && (
+          <span
+            title="비 직후엔 소하천 부유물이 폭증(first-flush)합니다 — 지금이 관측 가치가 가장 큰 순간입니다."
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", borderRadius: 999, background: "#0e7490", color: "#fff", fontSize: 12, fontWeight: 800 }}
+          >
+            🌧 지금 비 · 부유물 급증 관측 적기{typeof curMm === "number" && curMm > 0 ? ` (${curMm}mm/h)` : ""}
+          </span>
+        )}
       </div>
 
-      {/* 지역(하천) 탭 */}
+      {/* 지역(하천) 탭 — 비 오는 지역 우선 */}
       {regions.length > 1 && (
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-          {regions.map((r) => (
-            <button
-              key={r.key}
-              onClick={() => loadRegion(r.key)}
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                padding: "5px 11px",
-                borderRadius: 999,
-                cursor: "pointer",
-                border: r.key === regionKey ? "1px solid #0e7490" : "1px solid #e2e8f0",
-                background: r.key === regionKey ? "#0e7490" : "#fff",
-                color: r.key === regionKey ? "#fff" : "#475569",
-              }}
-            >
-              {r.label}
-            </button>
-          ))}
+          {sortedRegions.map((r) => {
+            const wet = rain[r.key]?.raining;
+            const active = r.key === regionKey;
+            return (
+              <button
+                key={r.key}
+                onClick={() => loadRegion(r.key)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  padding: "5px 11px",
+                  borderRadius: 999,
+                  cursor: "pointer",
+                  border: active ? "1px solid #0e7490" : wet ? "1px solid #7dd3fc" : "1px solid #e2e8f0",
+                  background: active ? "#0e7490" : wet ? "#f0f9ff" : "#fff",
+                  color: active ? "#fff" : wet ? "#0369a1" : "#475569",
+                }}
+              >
+                {wet && <span aria-hidden>🌧</span>}
+                {r.label}
+              </button>
+            );
+          })}
         </div>
       )}
 
