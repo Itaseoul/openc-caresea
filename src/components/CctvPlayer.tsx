@@ -35,6 +35,7 @@ export default function CctvPlayer({
     let cancelled = false;
     let netRetry = 0; // 네트워크 에러 누적(startLoad 재개 횟수)
     let hardRetry = 0; // 그 외 치명 에러 → 전체 재생성 횟수
+    let hasPlayed = false; // 한 번이라도 프레임을 버퍼했는가(죽은 카메라 판별)
     let recoverTimer: any;
     setErr(null);
     setLoading(true);
@@ -118,18 +119,22 @@ export default function CctvPlayer({
           hls.on(Hls.Events.FRAG_BUFFERED, () => {
             if (cancelled) return;
             netRetry = 0;
+            hasPlayed = true;
             setLoading(false);
           });
 
           hls.on(Hls.Events.ERROR, (_e: any, data: any) => {
             if (cancelled || !data?.fatal) return;
             switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                // 상류 502/타임아웃 등 → 로딩 재개, 과도 반복이면 포기
-                if (netRetry++ < 8) {
-                  recoverTimer = setTimeout(() => !cancelled && hls.startLoad(), 800);
+              case Hls.ErrorTypes.NETWORK_ERROR: {
+                // 대체 카메라가 있는 히어로(onFail 有)이고 아직 한 번도 재생 못했으면
+                // = 죽은 카메라 → 빠르게 포기하고 다음으로. 그 외엔 끈질기게 재시도.
+                const budget = onFailRef.current && !hasPlayed ? 2 : 8;
+                if (netRetry++ < budget) {
+                  recoverTimer = setTimeout(() => !cancelled && hls.startLoad(), hasPlayed ? 800 : 400);
                 } else giveUp();
                 break;
+              }
               case Hls.ErrorTypes.MEDIA_ERROR:
                 hls.recoverMediaError();
                 break;
