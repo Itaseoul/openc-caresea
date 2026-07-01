@@ -8,6 +8,13 @@ import { useApi } from "@/lib/useApi";
 //    없으면 "캘리브레이션 캠페인 전" 정직 표시 + 검증 메서드 다이어그램.
 // 정직 경계: 휴리스틱·약지도 단계(라벨 0). 학습형 모델이 아니다.
 
+type Alert = {
+  level: string;
+  dispatch: boolean;
+  channel: string;
+  recipients: string[];
+  action: string;
+};
 type Hotspot = {
   id: string;
   name: string;
@@ -17,6 +24,12 @@ type Hotspot = {
   level: string;
   why: string;
   rainfall_mm: number | null;
+  alert?: Alert;
+};
+type AlertGovernance = {
+  dispatchCount: number;
+  recipients: string[];
+  sites: { id: string; name: string; level: string; action: string }[];
 };
 type RiskResp = {
   ok: boolean;
@@ -24,6 +37,7 @@ type RiskResp = {
   model: string;
   signals: { area: string; rainfall_mm: number | null }[];
   hotspots: Hotspot[];
+  alertGovernance?: AlertGovernance;
 };
 type Match = {
   track_id: string;
@@ -61,6 +75,7 @@ export default function LitterRiskLoop() {
   const hotspots = risk.data?.hotspots ?? [];
   const maxScore = Math.max(0.01, ...hotspots.map((h) => h.score));
   const rain = (risk.data?.signals ?? []).filter((s) => (s.rainfall_mm ?? 0) > 0);
+  const gov = risk.data?.alertGovernance;
 
   return (
     <div className="not-prose space-y-4">
@@ -84,6 +99,17 @@ export default function LitterRiskLoop() {
             ? `강우 감지: ${rain.map((r) => `${r.area} ${r.rainfall_mm}mm`).join(", ")}`
             : "현재 건기 — 평시 정체 퇴적 위주"}
         </p>
+        {/* 지금 능동 알림(주의 이상) 요약 — 예측→알림→연대 사슬의 라이브 발령 */}
+        {gov && gov.dispatchCount > 0 && (
+          <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/70 p-3">
+            <div className="flex items-center gap-1.5 text-[12px] font-bold text-amber-800">
+              <span aria-hidden>🔔</span> 지금 알림 발령 {gov.dispatchCount}건 · 수신 {gov.recipients.join(", ")}
+            </div>
+            <p className="mt-0.5 text-[11px] leading-4 text-amber-900/70">
+              예측 등급이 곧 알림 등급 — 주의 이상에서 해당 주체로 능동 발령됩니다. (출동 판단 보조, 자동 지시 아님)
+            </p>
+          </div>
+        )}
         <div className="mt-3 space-y-2">
           {hotspots.map((h, i) => {
             const c = LEVEL[h.level] ?? LEVEL["낮음"];
@@ -103,6 +129,13 @@ export default function LitterRiskLoop() {
                   <div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600" style={{ width: `${Math.round((h.score / maxScore) * 100)}%` }} />
                 </div>
                 <p className="mt-1.5 text-[11.5px] leading-4 text-neutral-500">{h.why}</p>
+                {h.alert?.dispatch && (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-1 text-[11px] leading-4 text-amber-700">
+                    <span className="rounded bg-amber-100 px-1.5 py-0.5 font-semibold ring-1 ring-amber-200">🔔 알림</span>
+                    <span className="font-medium">{h.alert.recipients.join(" · ")}</span>
+                    <span className="text-amber-600">— {h.alert.action}</span>
+                  </p>
+                )}
               </div>
             );
           })}

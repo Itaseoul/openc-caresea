@@ -222,6 +222,36 @@ function buildWhy(
 
 const round2 = (x: number) => Math.round(x * 100) / 100;
 
+// ───────── 알림 거버넌스 — 예측 등급 → 수신 대상 · 행동 ─────────
+// 예측(정체)이 감지되면 누구에게 알리고 무엇을 하는지의 결정형 정책. Proposal의 ALERT_LADDER와 정합.
+// ⚠️ is_estimate 예측 기반이라 알림은 "출동 판단 보조"이지 자동 지시가 아니다. 안전신문고·재난문자와 비중복.
+export interface AlertPolicy {
+  level: RiskLevel;
+  dispatch: boolean; // 능동 알림 발령 대상인가(주의 이상)
+  channel: "push+운영" | "운영" | "대시보드" | "none";
+  recipients: string[]; // 수신 주체
+  action: string; // 권고 행동
+}
+
+export function alertFor(level: RiskLevel): AlertPolicy {
+  switch (level) {
+    case "높음":
+      return { level, dispatch: true, channel: "push+운영",
+        recipients: ["현장 수거 코디", "관할 구청 하천팀"],
+        action: "붐 비움·긴급 수거 출동 편성, 수위 단계 시 철거 판단" };
+    case "주의":
+      return { level, dispatch: true, channel: "운영",
+        recipients: ["시민 수거단", "이타서울 운영"],
+        action: "다음 정기 수거 우선순위 상향, 붐 장력·수위 점검" };
+    case "관심":
+      return { level, dispatch: false, channel: "대시보드",
+        recipients: ["대시보드"],
+        action: "관측 지속, 순회 시 육안 확인" };
+    default:
+      return { level, dispatch: false, channel: "none", recipients: [], action: "특이 신호 없음" };
+  }
+}
+
 // 여러 핫스팟을 현재 신호로 채점해 위험 내림차순 정렬.
 //   signalsByArea: 강우 area(구) → 신호. 핫스팟의 busanRainArea로 매핑.
 export function predictAccumulationRisk(

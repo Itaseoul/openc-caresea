@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { HOTSPOTS, predictAccumulationRisk, hotspotToObservation, MODEL_VER, type RiskSignal } from "@/lib/litterRisk";
+import { HOTSPOTS, predictAccumulationRisk, hotspotToObservation, alertFor, MODEL_VER, type RiskSignal } from "@/lib/litterRisk";
 import { kstIso, toJsonl } from "@/lib/observation";
 
 // 하류 퇴적 쓰레기 위험 예측 — "지금 이 시간" 핫스팟 순위.
@@ -116,6 +116,11 @@ export async function GET(req: NextRequest) {
     });
   }
 
+  // 알림 거버넌스 — 각 예측 등급을 수신 대상·행동으로 매핑(결정형). dispatch=능동 알림(주의 이상).
+  const hotspotsWithAlert = predictions.map((p) => ({ ...p, alert: alertFor(p.level) }));
+  const dispatch = hotspotsWithAlert.filter((p) => p.alert.dispatch);
+  const dispatchRecipients = Array.from(new Set(dispatch.flatMap((p) => p.alert.recipients)));
+
   return NextResponse.json({
     ok: true,
     generatedAt: kstIso(),
@@ -123,7 +128,14 @@ export async function GET(req: NextRequest) {
     method: "퇴적 ≈ 발생원 × 트랩(합류부·복개출구·조석) × (정체 + 강우 first-flush 펄스)",
     signals: areas.map((a) => ({ area: a, ...signalsByArea[a], source: rainSources[a] })),
     tide: tideSource,
-    count: predictions.length,
-    hotspots: predictions,
+    // 지금 능동 알림이 필요한 곳·수신 대상 요약(예측→알림→연대 사슬). 없으면 조용.
+    alertGovernance: {
+      note: "예측 등급→수신·행동 결정형 매핑. is_estimate 기반 출동 판단 보조(자동 지시 아님), 안전신문고·재난문자와 비중복.",
+      dispatchCount: dispatch.length,
+      recipients: dispatchRecipients,
+      sites: dispatch.map((p) => ({ id: p.id, name: p.name, level: p.level, action: p.alert.action })),
+    },
+    count: hotspotsWithAlert.length,
+    hotspots: hotspotsWithAlert,
   });
 }
