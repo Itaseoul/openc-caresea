@@ -104,11 +104,13 @@ const ALERT_LADDER: { level: string; score: string; trigger: string; who: string
 ];
 
 // 연대 — 알림이 울리면 각 주체가 맡는 행동(누가 무엇을). 예측→알림→행동의 사슬을 사람에 매핑.
-const COALITION: { who: string; role: string; onAlert: string }[] = [
-  { who: "시민 수거단", role: "현장 회수", onAlert: "주의↑ 시 우선 수거·품목 분류, 사진 검증 제보" },
-  { who: "사단법인 이타서울", role: "운영·데이터", onAlert: "알림 발령·기록, 붐 상태 점검, 데이터 공개" },
-  { who: "관할 구청 하천팀(사상·사하)", role: "점용·공공 수거 연계", onAlert: "높음 시 공공 청소 연계, 수위 단계 철거 협의" },
-  { who: "부산시 · KIOST", role: "하류 관측 데이터", onAlert: "하구 관측치 교환 — 상·하류 정합 검증" },
+// instrument = 그 주체를 실제로 묶는 수단(허가·협약), status = 현재 단계(정직). 정형 주체는 /permit 문서팩으로 연결.
+type CoalStatus = "활동 중" | "준비" | "협의 전";
+const COALITION: { who: string; role: string; onAlert: string; instrument: string; status: CoalStatus; href?: string }[] = [
+  { who: "시민 수거단", role: "현장 회수", onAlert: "주의↑ 시 우선 수거·품목 분류, 사진 검증 제보", instrument: "시민 참여·사례비 예산", status: "활동 중" },
+  { who: "사단법인 이타서울", role: "운영·데이터", onAlert: "알림 발령·기록, 붐 상태 점검, 데이터 공개", instrument: "운영 주체(UNEP 플라스틱 허브 회원)", status: "활동 중" },
+  { who: "관할 구청 하천팀(사상·사하)", role: "점용·공공 수거 연계", onAlert: "높음 시 공공 청소 연계, 수위 단계 철거 협의", instrument: "하천 점용허가·소하천 협의 (소하천정비법 §14)", status: "준비", href: "/permit" },
+  { who: "부산시 · KIOST", role: "하류 관측 데이터", onAlert: "하구 관측치 교환 — 상·하류 정합 검증", instrument: "민관 데이터 협약(MOU)·기부채납", status: "협의 전", href: "/permit" },
 ];
 
 function Section({
@@ -447,22 +449,46 @@ export default function Proposal() {
             </div>
           </div>
 
-          {/* 연대 — 알림이 울리면 각 주체가 맡는 행동 */}
+          {/* 연대 — 알림이 울리면 각 주체가 맡는 행동 + 그를 묶는 수단·현재 상태 */}
           <div className="not-prose">
-            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">연대 — 알림이 울릴 때 각자의 역할</div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {COALITION.map((c) => (
-                <div key={c.who} className="rounded-2xl border border-neutral-200 bg-white p-4">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-[14px] font-bold text-neutral-900">{c.who}</span>
-                    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">{c.role}</span>
-                  </div>
-                  <p className="mt-1.5 flex gap-1.5 text-[12.5px] leading-5 text-neutral-600">
-                    <span className="font-bold text-brand-500">→</span>{c.onAlert}
-                  </p>
-                </div>
-              ))}
+            <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <div className="text-[12.5px] font-semibold text-neutral-500">연대 — 알림이 울릴 때 각자의 역할과 그를 묶는 수단</div>
+              <div className="text-[11px] text-neutral-400">상태: 활동 중 · 준비 · 협의 전 (정직 표시)</div>
             </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {COALITION.map((c) => {
+                const st =
+                  c.status === "활동 중" ? "bg-emerald-100 text-emerald-700 ring-emerald-200"
+                  : c.status === "준비" ? "bg-amber-100 text-amber-700 ring-amber-200"
+                  : "bg-neutral-100 text-neutral-500 ring-neutral-200";
+                const inner = (
+                  <>
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="text-[14px] font-bold text-neutral-900">{c.who}</span>
+                      <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">{c.role}</span>
+                    </div>
+                    <p className="mt-1.5 flex gap-1.5 text-[12.5px] leading-5 text-neutral-600">
+                      <span className="font-bold text-brand-500">→</span>{c.onAlert}
+                    </p>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-neutral-100 pt-2.5">
+                      <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ring-1 ${st}`}>{c.status}</span>
+                      <span className="text-[11.5px] text-neutral-500">{c.instrument}</span>
+                      {c.href && <span className="text-[11px] font-semibold text-brand-600">· 문서팩 →</span>}
+                    </div>
+                  </>
+                );
+                return c.href ? (
+                  <a key={c.who} href={c.href} className="group rounded-2xl border border-neutral-200 bg-white p-4 transition hover:border-brand-300 hover:shadow-sm">
+                    {inner}
+                  </a>
+                ) : (
+                  <div key={c.who} className="rounded-2xl border border-neutral-200 bg-white p-4">{inner}</div>
+                );
+              })}
+            </div>
+            <p className="mt-2.5 text-[11.5px] leading-5 text-neutral-400">
+              구청·부산시 수신 주체는 <b>협약(MOU)·점용허가로 정형화</b>되어야 알림을 받는 실체가 됩니다 — 그 문서팩을 <a href="/permit" className="font-semibold text-brand-600 hover:underline">행정 허가 에이전트</a>가 스팟별로 생성합니다. 현재는 내부 운영 알림 기준이며 상태를 있는 그대로 표시합니다.
+            </p>
           </div>
 
           {/* 정직 경계 — 알림의 범위와 한계 */}
