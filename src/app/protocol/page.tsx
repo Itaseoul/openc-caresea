@@ -76,6 +76,23 @@ const SOURCES: { label: string; url: string }[] = [
   { label: "Horizon Magazine (2026-06)", url: "https://scienceblog.com/horizon/3542/teen-scientists-are-tracking-plastic-pollution-across-europes-rivers/" },
 ];
 
+// 해안·해변 부클릿(원문 프로토콜) 다섯 그룹.
+// 근거: docs/PP-해안해변-부클릿-번역분석-심층스터디.md (PP_coastal booklet_EN_final.pdf 전문 분석).
+const BOOK_GROUPS = [
+  { g: "A", name: "해변 위 쓰레기", size: "4~6", task: "트랜섹트·3해변대(조간대·상조대·식생대) 3×3m 방형구, 담배꽁초 크기 이상 계수, m²당 환산" },
+  { g: "B", name: "쓰레기 다양성", size: "6~8", task: "분류 스테이션에서 ~25개 카테고리 분류·계수·무게, 일회용 플라스틱 비율 산출" },
+  { g: "C", name: "리터 포렌식", size: "3~4", task: "문자 있는 품목 촬영 → 언어·통화·브랜드로 원산지·제조사 식별, 열화도 기록" },
+  { g: "D", name: "리포터 팀 (검증)", size: "4~6", task: "전 과정 사진·영상, 발생원·기상·좌표(십진도) 기록, 총괄 대조·기사 작성", hi: true },
+  { g: "＋", name: "미세플라스틱", size: "4~6", task: "만조선 1×1m 방형구 5cm 굴착, 체(망목 1mm)로 분리·계수, m²당 환산" },
+];
+
+// 폐기물 카테고리(그룹 B) — 우리 관측 스키마로 직접 채용 가능한 국제 정합 분류.
+const CATEGORIES = [
+  "비닐봉투", "음료 페트병", "페트병 뚜껑", "테이크아웃·패스트푸드 포장", "일회용 수저·접시·빨대",
+  "과자·칩 포장", "면봉", "물티슈·위생용품", "스티로폼", "소형 플라스틱 <2.5cm",
+  "음료캔", "병뚜껑", "알루미늄 포일", "유리병", "담배꽁초", "종이", "섬유", "고무", "풍선", "지역 쓰레기",
+];
+
 export const metadata = {
   title: "시민 수거를 표준 관측·라벨로 — Plastic Pirates 벤치마크",
   description:
@@ -217,12 +234,66 @@ export default function ProtocolPage() {
           </div>
         </div>
 
+        {/* 원문 프로토콜 심층 — 해안·해변 부클릿 */}
+        <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>원문 프로토콜 심층 — 해안·해변 부클릿</div>
+            <code style={{ fontSize: 11, color: "#64748b", background: "#f1f5f9", borderRadius: 6, padding: "2px 7px" }}>docs/PP-해안해변-부클릿-번역분석-심층스터디.md</code>
+          </div>
+          <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
+            공개 부클릿(<i>Coasts and Beaches</i>, DLR 2024) 전문을 번역·분석했습니다. 10–16세 청소년이
+            과학 훈련 없이도 <b>비교가능한 데이터</b>를 생산하는 완성형 프로토콜 — SEA:CUT이 이식할 관측 카드·카테고리·게이트의 원형입니다.
+          </p>
+
+          {/* 킬러 인용 — 사진이 표본 채택의 전제조건 */}
+          <div style={{ background: "#ecfeff", border: "1px solid #a5f3fc", borderRadius: 10, padding: "11px 13px", marginBottom: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#0e7490", marginBottom: 3 }}>⭐ 프로토콜 레벨의 강제 사진 게이트</div>
+            <p style={{ fontSize: 13, color: "#0f172a", lineHeight: 1.7, margin: 0, fontStyle: "italic" }}>
+              “쓰레기가 없어도 각 표본점을 반드시 촬영하라. <b>그러지 않으면 여러분의 결과는 과학 연구에 포함될 수 없다.</b>”
+            </p>
+            <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 5 }}>
+              — 그룹 A 방법. 사진은 기록이 아니라 <b>표본 채택의 전제조건</b>. 우리 “사진 검증 게이트”는 이걸 자동 EXIF/geo 검사로 자동화·엄격화한 것.
+            </div>
+          </div>
+
+          {/* 다섯 그룹 */}
+          <div style={{ fontSize: 11.5, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>표본 채취 — 다섯 그룹 분업</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 6 }}>
+            {BOOK_GROUPS.map((b) => (
+              <div key={b.g} style={{
+                display: "grid", gridTemplateColumns: "26px 1fr", gap: 9, alignItems: "start",
+                background: b.hi ? "#ecfeff" : "#f8fafc", border: `1px solid ${b.hi ? "#a5f3fc" : "#e2e8f0"}`,
+                borderRadius: 9, padding: "8px 10px",
+              }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: b.hi ? "#0e7490" : "#cbd5e1", textAlign: "center" }}>{b.g}</div>
+                <div>
+                  <div style={{ fontSize: 12.5, fontWeight: 800, color: "#0f172a" }}>{b.name} <span style={{ fontSize: 10.5, fontWeight: 600, color: "#94a3b8" }}>· {b.size}명</span></div>
+                  <div style={{ fontSize: 11.5, color: "#64748b", lineHeight: 1.5, marginTop: 1 }}>{b.task}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 카테고리 칩 */}
+          <div style={{ fontSize: 11.5, color: "#94a3b8", fontWeight: 700, margin: "12px 0 6px" }}>폐기물 카테고리 ~20종 (→ 관측 스키마로 채용)</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+            {CATEGORIES.map((c) => (
+              <span key={c} style={{ fontSize: 11, color: "#334155", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 999, padding: "3px 9px" }}>{c}</span>
+            ))}
+          </div>
+
+          {/* 관측 카드 필드 */}
+          <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.7 }}>
+            <b style={{ color: "#0f172a" }}>표준 관측 카드 필드</b>(업로드 폼): 그룹명 · 참여자 수 · <b>표본 채취일</b> · <b>강/하천 이름</b> · <b>위치·좌표(십진도)</b> · 사진 · 발생원(주민·방문객·산업·농업·해운·어업) · 최근 7일 기상. 캠페인 종료 <b>2주 내</b> 제출.
+          </div>
+        </div>
+
         {/* 정직성 경계 */}
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 12.5, color: "#92400e", lineHeight: 1.7 }}>
-          <b>정직성 경계.</b> Horizon Magazine 기사(2026-06-25)는 <b>사진 검증이 프로토콜에 명시된 4번째 그룹의 공식 역할</b>임을
-          확증합니다 — “전 과정을 사진으로 찍어 연구원이 학생 판단을 재확인·검증”. 다만 이는 <b>연구자 사후 대조</b> 방식이고,
-          SEA:CUT이 설계하려는 “업로드 시 자동 EXIF/geo 통과 게이트”는 그 검증 정신을 <b>자동화·엄격화</b>한 확장입니다.
-          “EU가 검증한 사진 검증 방식을 자동화한다”로 프레이밍하면 정확합니다.
+          <b>정직성 경계(정정).</b> 원문 부클릿은 <b>사진을 표본 채택의 전제조건으로 명문화</b>합니다 —
+          “사진이 없으면 결과가 과학 연구에 포함될 수 없다”. 즉 강제 사진 게이트가 프로토콜 레벨에 이미 존재합니다.
+          다만 검증 판정은 <b>연구 파트너의 사후 과학 평가</b>로 이뤄지며, SEA:CUT이 더하는 것은 <b>업로드 시점의 자동 EXIF/geo 검사</b>입니다.
+          “EU 프로토콜이 채택한 강제 사진 게이트를 SEA:CUT은 업로드 단계에서 자동화·엄격화한다”가 정확한 프레이밍입니다.
         </div>
 
         {/* 출처 */}
