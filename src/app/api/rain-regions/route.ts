@@ -28,17 +28,25 @@ function ncstBase() {
   return { base_date: ymd(d), base_time: `${p2(d.getHours())}00` };
 }
 
-async function fetchOnce(url: string): Promise<any[]> {
-  const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), 7000);
-  try {
-    const r = await fetch(url, { next: { revalidate: 300 }, signal: ctl.signal });
-    const j = await r.json();
-    const item = j?.response?.body?.items?.item;
-    return Array.isArray(item) ? item : item ? [item] : [];
-  } finally {
-    clearTimeout(timer);
+// Vercel→KMA 간헐 실패로 강수값이 비는 걸 줄이기 위해 짧게 재시도.
+async function fetchItems(url: string, tries = 3): Promise<any[]> {
+  let lastErr: unknown;
+  for (let i = 0; i < tries; i++) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 6000);
+    try {
+      const r = await fetch(url, { next: { revalidate: 300 }, signal: ctl.signal });
+      const j = await r.json();
+      const item = j?.response?.body?.items?.item;
+      return Array.isArray(item) ? item : item ? [item] : [];
+    } catch (e) {
+      lastErr = e;
+      if (i < tries - 1) await new Promise((res) => setTimeout(res, 200 + i * 300));
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  throw lastErr ?? new Error("kma fetch failed");
 }
 
 export async function GET() {
@@ -57,7 +65,7 @@ export async function GET() {
         `${BASE}?serviceKey=${encodeURIComponent(key)}&dataType=JSON&numOfRows=60&pageNo=1` +
         `&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}`;
       try {
-        const items = await fetchOnce(url);
+        const items = await fetchItems(url);
         const rn1 = items.find((i) => i.category === "RN1")?.obsrValue;
         const pty = items.find((i) => i.category === "PTY")?.obsrValue;
         const mm = rn1 == null || rn1 === "강수없음" ? 0 : Number(rn1);
