@@ -46,6 +46,15 @@ const MAP_ROWS = [
   ["“12 Lessons” 확산 가이드", "소하천 CCTV 협력모델에 동일 프로토콜 채택 제안 → EU 선례로 정당화"],
 ];
 
+// 현장 네 그룹 분업 — 4번째가 '검증(사진)'. 우리 사진 검증 게이트의 원형.
+// 근거: Horizon Magazine 기사(2026-06-25) "강둑에서 데이터베이스까지".
+const GROUPS = [
+  { n: "1", role: "기록", desc: "강의 특정 구간을 맡아 발견되는 플라스틱의 양을 기록" },
+  { n: "2", role: "수거·분류", desc: "발견된 플라스틱 쓰레기를 수거하고 카테고리로 분류" },
+  { n: "3", role: "미세플라스틱", desc: "미세 그물로 채집 → 연구실로 보내 입자 수 정량 분석" },
+  { n: "4", role: "검증 (사진)", desc: "전 과정을 사진으로 기록 → 연구원이 이 사진으로 학생 판단을 재확인·검증", hi: true },
+];
+
 // 사진 검증 게이트 — 라벨0→라벨1 승격 단계(우리 스키마 기준).
 const GATE = [
   { step: "업로드", desc: "수거 참여자가 사진 + 위치 + 품목 카테고리를 표준 관측 카드로 제출" },
@@ -145,6 +154,51 @@ export default function ProtocolPage() {
           </div>
         </div>
 
+        {/* 현장 네 그룹 분업 */}
+        <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
+          <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>현장 네 그룹 분업 — 4번째가 “검증”</div>
+          <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
+            참여 청소년은 임무별 <b>네 그룹</b>으로 나뉩니다. 마지막 그룹의 임무가 바로 <b>검증</b> — 전 과정을 사진으로 찍고,
+            연구원이 그 사진으로 학생의 판단을 재확인합니다. SEA:CUT “사진 검증 게이트”의 원형이 이미 프로토콜에 있습니다.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 8 }}>
+            {GROUPS.map((g) => (
+              <div key={g.n} style={{
+                background: g.hi ? "#ecfeff" : "#f8fafc",
+                border: `1px solid ${g.hi ? "#a5f3fc" : "#e2e8f0"}`,
+                borderRadius: 10, padding: "10px 11px",
+              }}>
+                <div style={{ fontSize: 10.5, fontWeight: 800, color: g.hi ? "#0e7490" : "#94a3b8" }}>그룹 {g.n}</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginTop: 2 }}>{g.role}</div>
+                <div style={{ fontSize: 11.5, color: "#64748b", lineHeight: 1.55, marginTop: 3 }}>{g.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 신뢰성·비용 논거 */}
+        <div style={{ marginTop: 12, ...card, padding: "14px 16px", borderLeft: "3px solid #0e7490" }}>
+          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>데이터는 믿을 만한가 — 코디네이터의 답</div>
+          <p style={{ fontSize: 13, color: "#334155", lineHeight: 1.75, margin: 0, fontStyle: "italic" }}>
+            “샘플을 많이 추출하면 개별 오류의 중요성이 줄어듭니다. 게다가 <b>사진을 통해 모든 결과를 검증</b>합니다.
+            어떤 면에서는 아이들의 데이터가 전문 연구자들이 수집한 데이터보다 더 신뢰할 만한 것으로 드러났습니다.”
+          </p>
+          <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 8, lineHeight: 1.6 }}>
+            — Philipp Ackermann, PlasticPiratesEU 코디네이터(독일 DLR 프로젝트 관리기관). 강 플라스틱 데이터가 희소한 이유는
+            <b> 조사 비용이 막대</b>하기 때문 — 시민과학이 이를 비용효율적으로 메웁니다. “바다로 흘러드는 플라스틱의 <b>70%가 강</b>에서 발생.”
+          </div>
+        </div>
+
+        {/* 지역 패턴 */}
+        <div style={{ marginTop: 12, ...card, padding: "12px 14px" }}>
+          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>드러난 지역 패턴 (정책 훅)</div>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, color: "#334155", lineHeight: 1.7 }}>
+            <li><b>일회용 플라스틱</b>(빨대·음식 용기·비닐봉투)이 모든 국가에서 쓰레기의 대부분 — 발생원은 강·해변 인근 <b>주민·방문객</b>.</li>
+            <li>스페인은 예외적으로 <b>물티슈</b> 오염이 두드러짐 → 향후 정책 변화의 근거가 될 수 있는 통찰.</li>
+            <li>담수 생태학자 Meritxell Abril Cuevas(스페인 Vic 대학 BETA Tech Center, FECYT 지원) 등 연구자가 학생을 지도·검증.</li>
+          </ul>
+        </div>
+
         {/* 사진 검증 게이트 */}
         <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
           <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>사진 검증 게이트 — 라벨0 → 라벨1</div>
@@ -165,10 +219,10 @@ export default function ProtocolPage() {
 
         {/* 정직성 경계 */}
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 12.5, color: "#92400e", lineHeight: 1.7 }}>
-          <b>정직성 경계.</b> “사진 검증 게이트”라는 표현은 SEA:CUT의 프레이밍입니다. 원문이 확증하는 것은
-          (a) 카메라가 표준 채집 도구이고 (b) 연구기관이 데이터를 사후 검증·조화한다는 두 사실뿐이며,
-          “업로드 시 사진이 자동 통과 게이트가 된다”는 강제 검증 로직은 공개 문서에서 명시적으로 확인되지 않았습니다.
-          인용·제안 시 이 구분을 유지해야 합니다.
+          <b>정직성 경계.</b> Horizon Magazine 기사(2026-06-25)는 <b>사진 검증이 프로토콜에 명시된 4번째 그룹의 공식 역할</b>임을
+          확증합니다 — “전 과정을 사진으로 찍어 연구원이 학생 판단을 재확인·검증”. 다만 이는 <b>연구자 사후 대조</b> 방식이고,
+          SEA:CUT이 설계하려는 “업로드 시 자동 EXIF/geo 통과 게이트”는 그 검증 정신을 <b>자동화·엄격화</b>한 확장입니다.
+          “EU가 검증한 사진 검증 방식을 자동화한다”로 프레이밍하면 정확합니다.
         </div>
 
         {/* 출처 */}
