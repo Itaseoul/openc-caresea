@@ -28,3 +28,32 @@ body {
 .scroll-x::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* 공용 키프레임 — 컴포넌트가 각자 <style> 주입하던 것을 여기로 중앙화 */
+@keyframes cctvspin { to { transform: rotate(360deg); } }
+@keyframes cctvpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes cctvshimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* 스크롤 등장 모션(과하지 않게 1회) — <Reveal>이 .in 토글 */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* 포커스 접근성 — 인라인 style 버튼도 커버(전역) */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #0e7490;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 모션 최소화 선호 존중 — 현재 전무하던 가드 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}

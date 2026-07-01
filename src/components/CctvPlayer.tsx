@@ -193,12 +193,13 @@ export default function CctvPlayer({
         autoPlay
         playsInline
         controls
+        aria-label={name ? `${name} 현장 CCTV 라이브(무음)` : "현장 CCTV 라이브(무음)"}
         poster={poster ?? undefined}
         style={{ width: "100%", height: "100%", display: err ? "none" : "block", objectFit: "cover", background: "#000" }}
       />
 
-      {/* LIVE 배지(정상 재생 시) */}
-      {!err && (
+      {/* LIVE 배지 — 실제 재생 중일 때만(로딩·에러 중엔 숨김, 정직) */}
+      {!err && !loading && (
         <div
           style={{
             position: "absolute",
@@ -215,7 +216,7 @@ export default function CctvPlayer({
             fontWeight: 800,
           }}
         >
-          <span style={{ width: 7, height: 7, borderRadius: 999, background: "#fff", display: "inline-block", animation: "cctvpulse 1.4s infinite" }} />
+          <span style={{ width: 7, height: 7, borderRadius: 999, background: "#fff", display: "inline-block", animation: "cctvpulse 1.4s infinite" }} aria-hidden />
           LIVE
         </div>
       )}
@@ -279,12 +280,6 @@ export default function CctvPlayer({
           </button>
         </div>
       )}
-
-      <style>{`
-        @keyframes cctvspin { to { transform: rotate(360deg) } }
-        @keyframes cctvpulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
-        @keyframes cctvshimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
-      `}</style>
     </div>
   );
 }

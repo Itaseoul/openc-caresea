@@ -4,6 +4,15 @@ import LitterRiskLoop from "@/components/LitterRiskLoop";
 import HomeHeroCctv from "@/components/HomeHeroCctv";
 import MembersRow from "@/components/MembersRow";
 
+// 연락/전환 경로. ⚠️ 공개 문의 이메일·후원 링크는 운영자 확정 후 교체 필요(현재 실사용 가능한 주소로 임시 설정).
+const CONTACT = {
+  emailText: "makeacademy@naver.com",
+  email: "mailto:makeacademy@naver.com?subject=SEA:CUT%20문의",
+  donate: "mailto:makeacademy@naver.com?subject=SEA:CUT%20후원%20문의",
+  partner: "mailto:makeacademy@naver.com?subject=SEA:CUT%20공공%20협업%20제안",
+  github: "https://github.com/Itaseoul/openc-caresea",
+};
+
 // SEA:CUT 로그프레임 제안 페이지. 콘텐츠 출처 docs/CHANGEX_PAGE_CONTENT.md.
 // 서버 컴포넌트(정적) + 근거3 섹션에 클라이언트 Dashboard 임베드.
 // ★ 텍스트(카피)는 원문 그대로 보존하고, 이미지·지도·다이어그램·지표로 "보여주는 방식"만 고도화한다.
@@ -116,43 +125,67 @@ function Figure({ img, caption, ratio = "aspect-[16/9]", note }: { img: ImgMeta;
 export default function Proposal() {
   return (
     <main className="min-h-screen bg-white text-neutral-900">
-      {/* ───────── 최상단 라이브 CCTV — "지금 살아 있는 현장"으로 첫인상 ───────── */}
-      <HomeHeroCctv />
-
-      {/* ───────── Hero — 부산 낙동강 하구 실증 무대 위 헤드라인 ───────── */}
+      {/* ───────── 통합 히어로 — 좌 카피·CTA / 우 라이브 CCTV 증거 ───────── */}
       <header className="relative isolate overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={IMG.eulsukdo.src} alt={IMG.eulsukdo.place} className="absolute inset-0 -z-10 h-full w-full object-cover" />
-        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-900/80 via-brand-900/70 to-slate-900/85" />
-        <div className="relative mx-auto max-w-3xl px-5 py-20 sm:py-28">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-300" aria-hidden />
-            SEA:CUT · source to sea
+        <img src={IMG.eulsukdo.src} alt={IMG.eulsukdo.place} fetchPriority="high" className="absolute inset-0 -z-10 h-full w-full object-cover object-[center_35%]" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-slate-900/90 via-brand-900/80 to-slate-900/90" />
+        <div className="relative mx-auto grid max-w-5xl items-center gap-8 px-5 py-14 sm:py-16 lg:grid-cols-2 lg:gap-10 lg:py-20">
+          {/* 좌: 메시지 + 신뢰 + CTA */}
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-300" aria-hidden />
+              SEA:CUT · source to sea
+            </div>
+            <h1 className="mt-4 text-balance text-3xl font-bold leading-[1.2] tracking-tight text-white sm:text-4xl lg:text-[2.6rem]">
+              도시의 작은 하천에서 바다로 흘러가는 부유 쓰레기를,{" "}
+              <span className="text-brand-200">우리가 직접 막고, 기록하고, 공개합니다.</span>
+            </h1>
+            <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/80 sm:text-base">
+              강이 바다로 쓰레기를 넘기는 그 지점을 우리 손으로 가로채는 실증 사업입니다. 오른쪽은 지금 이 순간 대상 하천 하류의 라이브 CCTV — 계획이 아니라 이미 작동하는 화면입니다.
+            </p>
+
+            {/* 신뢰 배지 스트립 */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {["UN환경계획 글로벌 플라스틱 허브 회원", "공개데이터 4종 연동", "라이브 실증 운영 중"].map((t) => (
+                <span key={t} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur">
+                  <span className="h-1 w-1 rounded-full bg-brand-300" aria-hidden />
+                  {t}
+                </span>
+              ))}
+            </div>
+
+            {/* 사실 기반 숫자(과장 없음) */}
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-white/85">
+              {[
+                { v: "3", l: "실증 후보 소하천" },
+                { v: "4", l: "공개데이터 연동" },
+                { v: "9", l: "함께하는 멤버" },
+              ].map((s) => (
+                <div key={s.l} className="flex items-baseline gap-1.5">
+                  <span className="text-xl font-extrabold tabular-nums text-white">{s.v}</span>
+                  <span className="text-xs text-white/70">{s.l}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-2.5">
+              <a href="#dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50">
+                <MiniIcon name="monitor" /> 작동하는 대시보드 보기
+              </a>
+              <a href="#join" className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+                협업·후원 문의
+              </a>
+            </div>
           </div>
-          <h1 className="mt-5 text-balance text-[1.95rem] font-bold leading-[1.25] tracking-tight text-white sm:text-[2.7rem]">
-            도시의 작은 하천에서 바다로 흘러가는 부유 쓰레기를,{" "}
-            <span className="text-brand-200">우리가 직접 막고, 기록하고, 공개합니다.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
-            강이 바다로 쓰레기를 넘기는 그 지점을 우리 손으로 가로채는 실증 사업입니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원입니다.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {["연중 단기·무동력 실증", "오픈소스 도면·데이터 공개", "공개 데이터 기반 운영·안전"].map((t) => (
-              <span key={t} className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-                {t}
-              </span>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap gap-2.5">
-            <a href="#dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50">
-              <MiniIcon name="monitor" /> 작동하는 대시보드 보기
-            </a>
-            <a href="#ready" className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
-              준비 현황 한눈에
-            </a>
+
+          {/* 우: 라이브 CCTV 증거 패널 */}
+          <div className="rounded-2xl border border-white/12 bg-slate-950/40 p-3 backdrop-blur-sm sm:p-4">
+            <HomeHeroCctv />
           </div>
         </div>
-        <div className="absolute bottom-2.5 right-3 z-10">
+
+        <div className="absolute bottom-2 right-3 z-10">
           <a href={IMG.eulsukdo.href} target="_blank" rel="noreferrer noopener" className="rounded bg-black/30 px-2 py-0.5 text-[10.5px] text-white/70 backdrop-blur hover:text-white">
             ▲ {IMG.eulsukdo.place} · © {IMG.eulsukdo.by} {IMG.eulsukdo.lic}
           </a>
@@ -402,8 +435,52 @@ export default function Proposal() {
 
         <MembersRow />
 
+        {/* ───────── 함께하기 — 전환 출구(후원·공공협업·오픈소스) ───────── */}
+        <section id="join" className="scroll-mt-4 border-t border-neutral-100 py-12 sm:py-14">
+          <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
+            <span className="h-px w-8 bg-brand-600" aria-hidden />
+            함께하기
+          </div>
+          <h2 className="mb-2 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">이 실증을 같이 밀어주세요</h2>
+          <p className="mb-6 max-w-2xl text-[15px] leading-7 text-neutral-600">
+            지금 작동하는 실증을 더 많은 소하천으로 복제하려 합니다. 후원·공공 협업·오픈소스 기여 — 어느 문으로든 함께할 수 있습니다.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { icon: "heart", tag: "개인·기업", title: "후원하기", desc: "자재·설치·안전·데이터에 쓰이는 3천만 원 실증을 함께 채웁니다.", href: CONTACT.donate, cta: "후원 문의" },
+              { icon: "handshake", tag: "지자체·부처", title: "공공 협업", desc: "소하천 점용 협의·데이터 공유·공동 실증을 제안해 주세요.", href: CONTACT.partner, cta: "협업 제안" },
+              { icon: "code", tag: "개발자·엔지니어", title: "오픈소스 기여", desc: "OpenBoom 도면과 데이터 파이프라인은 공개되어 있습니다.", href: CONTACT.github, cta: "GitHub 열기", external: true },
+            ].map((c) => (
+              <a
+                key={c.title}
+                href={c.href}
+                {...(c.external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
+                className="group flex flex-col rounded-2xl border border-neutral-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+                    <MiniIcon name={c.icon as IconName} size={20} />
+                  </span>
+                  <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">{c.tag}</span>
+                </div>
+                <div className="mt-3.5 flex items-center gap-1.5 text-[15px] font-bold tracking-tight text-neutral-900">
+                  {c.title}
+                  <span className="text-brand-400 transition group-hover:translate-x-0.5">→</span>
+                </div>
+                <p className="mt-1.5 flex-1 text-[12.5px] leading-5 text-neutral-500">{c.desc}</p>
+                <span className="mt-3 inline-flex w-fit items-center gap-1 rounded-lg bg-brand-700 px-3 py-1.5 text-xs font-semibold text-white transition group-hover:bg-brand-800">{c.cta}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
         <footer className="space-y-3 border-t border-neutral-200 py-10 text-xs leading-5 text-neutral-400">
           <div className="space-y-1.5">
+            <p className="text-[13px] text-neutral-600">
+              <span className="font-semibold text-neutral-700">사단법인 이타서울</span> · 문의{" "}
+              <a href={CONTACT.email} className="font-medium text-brand-700 hover:underline">{CONTACT.emailText}</a> ·{" "}
+              <a href={CONTACT.github} target="_blank" rel="noreferrer noopener" className="font-medium text-brand-700 hover:underline">GitHub</a>
+            </p>
             <p>
               <span className="font-medium text-neutral-500">데이터 출처</span> · 기상청 · 한강홍수통제소 · 서울특별시 열린데이터광장 · 부산광역시
             </p>
@@ -424,6 +501,14 @@ export default function Proposal() {
           </div>
         </footer>
       </div>
+
+      {/* 모바일 플로팅 — 어디서든 전환 출구 1개 */}
+      <a
+        href="#join"
+        className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-1.5 rounded-full bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/20 transition hover:bg-brand-800 sm:hidden"
+      >
+        <MiniIcon name="heart" size={16} /> 후원·문의
+      </a>
     </main>
   );
 }
@@ -533,7 +618,7 @@ function SourceToSeaDiagram() {
 }
 
 // ───────── 미니 아이콘 ─────────
-type IconName = "monitor" | "data" | "map" | "doc" | "pin" | "globe";
+type IconName = "monitor" | "data" | "map" | "doc" | "pin" | "globe" | "heart" | "handshake" | "code";
 function MiniIcon({ name, size = 18 }: { name: IconName; size?: number }) {
   const c = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
@@ -549,5 +634,11 @@ function MiniIcon({ name, size = 18 }: { name: IconName; size?: number }) {
       return <svg {...c}><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>;
     case "globe":
       return <svg {...c}><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z" /></svg>;
+    case "heart":
+      return <svg {...c}><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" /></svg>;
+    case "handshake":
+      return <svg {...c}><path d="m11 17 2 2a1 1 0 0 0 1.4 0l3.6-3.6M14 8l3 3 4-4-4-4-3 3M3 11l4 4 3-3-4-4-3 3z" /><path d="m7 15 2 2M10 12l2 2" /></svg>;
+    case "code":
+      return <svg {...c}><path d="m16 18 6-6-6-6M8 6l-6 6 6 6" /></svg>;
   }
 }
