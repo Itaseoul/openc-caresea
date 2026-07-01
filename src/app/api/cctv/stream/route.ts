@@ -19,7 +19,10 @@ export const preferredRegion = "icn1";
 // 오픈 프록시 악용 방지: 알려진 CCTV 스트림 호스트만 허용.
 // 허용 스트림 호스트: ITS(ktict) + 서귀포시 하천 CCTV(공개 HLS, 고정 IP).
 const ALLOW_HOST = /(^|\.)ktict\.co\.kr$/i;
-const ALLOW_IP = new Set(["211.34.191.215"]); // 서귀포시 실시간하천 CCTV 스트림 서버
+const ALLOW_IP = new Set([
+  "211.34.191.215", // 서귀포시 실시간하천 CCTV 스트림 서버
+  "211.114.96.121", // 제주시 하천 감시 CCTV(data.go.kr riverCctvService) 스트림 서버
+]);
 const hostAllowed = (h: string) => ALLOW_HOST.test(h) || ALLOW_IP.has(h);
 
 const isM3u8 = (url: string, ct: string, body: string) =>
