@@ -68,12 +68,12 @@ export async function GET(req: NextRequest) {
 
   const roads = road === "all" ? ["ex", "its"] : [road];
 
-  const build = (type: string) =>
+  const build = (type: string, ctype: string) =>
     `https://openapi.its.go.kr:9443/cctvInfo?apiKey=${encodeURIComponent(key)}` +
-    `&type=${type}&cctvType=${cctvType}` +
+    `&type=${type}&cctvType=${ctype}` +
     `&minX=${minX}&maxX=${maxX}&minY=${minY}&maxY=${maxY}&getType=json`;
 
-  const toItem = (d: any, roadType: string) => ({
+  const toItem = (d: any, roadType: string, thumb?: string | null) => ({
     cctvname: d.cctvname,
     coordx: Number(d.coordx),
     coordy: Number(d.coordy),
@@ -81,19 +81,32 @@ export async function GET(req: NextRequest) {
     cctvurl: d.cctvurl, // 원본 스트림 주소(http) — 참고용
     // 실제 재생용: 동일출처 프록시. 원본이 http라 https 라이브에선 이걸 써야 혼합콘텐츠 차단을 피함.
     stream: d.cctvurl ? `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}` : null,
+    // 정지영상(썸네일·포스터). cctvType=3의 cctvurl2 는 https(:8091)라 프록시 없이 직접 사용 가능.
+    thumb: thumb ?? d.thumb ?? null,
     road: roadType,
     water: isWaterCam(d.cctvname), // 하천/교량 등 물길 화면 여부
   });
 
-  // 도로별 조회는 서로 독립 → allSettled + 재시도로 한쪽 실패해도 나머지는 반환.
+  // type=1(HLS 스트림) + type=3(정지영상 https) 를 함께 조회해 카메라별로 썸네일을 붙인다.
   const settled = await Promise.allSettled(
-    roads.map(async (type) => ({ type, data: await itsFetch(build(type)) }))
+    roads.map(async (type) => {
+      const [stream, still] = await Promise.all([
+        itsFetch(build(type, cctvType)),
+        itsFetch(build(type, "3")).catch(() => [] as any[]), // 정지영상은 없어도 무방
+      ]);
+      // 정지영상 https 주소(cctvurl2)를 cctvname 으로 매핑
+      const thumbByName = new Map<string, string>();
+      for (const s of still) if (s?.cctvname && s?.cctvurl2) thumbByName.set(s.cctvname, s.cctvurl2);
+      return { type, data: stream, thumbByName };
+    })
   );
   const results = settled.map((s, i) =>
-    s.status === "fulfilled" ? s.value : { type: roads[i], error: "FETCH_ERROR", message: String(s.reason) }
+    s.status === "fulfilled" ? s.value : { type: roads[i], error: "FETCH_ERROR", message: String(s.reason), thumbByName: new Map() }
   );
 
-  let content = results.flatMap((res: any) => (res.data ?? []).map((d: any) => toItem(d, res.type)));
+  let content = results.flatMap((res: any) =>
+    (res.data ?? []).map((d: any) => toItem(d, res.type, res.thumbByName?.get(d.cctvname)))
+  );
   const errors = results.filter((r: any) => r.error);
 
   // 라이브가 전부 실패해 비었으면 커밋된 스냅샷으로 폴백(히어로가 절대 비지 않게).

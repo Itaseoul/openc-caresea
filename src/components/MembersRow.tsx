@@ -35,7 +35,7 @@ export default function MembersRow() {
       <div>
         <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">함께하는 사람들</div>
         <h2 className="mb-4 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">
-          지금 이 실증을 굴리는 {MEMBERS.length}명
+          멤버 {MEMBERS.length}명
         </h2>
 
         <ul className="flex flex-wrap items-center gap-x-5 gap-y-4">
