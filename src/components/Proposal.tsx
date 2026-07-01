@@ -2,6 +2,7 @@ import Dashboard from "@/components/Dashboard";
 import NakdongMap from "@/components/NakdongMap";
 import LitterRiskLoop from "@/components/LitterRiskLoop";
 import HomeHeroCctv from "@/components/HomeHeroCctv";
+import MembersRow from "@/components/MembersRow";
 
 // SEA:CUT 로그프레임 제안 페이지. 콘텐츠 출처 docs/CHANGEX_PAGE_CONTENT.md.
 // 서버 컴포넌트(정적) + 근거3 섹션에 클라이언트 Dashboard 임베드.
@@ -129,8 +130,8 @@ export default function Proposal() {
             SEA:CUT · source to sea
           </div>
           <h1 className="mt-5 text-balance text-[1.95rem] font-bold leading-[1.25] tracking-tight text-white sm:text-[2.7rem]">
-            도시의 작은 하천 병목에서 바다로 흘러가는 부유 쓰레기를,{" "}
-            <span className="text-brand-200">우리가 직접 막고 기록하고 공개합니다.</span>
+            도시의 작은 하천에서 바다로 흘러가는 부유 쓰레기를,{" "}
+            <span className="text-brand-200">우리가 직접 막고, 기록하고, 공개합니다.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
             강이 바다로 쓰레기를 넘기는 그 지점을 우리 손으로 가로채는 실증 사업입니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원입니다.
@@ -163,7 +164,7 @@ export default function Proposal() {
         <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
           <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">실증 무대 · 소하천 길목</div>
           <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">
-            낙동강 하구로 흘러드는 소하천 길목에서 가로챈다
+            낙동강 하구로 흘러드는 소하천, 그 길목을 잡는다
           </h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
             바다로 들어오기 직전, 낙동강 지류 소하천 합류부가 SEA:CUT의 무대입니다. 사상구 감전천(엄궁동에서 학장천에 합류해 낙동강으로 드는 길목)은 부산시 협력 데이터 실증을, 사하구 괴정천은 무동력 붐 물리 실증을 맡고, 학장천 엄궁동은 운영·안전 대시보드의 관측 지점입니다. 을숙도 하구는 4중 중첩 규제를 풀며 단계적으로 확장합니다. 부산시와 한국해양과학기술원이 낙동강 하구의 육상 기인 부유 쓰레기를 위성·드론·AI로 분석하는 가운데, SEA:CUT은 그 상류 발생 지점인 소하천 길목에 집중합니다.
@@ -212,7 +213,7 @@ export default function Proposal() {
 
       <div className="mx-auto max-w-5xl px-5">
         {/* ───────── 문제 ───────── */}
-        <Section eyebrow="문제" title="정부도 상시 측정하지 않는 사각지대">
+        <Section eyebrow="문제" title="아무도 상시 측정하지 않는 소하천">
           <Figure
             img={IMG.seoul}
             caption="도시의 작은 하천 — 콘크리트 고가 아래를 흐르는 도심 소하천"
@@ -231,7 +232,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 접근 = 오픈소스 ───────── */}
-        <Section eyebrow="접근" title="같은 원리, 그러나 오픈소스">
+        <Section eyebrow="접근" title="같은 원리, 오픈소스로 연다">
           <p>세계에는 이미 작은 하천의 부유 쓰레기를 막는 검증된 장치가 있습니다. 미국 Osprey Initiative의 Litter Gitter는 특허 장치이며 설치와 유지와 수거를 회사가 대행하는 상용 서비스입니다. 효과는 분명하지만 한 회사가 소유하고 운영하므로 다른 지역이 스스로 재현하기 어렵습니다.</p>
           <p>SEA:CUT의 OpenBoom은 같은 수리 원리를 따르되 도면과 자재 명세와 운영 절차를 모두 공개합니다. 한 곳에서 검증한 설계를 다른 마을이 추가 비용을 거의 들이지 않고 그대로 세울 수 있습니다. 우리의 성공 지표는 우리가 몇 킬로그램을 건졌는가가 아니라, 제삼의 시민 단체가 우리 도움 없이 다른 하천에 같은 붐을 세웠는가입니다.</p>
 
@@ -269,7 +270,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 글로벌 동향 = AI·데이터 정화 루프 ───────── */}
-        <Section eyebrow="글로벌 동향" title="세계는 'AI·데이터로 닫는 정화 루프'로 간다">
+        <Section eyebrow="글로벌 동향" title="세계는 데이터로 정화 루프를 닫는다">
           <p>세계의 하천·해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서, <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집·위성 탐지·표류 예측·수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
           <p>SEA:CUT은 이 흐름을 외해·위성이 아니라 <b>소하천·하구 규모로, 시민·무동력으로</b> 가져옵니다. OpenBoom은 단순한 차단막이 아니라 그 데이터 루프의 첫 계측점입니다.</p>
 
@@ -309,13 +310,13 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 데이터 루프 작동 — 예측·검증 폐루프 ───────── */}
-        <Section eyebrow="데이터 루프" title="예측하고, 실측으로 검증한다 — 작동하는 폐루프">
+        <Section eyebrow="데이터 루프" title="예측하고, 실측으로 검증하는 폐루프">
           <p>글로벌 동향의 데이터 루프를 우리도 이미 돌리고 있습니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다. 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
           <LitterRiskLoop />
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}
-        <Section eyebrow="설계" title="로그프레임">
+        <Section eyebrow="설계" title="사업 설계 — 로그프레임">
           <p className="not-prose -mt-1 text-[13px] text-neutral-500">투입에서 사명까지, 결과의 사슬(results chain)로 설계했습니다.</p>
           <div className="not-prose space-y-2.5">
             {LOGFRAME.map((r, i) => (
@@ -337,7 +338,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── OpenBoom ───────── */}
-        <Section eyebrow="핵심 산출" title="OpenBoom — 오픈소스 차단 붐">
+        <Section eyebrow="핵심 산출" title="OpenBoom — 무동력 오픈소스 차단 붐">
           <div className="not-prose">
             <BoomDiagram />
           </div>
@@ -353,7 +354,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 근거: source to sea ───────── */}
-        <Section eyebrow="근거" title="source to sea 국제 정합">
+        <Section eyebrow="근거" title="발원지에서 바다까지 — Source to Sea 정합">
           <div className="not-prose">
             <SourceToSeaDiagram />
           </div>
@@ -376,12 +377,12 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 정직 경계 ───────── */}
-        <Section eyebrow="원칙" title="정직 경계">
+        <Section eyebrow="원칙" title="정직의 경계 — 과장하지 않는다">
           <p className="text-sm leading-7 text-neutral-500">수면 붐은 떠 있는 쓰레기만 잡습니다. 홍수 시 안전이 가장 큰 관문이므로 소형과 탈착과 비굴착으로 대응하고 수위 단계에 따라 철거합니다. 영상 분석은 존재와 추세를 보여주는 보조 수단이며 자동 정확 집계를 약속하지 않습니다. 첫 시도는 학습으로 봅니다. 시 청소를 대체하지 않고 보완하며, 주민에게 무급 노동을 전가하지 않도록 사례비를 예산에 반영합니다.</p>
         </Section>
 
         {/* ───────── 확장 ───────── */}
-        <Section eyebrow="확장" title="두 번째 병목의 비용">
+        <Section eyebrow="확장" title="두 번째 병목까지, 복제의 비용">
           <Figure
             img={IMG.cleanup}
             caption="시민이 직접 하천을 돌보고 기록하는 참여 — 복제의 출발점"
@@ -398,6 +399,8 @@ export default function Proposal() {
             <ReplicaCard label="…" muted />
           </div>
         </Section>
+
+        <MembersRow />
 
         <footer className="space-y-3 border-t border-neutral-200 py-10 text-xs leading-5 text-neutral-400">
           <div className="space-y-1.5">

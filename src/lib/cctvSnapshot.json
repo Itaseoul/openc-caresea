@@ -1,0 +1,702 @@
+{
+"busan-nakdong": [
+{
+"cctvname": "[남해2지선] 서부산 낙동강교(종점)",
+"coordx": 128.972074,
+"coordy": 35.152833,
+"cctvurl": "http://cctvsec.ktict.co.kr/265/kJ/8o2tkWXQ0CgC6tpRsbyr/lBqcmGEXKyDKVXB0Ys21B5TSYEn+Tw8ojpKGrAmka3V5pqF0QYvpZDFPLouC4/32WWCftwbYdhxYU6FUj1c=",
+"water": true
+},
+{
+"cctvname": "[남해2지선] 서낙동강교",
+"coordx": 128.905054,
+"coordy": 35.163921,
+"cctvurl": "http://cctvsec.ktict.co.kr/8635/ato8mLyj7BK4yMov2KDF+a+BGUGpNZGPv4poqqr/qJ94PvhHjge4sePtcwGEKtb3ej+DiztIh9Vb1edrEKCOEtfZe41TzRr2Scx+kiqvilw=",
+"water": true
+},
+{
+"cctvname": "[남해선제2지선] 조만강교",
+"coordx": 128.888534545898,
+"coordy": 35.1651763916015,
+"cctvurl": "http://cctvsec.ktict.co.kr/3914/A5zW/yQQfZb3DTjDuMVlSou6tX4mVHZNcjZFhTBaJA8Ky7I49ZoQM5tT1jg89FjRzcsw0lp4FEp4txEArqenkd7p8UUlnnZPs2huCX4si3E=",
+"water": true
+},
+{
+"cctvname": "[중앙선] 강서낙동강교",
+"coordx": 128.974559,
+"coordy": 35.203675,
+"cctvurl": "http://cctvsec.ktict.co.kr/3443/1aO2JGgJBRYRzvzPzo0CRiB28yTBpxl272U+VrAWYhpqgQ1w1tlRaq9j6bq7sHRSI8j/71tx2MxTGywwvt5RX3AA1evv7FxzcrDqcfxKsWc=",
+"water": true
+},
+{
+"cctvname": "[남해2지선] 서부산종점",
+"coordx": 128.954121,
+"coordy": 35.155353,
+"cctvurl": "http://cctvsec.ktict.co.kr/2093/NzW4Vryf4l/ax79xbMckrJwm5LK+kISy8OZsIA2zIzmMoI0H6k7MkWF/4H2GdPfOZc2iZjf2NVxN4VJ3dbIhSIIP+shO8TLN1CBJNhUNwzs=",
+"water": false
+},
+{
+"cctvname": "[남해2지선] 서부산",
+"coordx": 128.94535,
+"coordy": 35.15716,
+"cctvurl": "http://cctvsec.ktict.co.kr/2529/lUjyJfeyaMDQNjbvr9bXEJ8oXG6wREPvBqHivRluRjPucXVdY2ic816QGQFHd265kiNGfJjvEXKVqx0aaTn/VeVhXRRB8VYWbQiSeLtwgS0=",
+"water": false
+},
+{
+"cctvname": "[남해2지선] 제1농로육교",
+"coordx": 128.93967,
+"coordy": 35.15832,
+"cctvurl": "http://cctvsec.ktict.co.kr/335/m9A8Jr2HF8fUWYABc/ok6krV2sP8A4uNxTfym94qt6Y7pjCl4BWnv/+J/08nzWAEYsFAE3t8Rlwnc+re8/YSOz13RN13UGMxDIKmMEAPH1k=",
+"water": false
+},
+{
+"cctvname": "[남해2지선] 순아교",
+"coordx": 128.92316,
+"coordy": 35.16065,
+"cctvurl": "http://cctvsec.ktict.co.kr/2530/wFVbyZEphlBcCSLgXBSLxQZ1FP/04xQdTJUb0eHDpXqXoI7oW/x2VNX2YGEwhN38iJoZbWwsVe5I/sQM1QUFqfIdkv9I9zuJEX9oU+hCzwM=",
+"water": false
+},
+{
+"cctvname": "[남해2지선] 가락",
+"coordx": 128.8964925,
+"coordy": 35.1650027,
+"cctvurl": "http://cctvsec.ktict.co.kr/2092/NNlq85UXqsQ9ugjHXuEHHBx6wUPa4KIjn+AmwduPN2YfMgu0jRzGIhvunEHt8UOjdJIbI+JlPiIx9kone5Q5fYUX/PT18WLWfE7zzz0LVhU=",
+"water": false
+},
+{
+"cctvname": "[남해2지선] 수가육교",
+"coordx": 128.880319,
+"coordy": 35.16839,
+"cctvurl": "http://cctvsec.ktict.co.kr/8634/4JjDWA5Sc7+hDPQMYnBwMplyK7/vTir+Jl99yQqKj016ir3ohXeutxDXaH1ahDT3NhFq8d3/H0PdzkimtkOy4u1ABFXZvsRpiL7H+SbfH08=",
+"water": false
+},
+{
+"cctvname": "[남해선] 덕천종점",
+"coordx": 128.977165,
+"coordy": 35.219089,
+"cctvurl": "http://cctvsec.ktict.co.kr/2069/WmWFemBn45K26o1Q2pDogCl/oylbafew972BAD0Kl0yMwzOSS8glti+kIPpbAsDYfvvHtUvHL12GBCEttwT3TFtyGCmYFE8ZL0eUyBh9e2o=",
+"water": false
+},
+{
+"cctvname": "[남해선] 대저",
+"coordx": 128.96634,
+"coordy": 35.21973,
+"cctvurl": "http://cctvsec.ktict.co.kr/2086/brr094SwOGbaEKgtBK8fz5mvcbukSzm8yjYH1Z0o58Y2I/QmpqOfyAS5l5ShAcEsmW4OFR2EbXDiUT7Ziv++ISriFZWjDD+zBiwXdKN7nIA=",
+"water": false
+},
+{
+"cctvname": "[남해선] 북부산영업소",
+"coordx": 128.942391,
+"coordy": 35.222052,
+"cctvurl": "http://cctvsec.ktict.co.kr/2498/6XSkkwYcO6ONi5nz7pQCR+HG3bcWzAclKy/IcJ31Boke91tOpwzdvPde8FMQqSo4yvFJeQNdeLZcpzn2zAnmrO3wmfpvYE59avj0lQ/7ZFc=",
+"water": false
+},
+{
+"cctvname": "[남해선] 불암교",
+"coordx": 128.93288,
+"coordy": 35.222213,
+"cctvurl": "http://cctvsec.ktict.co.kr/8631/vRHE74rUVd8L4emg79NhOvGvtRBrlQHM+vC+2iBUbATNSjuwU5SUKMKFutXin7UD6BU2RCvmIdhfO7Wfoj7oQMCMXB+1nZa6t0Q0iIpyotc=",
+"water": false
+}
+],
+"incheon-jangsu": [
+{
+"cctvname": "[제2경인선] 장수천1교",
+"coordx": 126.72286,
+"coordy": 37.43355,
+"cctvurl": "http://cctvsec.ktict.co.kr/94948/WiJPzcpTc3KpwS/mbYsFYHt+Bqk3cwHlFdA2Frhj0HL/uhcILZKgwsbm+3HhPTrZizPSMLNcYiHDjegpICrYNwBEN05yqh91aElodu+QmXw=",
+"water": true
+},
+{
+"cctvname": "[제2경인선] 학익대교1",
+"coordx": 126.661231994628,
+"coordy": 37.4381675720214,
+"cctvurl": "http://cctvsec.ktict.co.kr/3982/DLfdwZXcGWKZyJa5o1F5EK89roIxIkJJHtMlmg2jJew1b7UOrX5wBrUBau3A6IK63YXG2fUvr1IFdyd2hvD54bSRXq6q+iie4aHfzlbcQxA=",
+"water": true
+},
+{
+"cctvname": "[영동선] 군자분기점",
+"coordx": 126.764762878417,
+"coordy": 37.380760192871,
+"cctvurl": "http://cctvsec.ktict.co.kr/280/oYRUPmK7W4kHN9szCks8rLrSdmjkyHvU1kAQispyKzl3ZFLX9jennQp8t6qsZqRdwlDh0YQ6JTAP/D61HoE+9BEIaoIGN58dwErQfKOhQng=",
+"water": false
+},
+{
+"cctvname": "[영동선] 월곶",
+"coordx": 126.7522233,
+"coordy": 37.38796234,
+"cctvurl": "http://cctvsec.ktict.co.kr/51/lxt2CPSa7u0lVz+3Vuk0FM8OBGkrLobBdQwIqRoMsht76Z6qnnzU06HCNaaubhLdtHbF/JG+P4uYNj97eddageT3SbXqfj8g73M9qNLa0m8=",
+"water": false
+},
+{
+"cctvname": "[영동선] 월곶2",
+"coordx": 126.751068115234,
+"coordy": 37.3885993957519,
+"cctvurl": "http://cctvsec.ktict.co.kr/279/SJJAi1NXLD4IpwscHY9JH/oyw4EnK/DNynsgdUFLbRikS7MszDv/oarsJp3lkGLsqBaAwVZMBeEvSulI6CDG7Y0rJWob2A2eGu1OtRu3VlM=",
+"water": false
+},
+{
+"cctvname": "[영동선] 월곶1교",
+"coordx": 126.748409,
+"coordy": 37.390209,
+"cctvurl": "http://cctvsec.ktict.co.kr/2636/GLC3kLf8/deY1z0Km/jH1Nw9KgNMiCIYasVCWFW3bqkUGizW8uVDCtUJgQNFomjSajB573kt79Nag15FhUpCdH9ZTaVt/OvDhO4xTSUrzXo=",
+"water": false
+},
+{
+"cctvname": "[영동선] 논현교2",
+"coordx": 126.740516662597,
+"coordy": 37.4039039611816,
+"cctvurl": "http://cctvsec.ktict.co.kr/662/cWsoFOtGL6Jg3hB/ldDcaszYizEdQsX18uA+wJqtK3Q97khwVkDED6wlpcVK3uYXo+X75hHYcMNSvKmesqjQX9s+1Fnbc0dMeCOJWpMIfns=",
+"water": false
+},
+{
+"cctvname": "[영동선] 논현교",
+"coordx": 126.7398141,
+"coordy": 37.40897352,
+"cctvurl": "http://cctvsec.ktict.co.kr/563/1oE74GkGTsyaRq8ZeMqmk6bw5DcfFmEfgfM0wYPHmuaj9G0NbSnDpZDt4+Mq5uMikzpjb2JJddAyDfouc5MH8KRoqIh+K2EnP6pycQTorvs=",
+"water": false
+},
+{
+"cctvname": "[영동선] 서창",
+"coordx": 126.7380556,
+"coordy": 37.41777778,
+"cctvurl": "http://cctvsec.ktict.co.kr/8617/dRhva94L1usOrRwV+FuN+Yv6dDV4BGnLV6dCgDFtKtSBc/IYtU/Q+pbXU3MWFXMVckluJzA8fBZ8bo04GUJMxlrUBSor4eiAfRiotdRELo0=",
+"water": false
+},
+{
+"cctvname": "[영동선] 논현육교",
+"coordx": 126.737423,
+"coordy": 37.423889,
+"cctvurl": "http://cctvsec.ktict.co.kr/2637/PRexCFW6rGRxosySavhJYTjlC0s3QgjiqZoDqyPnm7aNV5n2vio3seAz+sBKkSysrUh4ugS3YJ7dDlr2fuhZOy8USv3bt+k4DfuQv5/LOz0=",
+"water": false
+},
+{
+"cctvname": "[제2경인선] 은행3교",
+"coordx": 126.7967597,
+"coordy": 37.42862553,
+"cctvurl": "http://cctvsec.ktict.co.kr/594/tiX8OiEcHfSXFGvSuPQunOvFFJgExvgNb3Od27JXr1Kut57eUVhqIloyCMo9GyoLrThHJz2jvRN6KS87gsWI+5aToBtxku5iyrsXscT1ixc=",
+"water": false
+},
+{
+"cctvname": "[제2경인선] 신천",
+"coordx": 126.78361,
+"coordy": 37.43028,
+"cctvurl": "http://cctvsec.ktict.co.kr/41/ClXnFdt9jKJ5kkkdwK4X7ocwdgysJl5ZzW9UykfwhjC0g00wsJo9jskpzIudJcOpIcl2g12G+VFtL5tNuHQnqvPFr9BAUYueDRrgO58W2G4=",
+"water": false
+},
+{
+"cctvname": "[제2경인선] 남인천영업소1",
+"coordx": 126.764183044433,
+"coordy": 37.4319915771484,
+"cctvurl": "http://cctvsec.ktict.co.kr/293/vRD6E0JZIDKEFm7ErLSilTyOlO9phDl5+VZ7m34ViXWoLse5nucqvfdv0DtSpqzIsqiWPYlvV/uhrAujPq/RmLeRXFIk5kRjO0ofM4avQIY=",
+"water": false
+},
+{
+"cctvname": "[제2경인선] 남인천",
+"coordx": 126.75611,
+"coordy": 37.43222,
+"cctvurl": "http://cctvsec.ktict.co.kr/40/80s23MH/LxzS95FmPYVbg+tmcxWzmMANeLOQ9yC+uCrWhYSvY5xoPQ3IQMxdJ/4qNDSQP59kJG5J72e8a6TGBLtHBk6M+yAeyKPr7GmIBjk=",
+"water": false
+}
+],
+"hangang-low": [
+{
+"cctvname": "[인천국제공항선] 방화대교남단(올림픽대로) (서울 34.8)",
+"coordx": 126.82206,
+"coordy": 37.58458,
+"cctvurl": "http://cctvsec.ktict.co.kr/5031/i1WmES8cSjBMstWnFxzntvugL7EajbJELiIUzs65h4TuuJJFyFYV6OqiPI0mIYEH8eVz44wF7wYTTJL7yOk7PvF3qbEgsN85zSpbn1jKsZA=",
+"water": true
+},
+{
+"cctvname": "[인천국제공항선] 방화대교북단(강변북로) (공항 36.0)",
+"coordx": 126.83179,
+"coordy": 37.59278,
+"cctvurl": "http://cctvsec.ktict.co.kr/5032/Y09ZwitLHQe3jzcW9QDVJVK/zVwFwxFILNcOQJFOUuxzr5vRynBReTH4dzMj7xwO3oLer3WQt/e+FScxdoPJ8comhBIYofuNSfTcz26CY3k=",
+"water": true
+},
+{
+"cctvname": "[수도권제1순환선] 김포대교(남단)",
+"coordx": 126.783454895019,
+"coordy": 37.6017189025878,
+"cctvurl": "http://cctvsec.ktict.co.kr/2365/1W92zvTbIjMj8pHvNgo3oJh+Qmc++VTlIzzHcon2wdJLFLdyglvy21BHSFlyfgVGuZgFYgStpwmVtfckhM5RjZSz7WCUXlWOD9UfViXLLS8=",
+"water": true
+},
+{
+"cctvname": "[수도권제1순환선] 김포대교(북단)",
+"coordx": 126.797859191894,
+"coordy": 37.6166954040527,
+"cctvurl": "http://cctvsec.ktict.co.kr/2364/CEOcsGtv3SfTwFbag828ZGdxHgQOIiFebsWkx+Kcae/LztDxIGmZhrLHlMvdkH+2VN2vyyAOi2YAuVDX0ng6/I9rNgf+t5qSEjkCVArtDos=",
+"water": true
+},
+{
+"cctvname": "[수도권제1순환선] 동양-1",
+"coordx": 126.752662658691,
+"coordy": 37.5623130798339,
+"cctvurl": "http://cctvsec.ktict.co.kr/3958/7LHk8pkWT2/EYst5lTAOPgdVl+DUoxIqYE1mPAbmIn0u7zNdySkGSrB6rfqd4L2EBGK4lHyynz7u8LhuSSS0uL4S8rzkXmpPiIQNezzlnXQ=",
+"water": false
+},
+{
+"cctvname": "[수도권제1순환선] 노오지분기점",
+"coordx": 126.752503,
+"coordy": 37.568518,
+"cctvurl": "http://cctvsec.ktict.co.kr/68/kmdBUNaevsHLLdOV58XkAoIZKQCqP0bW0ItJwKM0bKFoNaGpkfQfC6UK/EdK1yTpQrVMGuIoB7cGevBn0JqNtmW1rGYAsh9UVbJXP5CvyhE=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항] 공항 25.2",
+"coordx": 126.72018,
+"coordy": 37.57161,
+"cctvurl": "http://cctvsec.ktict.co.kr/5027/ZIwc2gj+m8pweIJ005cXUQAF11Ka8x8PvKmKdptP1SYa08glR7uQIl3A8C//lVSeo89QVShg8708r7qL4gf9HUkVQJDXncGNYjavYkvNYnA=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항선] 노오지분기점 (공항 27.1)",
+"coordx": 126.7412109,
+"coordy": 37.57202911,
+"cctvurl": "http://cctvsec.ktict.co.kr/5028//iX8Yr/sggxTsYdKR2Ved/WaA88T5iIZGHfpZJm4iqw4d49iSnoHCTP8yXh13Y9YXUslEPfmwqIggCZ9wrypNG/pVTotFrG+x8RXZbduqqY=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항선] 공항 30.1K",
+"coordx": 126.77082,
+"coordy": 37.57955,
+"cctvurl": "http://cctvsec.ktict.co.kr/5721/NnWxFDb0nuo7w+9bMI4FcGj3jqUdk5MkmAnSWbd0TXftrXWreDsUhKt7WVdfirrvjLHfI6qtEUGcVtwYXP3gTVCeEMVjkrGf882chRTzMwo=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항선] 김포나들목 (서울 30.9)",
+"coordx": 126.7794647,
+"coordy": 37.58135605,
+"cctvurl": "http://cctvsec.ktict.co.kr/5029/dADAupFwPffeDx0pvfV/ZRpEAx25f2OQCf1W2yA3vjIhJLOqaR//IcSaNsI5J4QYjbnlO3GX0bOtMu8n2Uyt/jQpQORZ54FXtRuf4Krq9Gw=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항선] 개화터널입구 (서울 32.2)",
+"coordx": 126.7936783,
+"coordy": 37.58439255,
+"cctvurl": "http://cctvsec.ktict.co.kr/5030/J/I6k6ZN0/mLi/U8Z8VnjiMqCQmA6Gaqs5WpP3WMYADR9ooPPeT+nKEVINEx+88VZof6dko1X4eDkXhh+gRvTZdkMw2z4s7+MPBG5W2vJrE=",
+"water": false
+},
+{
+"cctvname": "[인천국제공항선] 공항 32.8K",
+"coordx": 126.801,
+"coordy": 37.58593,
+"cctvurl": "http://cctvsec.ktict.co.kr/5720/v34uUsZ3qB0Fb5KR+Xbzm/u4peTeGB4xa2uNP0IUa8JQayTjHH4vpo3DpIOVF4ueSvWEjNuNk7USOKBXrdBH3w8WEgphsL81487bYT8kC34=",
+"water": false
+},
+{
+"cctvname": "[서울문산선]남고양IC 지선1",
+"coordx": 126.854297,
+"coordy": 37.586894,
+"cctvurl": "http://cctvsec.ktict.co.kr/5715/J5oitUUT+no7CqiQ5pu5LmVBeb4jBZ/lFrBBjz3K8/9LCFNCnHO0M2UXaCE2bhTvrZ3B8jNmQXuh9CQet51SlzBSlpSESWLchevILX/GvNM=",
+"water": false
+},
+{
+"cctvname": "[수도권제1순환선] 김포영업소",
+"coordx": 126.7613,
+"coordy": 37.58696,
+"cctvurl": "http://cctvsec.ktict.co.kr/531/tdrMYVNWYwDX7mnr7iU2bb7XcaLp6frraAfi93tbooLH90BZGVfTimcS/28QimygISFpO/x7uqkq+VnP2PpVkontAjiUdu8j535WLUbbzA0=",
+"water": false
+}
+],
+"geum-low": [
+{
+"cctvname": "[서해안선] 금강대교",
+"coordx": 126.79,
+"coordy": 36.039167,
+"cctvurl": "http://cctvsec.ktict.co.kr/2593/xlPkGKv0Uk1zvpjK9NhLZcBrm99kHWgXW1ru5JNhXy4xVoZaqY+egEuRrAipKV+zMyFNVFYn5n/x5bglZvTYDpi21/kM8sBebjqPd0htDOY=",
+"water": true
+},
+{
+"cctvname": "[국도29] 서천 하구둑사거리",
+"coordx": 126.7389582,
+"coordy": 36.0201347,
+"cctvurl": "http://cctvsec.ktict.co.kr/79479/EbGih81DCCe5odPCptFD4jhNrWFRP9qfHbXc5pITfkWsvP92vzm3bgcgXxbb8nphpWi2qLvIydXOQJm9XaB+966HuXmLnhEpgKNrx8KuTEY=",
+"water": true
+},
+{
+"cctvname": "[국도4] 서천 서천교차로",
+"coordx": 126.68279,
+"coordy": 36.089726,
+"cctvurl": "http://cctvsec.ktict.co.kr/71974/qqvj2Jss8H8AozpNRhzXduFJpZV1NByfS9vuDPb+cUTkKXdhNLomOYefFROQ55UcePP5MrYwHVIWAdpHAwuin7yx7VtRf8Z8w7/Vd/CtYvU=",
+"water": true
+},
+{
+"cctvname": "[서천공주선] 추동",
+"coordx": 126.771886,
+"coordy": 36.062335,
+"cctvurl": "http://cctvsec.ktict.co.kr/387/lkEV2k3cIKWQGt1DX7dfP35HWwv6wSSHH1txRqTUJMjXUzE+KMn7WdX+BLmciXqI0p1VD4LIYDLonAQ4sSg1mGEG4z7UhzHWd4OYfRYeOM0=",
+"water": false
+},
+{
+"cctvname": "[서천공주선] 동서천분기점",
+"coordx": 126.77306,
+"coordy": 36.05639,
+"cctvurl": "http://cctvsec.ktict.co.kr/2168/5F3ToylyUS/yWhRUW9XIpau8Dws7gpd2RhYAtTsNw0OylSPy4uxiVzGoZd7Y4xSYDF98IXsKcj+C/YaLnoM8b3ckGZsdlbgibO5FhKLnRoA=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 서천",
+"coordx": 126.693,
+"coordy": 36.099,
+"cctvurl": "http://cctvsec.ktict.co.kr/2188/yvfokHoCzZE7wwDoHn0mZGIPhADif7uec8qReKni6cfsgR9dnGkPfaXxRIqfDHb6zuk1M2sXS+bozV1WiIRxbvEtzghki38ZDbftFq60psE=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 군산",
+"coordx": 126.797248,
+"coordy": 36.013796,
+"cctvurl": "http://cctvsec.ktict.co.kr/2189/uR5h58UK3hH3gi9z8dIJ+NSekw/ATkzsbdt7lixOCWvVcmCchvbomGoCDWx89qohS5LU40PLU4jrlBO78QrciVhL4Yusc7Letw8+HPIljRI=",
+"water": false
+},
+{
+"cctvname": "[서천공주선] 이사",
+"coordx": 126.7677778,
+"coordy": 36.11916667,
+"cctvurl": "http://cctvsec.ktict.co.kr/2585/Hh1AzG/6fIB+/k3fCWH1YWI5xt3GOapdohXSEaiNRhjHjr1Xk9l3TbJw22eoNdNMBk8Zp0VvxrHKYcuOki9cX29gbS8H9SYzqkQJV8JbvLM=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 기린",
+"coordx": 126.8055247,
+"coordy": 36.00175326,
+"cctvurl": "http://cctvsec.ktict.co.kr/2603/xZB0PcLtmb60fbM9St+N1Yx+Wei0jEf5uVDE45NMxbXJNl89wc56DNbPG+kUovC1fxQwGdoKfMgvL3pM7OvNoKrJsyQci2jKQZIp2quH1jk=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 두북교",
+"coordx": 126.7454466,
+"coordy": 36.0695182,
+"cctvurl": "http://cctvsec.ktict.co.kr/3193/5unraeVwtuH+PKRO6r8WZAbmZ/Xs/VAugViPt0pQfYWJen5RJxUcMEw78mCACuou4eoQT1Eqbd0q0De+a+JNOXEvEEwpm5WDff2X6vTkuU0=",
+"water": false
+},
+{
+"cctvname": "[서천공주선] 동서천IC",
+"coordx": 126.778358459472,
+"coordy": 36.0477752685546,
+"cctvurl": "http://cctvsec.ktict.co.kr/3780/cGS4i/X3E3TDLqSzpkgYvhiIdO0zm62fZ/Va5VB05ChRc5SzhEdPuwTDmKT3mS8rNZ71GZCJsvVzJnvF1Hips1yUubDfTwnXrGs+/w11yJc=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 추동교",
+"coordx": 126.785891,
+"coordy": 36.048801,
+"cctvurl": "http://cctvsec.ktict.co.kr/3195/M8WNApSjyFI13RHCpqcBbHem/+62sxkOF2v9W5DxMC1G8LqEKHouTzsRT5CVCLY5StnBPFbu7OSrvJqk1z1RvhzEUv3Lh+k9/E45BnHnvtc=",
+"water": false
+},
+{
+"cctvname": "[서천공주선] 가공교",
+"coordx": 126.7751921,
+"coordy": 36.0977887,
+"cctvurl": "http://cctvsec.ktict.co.kr/8013/s5pSt/Gua/7cQnZ6WxBR2nXdITDwILpk10VNXOCHqkUsOYzAsgXaB6A/YDRwiRwdYWJSYmu0ZJ2cWik3EEtjtPkDVFwudhFu4naD7R3lDXQ=",
+"water": false
+},
+{
+"cctvname": "[서천공주선] 황사교",
+"coordx": 126.77389,
+"coordy": 36.07361,
+"cctvurl": "http://cctvsec.ktict.co.kr/8014/4DtwKEGWUKKsYVKXTsAUOWqnfGW3Jsu+Hn+Pd8AQFU7zfkRoHLS9zNd0CF1mDY+GE6ZrZ3L6kRONefBcG1C1SdPTx8QvdiM9oWhCYg7gpnY=",
+"water": false
+}
+],
+"yeongsan-low": [
+{
+"cctvname": "[국도 1호선] 나주 영산강교",
+"coordx": 126.66564,
+"coordy": 34.98561,
+"cctvurl": "http://cctvsec.ktict.co.kr/9068/dq6PQjhy7mM2hXy/NsGZ/2EIxkZDGzcgCmxoXQ46NO8/t6MGLbKsMYhv8W9IBqcabnL1C6RIh0qUeN+VJkTXP33OD4AMVu7Tu3QVY/kwPh8=",
+"water": true
+},
+{
+"cctvname": "[서해안선] 양장",
+"coordx": 126.496376037597,
+"coordy": 34.882755279541,
+"cctvurl": "http://cctvsec.ktict.co.kr/149/9uhLscWBrWe9amyXgBnuC+uPJhiAhZfH5x/71BVtZcLFCWymrvEipQ27V18dBQXs7vkCelOGbkGdA8RiAOtKxoJM5f/DVu6ZEn+X6gIIUqA=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 광암교",
+"coordx": 126.499953,
+"coordy": 34.895583,
+"cctvurl": "http://cctvsec.ktict.co.kr/8237/nUcZw2c0wCdS2/dYDD95oFi3H7WUZt4/41fZUZHINdJIm8dgszauy1AYtUnhGVhvu1nxtxrOdbtXOSX6EKiEVIlTjqnQ1w/2qo+IVdg3DcI=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 몽탄2터널",
+"coordx": 126.497778,
+"coordy": 34.924722,
+"cctvurl": "http://cctvsec.ktict.co.kr/8094/iw0iZHQ3c+rllZzIK3NuNr1m3IRagIHYXyfMq0mcnqxGb0wa+m8Ujr+8U2cfAh0DqBnPD0+gb5cZ+Xe9zL2RiUTquV9as13Z0OvQufIZgkM=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 몽탄2교",
+"coordx": 126.504768371582,
+"coordy": 34.9456481933593,
+"cctvurl": "http://cctvsec.ktict.co.kr/2794/HT0Pwsnh2nluqZWgkzXOSpruS39lR6aYAviQvlbfRVBwz6AXe7jxBqwBGtfLRZlYrhR7Q5PPMWmoyst9gXPA+T/VxFqnnTvAcybGFDRz7Rg=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 학산",
+"coordx": 126.505146,
+"coordy": 34.948722,
+"cctvurl": "http://cctvsec.ktict.co.kr/94836/JH+9DVBbW9VzrOC7QXwluER/Ocy0/GAQEbEVtSgMmuXaMRDULbXEISDVFlYRFMMjPquNsyIFE7VS7PlQmU823Pi6FCEShd+RgG+w80HEgFc=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 무안4터널",
+"coordx": 126.501389,
+"coordy": 34.957778,
+"cctvurl": "http://cctvsec.ktict.co.kr/8093/EZD6sRpEsbpNH/+fWdrRp54iecZKK39V/i7bvHcHoHb7ZxvPXReQaAcbBmhUm29+7+6JxVqaJoNYff+oQoTypt7JWVjX2yFaAbWfdoOT0GQ=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 성암교",
+"coordx": 126.49583,
+"coordy": 34.97444,
+"cctvurl": "http://cctvsec.ktict.co.kr/8092/jdBGYk1oA3/b9+XKiHJUE1GBlUDanLCsQNc0ku/rISRxihzXHbXM2PoLpo19RjypQZM8DvaNDsTavN6J5SOmURE0cmiayE9mCvGwb3NIxDM=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 무안1터널",
+"coordx": 126.493333,
+"coordy": 34.988056,
+"cctvurl": "http://cctvsec.ktict.co.kr/8091/QN8ioaXNlQgLIhV4bCMnbbAh8lqB9fHuFnO88NHyc8K9iItnsxr6xKH5+2tBCMLLOU+woR49KEW0fgsG8EjnNcyk8MpVaeHxRbbBubifEog=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 무안",
+"coordx": 126.4918884,
+"coordy": 35.00916176,
+"cctvurl": "http://cctvsec.ktict.co.kr/2201/h7O1Rmg7DcRc3OAayB5Tuhqs1gQ4YnCY4wSpu3aCfEii+BNf7mteDLxg9oBFwXrEUpkJP+Mmoqn3/Y7Rhijuq3AxOxSQCjgf3zUZfyMiJQw=",
+"water": false
+},
+{
+"cctvname": "[무안광주선] 동산육교",
+"coordx": 126.42528,
+"coordy": 35.01111,
+"cctvurl": "http://cctvsec.ktict.co.kr/8105/eVGQeiEA8pF0nFuN1CUzcwRF0Sz5+Zl6hPoaUAhxA37dKHYx+V9fJcEkTu/d9xwaffvgq11BRP5dz+um2srx9hpwwwRz7FEtDhU40Gop+Oo=",
+"water": false
+},
+{
+"cctvname": "[무안광주선] 북무안",
+"coordx": 126.44316,
+"coordy": 35.016389,
+"cctvurl": "http://cctvsec.ktict.co.kr/2543/G75rZ6iLt4o54qEjv6QlAqIlzxdkP3YHfdqFepy/0G3ovJ8tfJYyRJRzWIPBq2UWQEmVy+d1dV6m/yVvt8SmLb0XFeToSv9uAxFVxqW2upU=",
+"water": false
+},
+{
+"cctvname": "[서해안선] 신계",
+"coordx": 126.490463256835,
+"coordy": 35.0172843933105,
+"cctvurl": "http://cctvsec.ktict.co.kr/150/15OvaEyEfFX/y33ggDDtazakEY8FD0W1gy2hO++MAO1zvUNE3Ks7matFVTb3gaIG4zB140+agzJJ5ePrebtRQ6R2l6413sZbxtbdTYeCPTw=",
+"water": false
+},
+{
+"cctvname": "[무안광주선] [광주]보평터널(광주외부)",
+"coordx": 126.460352,
+"coordy": 35.017836,
+"cctvurl": "http://cctvsec.ktict.co.kr/8501/szEyoDnGFRozOT90VZnyCYZO36n9JQEbuy+sSaqmVXLviIMioSAhW2045LWcYB2HJlK+b+7Eq2MTBN9UygwHrFjIl4w15bq3OXFMORdTrnc=",
+"water": false
+}
+],
+"taehwa-ulsan": [
+{
+"cctvname": "[울산선] 천상천교",
+"coordx": 129.238727,
+"coordy": 35.562088,
+"cctvurl": "http://cctvsec.ktict.co.kr/94917/MXbLpV7qG7/C4Vq4jLZqrUSe5g2Dhzr/urZlizUwGDsHxCcqkLyX50Wnj3qkDCnyfl1vYwg56R9V+8gRabxFzXFHEgXWCBCXcOxHa61p0wU=",
+"water": true
+},
+{
+"cctvname": "[동해선] 범서대교",
+"coordx": 129.2567,
+"coordy": 35.562314,
+"cctvurl": "http://cctvsec.ktict.co.kr/8739/G43QKEkJX7jV0ITVzj+OxcugfgOO/1h3ZKJULXVaXBhA7E/ebaBentXOV9MM0Qd+mvb2J+vmneKe+Vz9qHxhwmdlT7ZPuI44/+v5D0SWqec=",
+"water": true
+},
+{
+"cctvname": "[울산선] 울산종점",
+"coordx": 129.2592928,
+"coordy": 35.55310954,
+"cctvurl": "http://cctvsec.ktict.co.kr/2217/tCbfJh9b2eLZyAE52ndlXpslA06p9hhvmJAqOifGBP2uNYz4bSkI4IYzfqX7ZCwr9VoInI8cFvcRyBO7rmY6caD2nYXxbyJV55vKOtJxetM=",
+"water": false
+},
+{
+"cctvname": "[부산울산선] 울산분기점1",
+"coordx": 129.24944,
+"coordy": 35.55361,
+"cctvurl": "http://cctvsec.ktict.co.kr/2119/jZ+CMmbRkKsK+dwICPWEne/lcfbT+t+mgwryXTLGzLsF1rWY+LJmhtIuor4T5sN6BWghRHmaIBP5Zrqruvl55RdQMVIE5ulzLj5XaG3acbQ=",
+"water": false
+},
+{
+"cctvname": "[부산울산선] 울산분기점2",
+"coordx": 129.24583,
+"coordy": 35.55667,
+"cctvurl": "http://cctvsec.ktict.co.kr/3135/OdWdxZuYaohWtrHyxVdFK+xgODj+88QEYD/Rrj/Gs9E2y7Z6c9Hnb7fr7CMUPqG2eWlwwKwG3ujpoGWm1X2pBSwRs1CFPkVEqO7MPOY7z3I=",
+"water": false
+},
+{
+"cctvname": "[울산선] 범서정류장",
+"coordx": 129.234848,
+"coordy": 35.564888,
+"cctvurl": "http://cctvsec.ktict.co.kr/3248/F1YiKrQFMJAANjuBsY7ZSLMjNJkEsg3J1gZzfSU+pbs3bqDWtVodxCZToSczXEIzzK2nq8CUz4eJ77ANPodjTgG+kyWiKszGC+y6PGdM6go=",
+"water": false
+},
+{
+"cctvname": "[동해선] [울산]다운1터널(울산외부1)",
+"coordx": 129.26357,
+"coordy": 35.56993,
+"cctvurl": "http://cctvsec.ktict.co.kr/344/YM0nNDy2iMcECkoNbq1Eif/8D3ih+TlR0fn270nmKA9XBigGeESFcAXvFYV7o04H8V8OQjk9jbafAwVC4WYWAfVBbU8fAw92XxnlEzVgdiQ=",
+"water": false
+},
+{
+"cctvname": "[동해선] 다운2교",
+"coordx": 129.2663589,
+"coordy": 35.57242822,
+"cctvurl": "http://cctvsec.ktict.co.kr/8740/EYFxZy0pLsKPOL5of7CoSAZ9N9O/7ZpdSYm4FZ32JcVZYxeV/OTgru4DMDqnKK9SkdatLgj2JIPvF/+pV/S0He/tO0JyedAlmlXNcgWmPsY=",
+"water": false
+},
+{
+"cctvname": "[동해선] [포항]다운4터널(포항외부1)",
+"coordx": 129.27686,
+"coordy": 35.578503,
+"cctvurl": "http://cctvsec.ktict.co.kr/345/hHy2xrFunCaZbapnkPNtsOGDxpLTTYrNoVxbGDwwS1NfV9xsuR3t+L+bejR4syTMptEhFjnhSDdeYmxJIvief5kZimMq26pxETI8Zw7XnNo=",
+"water": false
+},
+{
+"cctvname": "[동해선] [포항]범서1터널(포항외부1)",
+"coordx": 129.28317,
+"coordy": 35.58766,
+"cctvurl": "http://cctvsec.ktict.co.kr/346/MED9ApgQ/vsuCdQemAz1rKkOrAVIFKhIxrTuM8rUFVc/GDyWLK3iZjMrFw7rMbVKQTjnDs93k2dSbc5hUvBw3oicdWKYOp5FbTEgKncgZaQ=",
+"water": false
+},
+{
+"cctvname": "[동해선] [포항]범서2터널(포항외부1)",
+"coordx": 129.2835,
+"coordy": 35.597477,
+"cctvurl": "http://cctvsec.ktict.co.kr/364/bnKBDM1desyMYufW1UDSBfOY+G5F7R0KEgqRcYntuSY6pReJmmTv0V1ZruYkYemfeCmo6dxkvq3wML+jnTNL925RZsdB73MBtFHg3bu7sbk=",
+"water": false
+},
+{
+"cctvname": "[동해선] 두산교",
+"coordx": 129.2818728,
+"coordy": 35.60776327,
+"cctvurl": "http://cctvsec.ktict.co.kr/8741//X8AjVCx3HMNcslTUJK/69hUzoP+mMqKZOfCyjXhVUb4HAW5RHlRqsmSUv2OE8/BDeTDrXwZFoPT5/62ULGNIaBoDtg1CxYCv6K3oW5nM/g=",
+"water": false
+},
+{
+"cctvname": "[동해선] 척과구룡",
+"coordx": 129.2816367,
+"coordy": 35.61053707,
+"cctvurl": "http://cctvsec.ktict.co.kr/8742/2XcQO6ePTjLAjUtDV3dfNR9xhvc/JDhLu+u12k6Vy02EJxxQsB3tyUENRkS9heQ+iKogDVdkIDVJZSC8jqp23T4TTmhVK9oDnMOqdE/1rUM=",
+"water": false
+},
+{
+"cctvname": "[국도7] 울주 청량교(옥동생태터널)",
+"coordx": 129.270288,
+"coordy": 35.521355,
+"cctvurl": "http://cctvsec.ktict.co.kr/79879/+n06fSvz0ASTKte9PmBisJVYk+lpD2jYG7/o3ukuI1hDpeHFFjLAZiOV+UYYr00jAeP3LFERU/bTbMXRWUkJg16DKc2EYYlHRILN1K5w6F4=",
+"water": false
+}
+],
+"seomjin-low": [
+{
+"cctvname": "[남해선] 수어천교",
+"coordx": 127.721529,
+"coordy": 34.988536,
+"cctvurl": "http://cctvsec.ktict.co.kr/2508/aDGLiibT5XEpSpL8L7Yy90VVi+TkfuJINUGFfVpHe9Nn1JznbuHevbUAIDAkQYwZXsjTCnsb4+gLD/wh+g6oyuiUovf6WyPl/Y6d3e5Qmhc=",
+"water": true
+},
+{
+"cctvname": "[남해선] 진정천교",
+"coordx": 127.802261352539,
+"coordy": 34.9909515380859,
+"cctvurl": "http://cctvsec.ktict.co.kr/2770/A+vi0cEd5XQTLpQ89RFnJHcqeQ9Rb0KBSBxNsdPRfpwlS+mlZGxvqoKEHReQ/kUqgtU3j9YcE1MqzfnwqjV1kFTNcLYdClIvaday+43CtLk=",
+"water": true
+},
+{
+"cctvname": "[국도59호선] 하동 섬진대교 북측",
+"coordx": 127.774743,
+"coordy": 34.957321,
+"cctvurl": "http://cctvsec.ktict.co.kr/74524/jm55saiNNnfiPVle2LQFNyg+1CA6QGsIRHWe4ojwJLpdf7nfRm6zCrx84ovRzSMnTkMP9hYcAifQhsc6HFsy0/tWEYA68GwTHXennASeOf0=",
+"water": true
+},
+{
+"cctvname": "[국도19] 하동 계천교 서측",
+"coordx": 127.821466,
+"coordy": 34.995673,
+"cctvurl": "http://cctvsec.ktict.co.kr/78490/A2a43YD7tMb1K51IucQ93/50Ip8WMGVxhNoL/KJm9KuvzS6jmmW+Yf0ZTo6745Ujj5xVTFCPeh/mLmDwMIKD+eN8MidJe8JKh1YacYe52tY=",
+"water": true
+},
+{
+"cctvname": "[국도19] 하동 섬진강 습지공원",
+"coordx": 127.783083,
+"coordy": 35.025795,
+"cctvurl": "http://cctvsec.ktict.co.kr/73685/YK3zdtvXnzMjSVexM/QC2gdv88KPIfh2PD7UxC/4Z1+UfvhbBEUq5qQ32CSdQHIYjRJcEmMo1pbts3Fp/JhJ/U788subctummUVMAc3Uk2I=",
+"water": true
+},
+{
+"cctvname": "[남해선] 광양터널",
+"coordx": 127.6611,
+"coordy": 34.96918,
+"cctvurl": "http://cctvsec.ktict.co.kr/2496/uH8P0eTTTHDtu8FdAHujTt20tJNH91DDS9bpk2798sXw/LGyGmkVpnsPDP7lYq1kmeAwPdL0N6aR/PGPHYBdVIeF7UqQ8+R8tIXkomjj2Xc=",
+"water": false
+},
+{
+"cctvname": "[남해선] 선유",
+"coordx": 127.66421508789,
+"coordy": 34.9745254516601,
+"cctvurl": "http://cctvsec.ktict.co.kr/3916/6i2hix/Xl1oSRFGN7SMLk4gO9SzW+t4fPVeiW6SS5N/3/9lqOPOusaj2/LjZmhtaqFQh4oKCNiaZSRODE8B9oyZ7M21sBr1pki1WZaqn0Sw=",
+"water": false
+},
+{
+"cctvname": "[남해선] 하선교",
+"coordx": 127.66892,
+"coordy": 34.976691,
+"cctvurl": "http://cctvsec.ktict.co.kr/8488/i05vG17Vkpvyi6LoXG+dSPSv9fOiQ4qECsIuK/MOx2J3KS7ARApU4W3Auw7zhscAXLgmHK8kjEF9XlTU6/8az3TG7fPyVehUQcm4ClD5Vqo=",
+"water": false
+},
+{
+"cctvname": "[남해선] 선소",
+"coordx": 127.761039733886,
+"coordy": 34.9798507690429,
+"cctvurl": "http://cctvsec.ktict.co.kr/144/pYVVyudr17rSzmc7QWo+EqLPcP15rlDeZuaEcNtwtKnBtGAJ2BUJTEGioEhqqkJui6RQACYQFQ7vYhMEtL5Oebif91fOBSodFDNjlbWSZp8=",
+"water": false
+},
+{
+"cctvname": "[남해선] 진월",
+"coordx": 127.7482084,
+"coordy": 34.98016219,
+"cctvurl": "http://cctvsec.ktict.co.kr/2065/x4j3v3mhCsNWcHpqECpSatCAm+kNMYWDR41bQRhpjgCVU1+LW8qf5gLOhP2r/aHfuJuYnjt1qH1MlX9ta6QFxtjnW+xWt1dQjekXCcaEsJE=",
+"water": false
+},
+{
+"cctvname": "[남해선] 청룡교",
+"coordx": 127.674949645996,
+"coordy": 34.9805831909179,
+"cctvurl": "http://cctvsec.ktict.co.kr/141/t/dK/wPnLe4GtVMgtMYGGAUybtpJLPgrrKnZqIR/Ol0/XjkhfeyNJnlR7iNZKIKz3kjWLNEU/6Q9Ua3Qy5aX/raRRhqf+hQ5rZETfsfM1ug=",
+"water": false
+},
+{
+"cctvname": "[남해선] 망덕",
+"coordx": 127.736645,
+"coordy": 34.980587,
+"cctvurl": "http://cctvsec.ktict.co.kr/2769/zdYDX7HLRCMS/crg8AlHcL2p31vTltIFnnImyjmKGOTT5U71hMHkzgpe7y5v4941APodrhAoqgLJ9jKxfpwYNmH94/2nNOgzrCdJ/u2DZmg=",
+"water": false
+},
+{
+"cctvname": "[남해선] 신금",
+"coordx": 127.709327697753,
+"coordy": 34.9860725402832,
+"cctvurl": "http://cctvsec.ktict.co.kr/143/U6UhWDsTbyeL0Ff6bfS0ajOfZ/zRSWMCJRdFnjhx0Bjxzn9t9bBj+e+viJn6TcQEzKEuCc6RTXaNBKw3WlAUKjW/qWhS5qMybB3hIDE6M9Y=",
+"water": false
+},
+{
+"cctvname": "[남해선] 섬진강휴게소",
+"coordx": 127.77112,
+"coordy": 34.986133,
+"cctvurl": "http://cctvsec.ktict.co.kr/2066/37NjrpgvyPeTm2eg5DwmOq/crGCaq+1o9PxrgRpJCc3HVk8+DtmQf0xCJlAi9hgM3NTAknovATABvptuBUxdVqkxhviHoHClllfbOEPZCbE=",
+"water": false
+}
+]
+}
