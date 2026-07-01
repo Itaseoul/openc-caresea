@@ -1,6 +1,7 @@
 import Dashboard from "@/components/Dashboard";
 import NakdongMap from "@/components/NakdongMap";
 import LitterRiskLoop from "@/components/LitterRiskLoop";
+import HomeHeroCctv from "@/components/HomeHeroCctv";
 
 // SEA:CUT 로그프레임 제안 페이지. 콘텐츠 출처 docs/CHANGEX_PAGE_CONTENT.md.
 // 서버 컴포넌트(정적) + 근거3 섹션에 클라이언트 Dashboard 임베드.
@@ -114,6 +115,9 @@ function Figure({ img, caption, ratio = "aspect-[16/9]", note }: { img: ImgMeta;
 export default function Proposal() {
   return (
     <main className="min-h-screen bg-white text-neutral-900">
+      {/* ───────── 최상단 라이브 CCTV — "지금 살아 있는 현장"으로 첫인상 ───────── */}
+      <HomeHeroCctv />
+
       {/* ───────── Hero — 부산 낙동강 하구 실증 무대 위 헤드라인 ───────── */}
       <header className="relative isolate overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}

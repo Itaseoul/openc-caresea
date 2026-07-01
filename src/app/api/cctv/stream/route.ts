@@ -27,6 +27,36 @@ const isM3u8 = (url: string, ct: string, body: string) =>
 // 프록시 경유 URL 생성
 const proxied = (abs: string) => `/api/cctv/stream?u=${encodeURIComponent(abs)}`;
 
+// Vercel→상류(Nimble :8081) egress 가 간헐적으로 실패(502) → 짧은 재시도로 흡수.
+// 한 세그먼트의 일시적 502가 hls.js 치명적 네트워크 에러로 번져 재생이 멈추는 걸 막는다.
+async function fetchWithRetry(url: string, tries = 3): Promise<Response> {
+  let last: unknown;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 8000); // 8s 하드 타임아웃
+      try {
+        const r = await fetch(url, {
+          redirect: "follow",
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; caresea-cctv-proxy)" },
+          cache: "no-store",
+          signal: ctl.signal,
+        });
+        // 5xx 는 재시도, 4xx 는 즉시 반환(재시도 무의미)
+        if (r.ok || (r.status >= 400 && r.status < 500)) return r;
+        last = new Error(`upstream ${r.status}`);
+      } finally {
+        clearTimeout(timer);
+      }
+    } catch (e) {
+      last = e;
+    }
+    // 지수 백오프(150ms, 400ms)
+    if (i < tries - 1) await new Promise((res) => setTimeout(res, 150 + i * 250));
+  }
+  throw last ?? new Error("fetch failed");
+}
+
 // m3u8 본문의 모든 URI 를 절대화 후 프록시 경유로 재작성
 function rewriteManifest(body: string, baseUrl: string): string {
   const abs = (ref: string) => {
@@ -71,12 +101,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const upstream = await fetch(target.toString(), {
-      redirect: "follow",
-      // 일부 공공 스트림 서버가 UA 없으면 거부하는 경우 대비
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; caresea-cctv-proxy)" },
-      cache: "no-store",
-    });
+    const upstream = await fetchWithRetry(target.toString());
 
     if (!upstream.ok) {
       return NextResponse.json(

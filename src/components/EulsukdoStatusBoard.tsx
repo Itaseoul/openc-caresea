@@ -181,9 +181,9 @@ export default function EulsukdoStatusBoard() {
       {cctvStreams.length > 0 && (
         <div style={{ marginTop: 12 }}>
           <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>📹 현장 CCTV 라이브 (ITS · 낙동강 하구 인근)</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 10 }}>
             {cctvStreams.map((c, i) => (
-              <CctvPlayer key={i} src={c.stream || c.cctvurl} name={c.cctvname} />
+              <CctvPlayer key={i} src={c.stream || c.cctvurl} name={c.cctvname} big />
             ))}
           </div>
         </div>
