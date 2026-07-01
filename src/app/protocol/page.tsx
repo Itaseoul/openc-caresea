@@ -74,6 +74,8 @@ const SOURCES: { label: string; url: string }[] = [
   { label: "CORDIS 결과 요약", url: "https://cordis.europa.eu/article/id/449183-young-europeans-investigate-plastic-pollution-in-rivers-and-the-ocean" },
   { label: "UNESCO IHP-WINS 등재", url: "https://ihp-wins.unesco.org/citizens4water/project/8" },
   { label: "Horizon Magazine (2026-06)", url: "https://scienceblog.com/horizon/3542/teen-scientists-are-tracking-plastic-pollution-across-europes-rivers/" },
+  { label: "프로젝트 소개 영상 (YouTube)", url: "https://www.youtube.com/watch?v=Jvi7yeCbbyI" },
+  { label: "Zenodo 데이터셋 — Riverbank 대형쓰레기 v2.0.0 (직접 분석)", url: "https://doi.org/10.5281/zenodo.15535434" },
 ];
 
 // 해안·해변 부클릿(원문 프로토콜) 다섯 그룹.
@@ -91,6 +93,52 @@ const CATEGORIES = [
   "비닐봉투", "음료 페트병", "페트병 뚜껑", "테이크아웃·패스트푸드 포장", "일회용 수저·접시·빨대",
   "과자·칩 포장", "면봉", "물티슈·위생용품", "스티로폼", "소형 플라스틱 <2.5cm",
   "음료캔", "병뚜껑", "알루미늄 포일", "유리병", "담배꽁초", "종이", "섬유", "고무", "풍선", "지역 쓰레기",
+];
+
+// 핵심 사실 스트립 — CINEA 종합(2025-12-09) + 교사 설문(120명).
+const KEY_FACTS = [
+  { v: "3 → 14개국", l: "독일 단독(2016) → 트리오(2020) → EU 14개국" },
+  { v: "14개 언어", l: "교재·과학 프로토콜 제공" },
+  { v: "26개+ 기관", l: "데이터 처리·검증(IMIS·MDA 통합)" },
+  { v: "91 / 88 / 99%", l: "교사 설문: 내년 지속 / 타 교사 추천 / 인식효과" },
+];
+
+// 실측 오픈데이터셋 검증 로그 — 그룹 단위 실격 사유(사진 관련이 압도적).
+// 근거: Zenodo DOI 10.5281/zenodo.15535434 Riverbank v2.0.0 (771건) 직접 분석.
+const DISQUAL = [
+  { reason: "사진 없음 (‘no photos available’)", n: 30, photo: true },
+  { reason: "쓰레기 수와 재질 불일치", n: 26, photo: false },
+  { reason: "사진 없음 (‘no photos’)", n: 25, photo: true },
+  { reason: "쓰레기는 있으나 사진 0장", n: 19, photo: true },
+  { reason: "사진 없음 (‘no photo’)", n: 17, photo: true },
+  { reason: "사진 미제출로 반려", n: 15, photo: true },
+  { reason: "사진↔데이터 시트 불일치", n: 13, photo: true },
+  { reason: "사진 속 품목이 겹침", n: 12, photo: true },
+  { reason: "방법 미준수", n: 11, photo: false },
+];
+
+// 데이터 수집의 한계(문서화·실측 근거) ↔ 그래도 성립하는 활용사례.
+const LIMITS = [
+  {
+    lim: "면적·무게는 전문가 미검증",
+    ev: "README 명시: 그룹 B의 강변 길이·너비, 플라스틱·전체 무게는 전문가가 검증할 수 없었음.",
+    use: "밀도(개/㎡)·질량 플럭스의 분모가 불확실 → 절대량 추정에 쓰지 말 것. 무게는 우리 수거 중량 앵커(/api/observations/anchor)로 독립 확보.",
+  },
+  {
+    lim: "입지는 무작위가 아닌 편의표집",
+    ev: "학교가 접근 가능한 지점을 선택. 방형구는 국소 무작위지만 지점 자체는 대표성 없음.",
+    use: "‘한 나라 강의 평균’으로 일반화 금지. 상대적 구성·핫스팟 순위·발생원 신호로만 사용.",
+  },
+  {
+    lim: "계수 주관·잔차 오류",
+    ev: "사진 검증 후에도 ‘사진↔데이터 불일치’·‘품목 겹침’ 실격이 존재. 아동 분류의 잔차 오류.",
+    use: "개별 표본은 약라벨(라벨0)로. 대량 평균으로 개별 오류 상쇄(Ackermann) — 집계 패턴만 신뢰.",
+  },
+  {
+    lim: "시공간 편중·연도 모호",
+    ev: "캠페인 쏠림(가을 2022 251 vs 봄 2022 1건). ‘캠페인 연도 ≠ 실제 채취 연도’ 주석, 좌표는 학생이 지도로 추정.",
+    use: "계절·연도 비교는 캠페인 메타로 보정. 추세는 다수 캠페인 누적 후에만.",
+  },
 ];
 
 export const metadata = {
@@ -122,6 +170,30 @@ export default function ProtocolPage() {
               <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{s.label}</div>
               <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: "-.02em", color: s.color, marginTop: 1 }}>{s.value}</div>
               {s.sub && <div style={{ fontSize: 10.5, color: "#94a3b8", marginTop: 1 }}>{s.sub}</div>}
+            </div>
+          ))}
+        </div>
+
+        {/* 인터랙티브 맵 + 영상 CTA */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 8, marginBottom: 10 }}>
+          <a href="https://www.plastic-pirates.eu/en/results/map" target="_blank" rel="noopener noreferrer"
+            style={{ ...card, padding: "12px 14px", textDecoration: "none", background: "linear-gradient(135deg,#ecfeff,#fff)", borderColor: "#a5f3fc" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#0e7490" }}>🗺 인터랙티브 맵</div>
+            <div style={{ fontSize: 12.5, color: "#334155", lineHeight: 1.5, marginTop: 3 }}>업로드된 각 그룹의 표본이 유럽 지도에 표시 — 자국·유럽 평균과 실시간 비교.</div>
+          </a>
+          <a href="https://www.youtube.com/watch?v=Jvi7yeCbbyI" target="_blank" rel="noopener noreferrer"
+            style={{ ...card, padding: "12px 14px", textDecoration: "none" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#b91c1c" }}>▶ 프로젝트 소개 영상</div>
+            <div style={{ fontSize: 12.5, color: "#334155", lineHeight: 1.5, marginTop: 3 }}>Plastic Pirates 활동·방법론을 담은 공식 설명 영상(YouTube).</div>
+          </a>
+        </div>
+
+        {/* 핵심 사실 스트립 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 8, marginBottom: 18 }}>
+          {KEY_FACTS.map((f) => (
+            <div key={f.l} style={{ ...card, padding: "9px 12px" }}>
+              <div style={{ fontSize: 15.5, fontWeight: 800, letterSpacing: "-.02em", color: "#0e7490" }}>{f.v}</div>
+              <div style={{ fontSize: 10.5, color: "#94a3b8", marginTop: 1, lineHeight: 1.4 }}>{f.l}</div>
             </div>
           ))}
         </div>
@@ -288,12 +360,74 @@ export default function ProtocolPage() {
           </div>
         </div>
 
+        {/* 실측 오픈데이터셋 — 사진 게이트가 실제로 작동 */}
+        <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>실측 오픈데이터셋 — 사진 게이트는 실제로 작동한다</div>
+            <a href="https://doi.org/10.5281/zenodo.15535434" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11.5, color: "#0e7490", fontWeight: 600 }}>Zenodo DOI →</a>
+          </div>
+          <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
+            공개된 <b>Riverbank 대형쓰레기 데이터셋 v2.0.0</b>(12개국·2022~2024·5개 캠페인, <b>771건</b>)을 직접 분석했습니다.
+            각 표본에 <code>DatasetQualified</code>·<code>DisqualifiedReason</code> 검증 필드가 붙어 있고 —
+            <b> 그룹 단위 실격 사유의 압도적 다수가 “사진” 관련</b>입니다(사진 언급 371건). 사진이 없으면 표본은 데이터로 채택되지 않습니다.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 5 }}>
+            {DISQUAL.map((d) => {
+              const max = 30;
+              return (
+                <div key={d.reason} style={{ display: "grid", gridTemplateColumns: "1fr 34px", alignItems: "center", gap: 8 }}>
+                  <div style={{ position: "relative", height: 20, background: "#f1f5f9", borderRadius: 5, overflow: "hidden" }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${(d.n / max) * 100}%`, background: d.photo ? "#0891b2" : "#cbd5e1", borderRadius: 5 }} />
+                    <span style={{ position: "absolute", left: 8, top: 0, bottom: 0, display: "flex", alignItems: "center", fontSize: 11, fontWeight: 600, color: "#0f172a" }}>{d.reason}</span>
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", textAlign: "right" }}>{d.n}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: 9, display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#94a3b8" }}>
+            <span style={{ width: 10, height: 10, background: "#0891b2", borderRadius: 3, display: "inline-block" }} /> 사진 관련 실격
+            <span style={{ width: 10, height: 10, background: "#cbd5e1", borderRadius: 3, display: "inline-block", marginLeft: 8 }} /> 기타
+          </div>
+          <div style={{ marginTop: 10, fontSize: 12, color: "#334155", lineHeight: 1.65, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 10px" }}>
+            데이터셋 단위로는 727건 채택 / 31건 실격 / 13건 na. 검증은 파트너 기관 → VLIZ·NIB 2차 품질관리 → VLIZ 조화·표준화·발행.
+            스키마의 <code>Source*</code>(주민·방문객·산업·농업·해운·어업)·<code>Weather_*</code>·좌표·강명 필드는 우리 관측 스키마로 직접 이식 가능.
+          </div>
+        </div>
+
         {/* 정직성 경계 */}
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 12.5, color: "#92400e", lineHeight: 1.7 }}>
           <b>정직성 경계(정정).</b> 원문 부클릿은 <b>사진을 표본 채택의 전제조건으로 명문화</b>합니다 —
           “사진이 없으면 결과가 과학 연구에 포함될 수 없다”. 즉 강제 사진 게이트가 프로토콜 레벨에 이미 존재합니다.
           다만 검증 판정은 <b>연구 파트너의 사후 과학 평가</b>로 이뤄지며, SEA:CUT이 더하는 것은 <b>업로드 시점의 자동 EXIF/geo 검사</b>입니다.
           “EU 프로토콜이 채택한 강제 사진 게이트를 SEA:CUT은 업로드 단계에서 자동화·엄격화한다”가 정확한 프레이밍입니다.
+        </div>
+
+        {/* 데이터 수집의 한계 ↔ 활용사례 심층 */}
+        <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
+          <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>데이터 수집의 한계 ↔ 그래도 성립하는 활용사례</div>
+          <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
+            시민과학 데이터에는 분명한 한계가 있습니다. 중요한 건 <b>한계를 숨기지 않고, 그 한계 안에서 성립하는 용도로만 쓰는 것</b>입니다.
+            아래는 문서·실측으로 확인된 한계와, 그럼에도 정당한 활용사례입니다.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8 }}>
+            {LIMITS.map((l) => (
+              <div key={l.lim} style={{ border: "1px solid #e2e8f0", borderRadius: 10, overflow: "hidden" }}>
+                <div style={{ background: "#fef2f2", padding: "8px 11px", fontSize: 12.5, fontWeight: 800, color: "#b91c1c" }}>⚠ {l.lim}</div>
+                <div style={{ padding: "8px 11px", fontSize: 11.5, color: "#64748b", lineHeight: 1.55, borderBottom: "1px solid #f1f5f9" }}>
+                  <b style={{ color: "#94a3b8" }}>근거:</b> {l.ev}
+                </div>
+                <div style={{ padding: "8px 11px", fontSize: 12, color: "#0f172a", lineHeight: 1.6, background: "#ecfeff" }}>
+                  <b style={{ color: "#0e7490" }}>→ 활용:</b> {l.use}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 11, fontSize: 12, color: "#334155", lineHeight: 1.7, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "9px 11px" }}>
+            <b style={{ color: "#0f172a" }}>SEA:CUT 사용 원칙.</b> 시민 수거 데이터는 <b>절대량(플럭스)</b>이 아니라 <b>상대적 구성·발생원·핫스팟</b> 신호로 쓴다.
+            개별 카운트는 <b>약라벨(라벨0)</b>로 취급하고, 사진 게이트 통과분만 라벨1로 승격. 절대 질량은 우리 <b>수거 중량 앵커</b>로 독립 확보(<code>/api/observations/anchor</code>),
+            표류 예측은 드리프터 실측으로 폐루프 검증(<code>/api/litter-risk/validate</code>). 즉 <b>한계를 앵커·검증으로 감싸는</b> 설계.
+          </div>
         </div>
 
         {/* 출처 */}

@@ -112,6 +112,45 @@
 
 ---
 
+---
+
+## 9. 실측 오픈데이터셋 분석 (Zenodo DOI 10.5281/zenodo.15535434)
+
+다운로드한 `15535434.zip → PlasticPirates_Riverbank_data_v2.0.0.zip`(Riverbank 대형쓰레기 v2.0.0)을 직접 분석. 12개국(오스트리아·벨기에·불가리아·독일·그리스·헝가리·이탈리아·라트비아·리투아니아·포르투갈·슬로베니아·스페인), 2022~2024, 5개 캠페인(가을2022~가을2024), **771건**.
+
+### 검증 파이프라인 (README 원문)
+파트너 기관 전문가가 **데이터 검증 프로토콜(Deliverable D3.1)** 로 검증 → VLIZ·NIB 2차 품질관리 → VLIZ가 조화·표준화·발행. 개념 기반: Científicos de la Basura(칠레 UCN)·Following the Pathways of Litter.
+
+### ⭐ 사진 게이트 실측 증거
+- `DatasetQualified`: **채택 727 / 실격 31 / na 13**.
+- **그룹 단위 실격 사유의 다수가 사진 관련**(‘photo’ 언급 371건). 상위 사유: 사진 없음(no photos available 30·no photos 25·no photo 17·reject-no photo 15·lacking 9·no photos of group A 9), 쓰레기 있으나 사진 0장 19, **사진↔데이터 불일치** 13, **사진 속 품목 겹침** 12, 쓰레기수-재질 불일치 26, 방법 미준수 11.
+- → 사진이 없으면 표본이 데이터로 **채택되지 않는다**. "사진 검증 게이트"가 실제 발행 데이터에서 **최우선 품질관리**로 작동함을 정량 확인.
+
+### 스키마 (→ /api/observations 직접 이식)
+- **일반 메타**: DatasetID(국가약자+고유번호) · CountryResponsible · ResearchInstituteResponsible · PersonResponsible/Contact · **SamplingCampaign**(계절+연도) · SamplingYear · SamplingDate(ISO8601) · **SamplingCoordinatesLatitude/Longitude**(십진도) · SamplingPlace/Region · **SamplingRiver** · SamplingRiverSystem · SamplingParticipants · **SamplingAttempted / DatasetQualified / DatasetReasonDisqualified**(검증 필드) · SamplingOnlineOnWebsite.
+- **그룹 A(원형 방형구)**: NumberOfStationsSampled(0~9) · WithLitterFindings · 카테고리별 Total(Paper·Cigarettes·Plastic·Metal·Glass·FoodLeftover·Other) · OverallTotal · **AveragePerM2** · Qualified/DisqualifiedReason.
+- **그룹 B(다양성)**: ~25 카테고리 카운트(PlasticBags·Bottles·Lids·TakeawayFastFood·CutleryPlates·PackagingSweets·CottonBuds·WetWipes·Polystyrene·**SingleUsePlasticTotal**·SmallPlastic<2.5cm·Metal·Glass·Cigarettes·Paper·Textiles·Rubber·Balloons·LocalWaste) · TotalNumber · **ProportionSingleUsePlastic(%)** · Length/WidthSearched(m) · WeightPlastic/AllKG · Qualified.
+- **그룹 D(리포터)**: Source{Residents·Visitors·FlyTippers·Industry·Agriculture·Shipping·Fishing}(no/possibly/yes) · Weather{Rain·Storm·Heat} · Problems.
+
+### 활용사례를 위한 한계 심층 (정직 기록)
+| 한계 | 문서·실측 근거 | 그래도 성립하는 활용 |
+|---|---|---|
+| **면적·무게 미검증** | README: 그룹B 강변 길이·너비, 플라스틱·전체 무게는 **전문가가 검증 못 함** | 밀도(개/㎡)·질량 절대량 추정 금지. 무게는 우리 수거 중량 앵커로 독립 확보 |
+| **편의표집(입지 비무작위)** | 학교가 접근 가능 지점 선택. 방형구만 국소 무작위 | ‘나라 강 평균’ 일반화 금지 → 상대 구성·핫스팟·발생원 신호로만 |
+| **계수 주관·잔차 오류** | 사진 검증 후에도 ‘사진↔데이터 불일치’·‘품목 겹침’ 실격 존재 | 개별 표본=약라벨. 대량 평균으로 개별오류 상쇄(Ackermann) — 집계만 신뢰 |
+| **시공간 편중·연도 모호** | 캠페인 쏠림(가을2022 251 vs 봄2022 1). ‘캠페인연도≠실채취연도’ 주석, 좌표 학생 추정 | 계절·연도 비교는 캠페인 메타로 보정, 추세는 누적 후 |
+| **결측 다수** | ‘na’ 광범위, 미세플라스틱은 별도 데이터셋 | 결측 필드 강제 검증 대상에서 제외, 있는 필드만 |
+
+**SEA:CUT 사용 원칙**: 시민 수거 데이터는 **절대량(플럭스)이 아니라 상대적 구성·발생원·핫스팟 신호**로 쓴다. 개별 카운트는 약라벨(라벨0), 사진 게이트 통과분만 라벨1. 절대 질량은 수거 중량 앵커(`/api/observations/anchor`), 표류는 드리프터 폐루프 검증(`/api/litter-risk/validate`)로 감싼다. → **한계를 앵커·검증으로 감싸는 설계**가 정직하면서도 강력.
+
+### 글로벌 확산·부수효과 (CINEA 2025-12-09)
+- 3개국(2016 독일→2020 트리오 독·포·슬)→14개국. 14개 언어. 26개+ 기관.
+- 바다 유입 플라스틱 연 1,100만t 중 강 유입 최대 200만t.
+- 교사 설문(120명): **91% 내년 지속 · 88% 타 교사 추천 · 99% 인식효과**. 부수효과: "활동 후 교실이 더 깨끗".
+- 파일럿 확산: 바베이도스·에콰도르·칠레·이집트. Plastic Pirates Summit 2024.
+
+---
+
 ## 부기: 수치 표기 주의
 - 참여국: 부클릿 본문 "13개국"(2022 확대 시점), 후속 기사·집계 "14개국". 인용 맥락에 맞게.
 - Grant No: 부클릿 10108882 vs CORDIS 프로젝트 ID 101088822 — 둘 다 병기 가능.
