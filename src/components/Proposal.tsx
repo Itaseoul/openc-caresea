@@ -6,10 +6,10 @@ import MembersRow from "@/components/MembersRow";
 
 // 연락/전환 경로. ⚠️ 공개 문의 이메일·후원 링크는 운영자 확정 후 교체 필요(현재 실사용 가능한 주소로 임시 설정).
 const CONTACT = {
-  emailText: "makeacademy@naver.com",
-  email: "mailto:makeacademy@naver.com?subject=SEA:CUT%20문의",
-  donate: "mailto:makeacademy@naver.com?subject=SEA:CUT%20후원%20문의",
-  partner: "mailto:makeacademy@naver.com?subject=SEA:CUT%20공공%20협업%20제안",
+  emailText: "itaseoul@naver.com",
+  email: "mailto:itaseoul@naver.com?subject=SEA:CUT%20문의",
+  donate: "mailto:itaseoul@naver.com?subject=SEA:CUT%20후원%20문의",
+  partner: "mailto:itaseoul@naver.com?subject=SEA:CUT%20공공%20협업%20제안",
   github: "https://github.com/Itaseoul/openc-caresea",
 };
 
