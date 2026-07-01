@@ -76,6 +76,9 @@ const SOURCES: { label: string; url: string }[] = [
   { label: "Horizon Magazine (2026-06)", url: "https://scienceblog.com/horizon/3542/teen-scientists-are-tracking-plastic-pollution-across-europes-rivers/" },
   { label: "프로젝트 소개 영상 (YouTube)", url: "https://www.youtube.com/watch?v=Jvi7yeCbbyI" },
   { label: "Zenodo 데이터셋 — Riverbank 대형쓰레기 v2.0.0 (직접 분석)", url: "https://doi.org/10.5281/zenodo.15535434" },
+  { label: "Zenodo 데이터셋 — 플로팅 매크로·메소·마이크로", url: "https://doi.org/10.5281/zenodo.15535538" },
+  { label: "데이터셋 발행 안내 (Plastic Pirates news)", url: "https://www.plastic-pirates.eu/en/news/milestone-achieved-plastic-pirates-datasets-published-zenodo" },
+  { label: "동료심사 논문 — 프랑스 강변·해변 시민과학 비교 (ESPR 2024)", url: "https://link.springer.com/article/10.1007/s11356-024-35506-w" },
 ];
 
 // 해안·해변 부클릿(원문 프로토콜) 다섯 그룹.
@@ -139,6 +142,29 @@ const LIMITS = [
     ev: "캠페인 쏠림(가을 2022 251 vs 봄 2022 1건). ‘캠페인 연도 ≠ 실제 채취 연도’ 주석, 좌표는 학생이 지도로 추정.",
     use: "계절·연도 비교는 캠페인 메타로 보정. 추세는 다수 캠페인 누적 후에만.",
   },
+];
+
+// 우리가 직접 집계한 결과 — Riverbank v2.0.0 그룹B 채택 545건·79,947점.
+const COMPUTED_CATS = [
+  { ko: "담배꽁초", pct: 16.0 }, { ko: "유리 조각", pct: 11.7 }, { ko: "식별불가 플라스틱", pct: 8.2 },
+  { ko: "물티슈·위생용품", pct: 8.2 }, { ko: "종이", pct: 7.3 }, { ko: "과자 포장", pct: 6.8 },
+  { ko: "소형 플라스틱 <2.5cm", pct: 6.3 }, { ko: "비닐봉투", pct: 5.1 }, { ko: "스티로폼", pct: 4.5 }, { ko: "음료 페트병", pct: 4.3 },
+];
+// 그룹D 채택 607건 — 발생원 지목(yes+possibly) 비율.
+const COMPUTED_SOURCES = [
+  { ko: "방문객", pct: 90 }, { ko: "주민", pct: 77 }, { ko: "무단투기", pct: 48 },
+  { ko: "어업", pct: 38 }, { ko: "농업", pct: 28 }, { ko: "산업", pct: 24 }, { ko: "해운", pct: 13 },
+];
+// PP 필드 → SEA:CUT 관측 스키마 매핑.
+const SCHEMA_MAP = [
+  ["SamplingRiver / RiverSystem", "river / river_system"],
+  ["SamplingCoordinates Lat·Lng (십진도)", "geo.lat / geo.lng"],
+  ["SamplingDate (ISO 8601) · Campaign", "observed_at · campaign(계절+연도)"],
+  ["…_Results_* 카테고리 카운트 ×20", "items[] (category, count)"],
+  ["ProportionSingleUsePlastic %", "single_use_ratio"],
+  ["Source{Residents…Fishing}", "sources[] (yes/possibly/no)"],
+  ["Weather{Rain·Storm·Heat}", "weather[]"],
+  ["DatasetQualified · DisqualifiedReason", "label_status(0/1) · reject_reason"],
 ];
 
 export const metadata = {
@@ -392,6 +418,68 @@ export default function ProtocolPage() {
           <div style={{ marginTop: 10, fontSize: 12, color: "#334155", lineHeight: 1.65, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 10px" }}>
             데이터셋 단위로는 727건 채택 / 31건 실격 / 13건 na. 검증은 파트너 기관 → VLIZ·NIB 2차 품질관리 → VLIZ 조화·표준화·발행.
             스키마의 <code>Source*</code>(주민·방문객·산업·농업·해운·어업)·<code>Weather_*</code>·좌표·강명 필드는 우리 관측 스키마로 직접 이식 가능.
+          </div>
+        </div>
+
+        {/* 우리가 직접 집계한 결과 */}
+        <div style={{ marginTop: 12, ...card, padding: "14px 16px" }}>
+          <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>우리가 직접 집계한 결과 — 재인용이 아닌 독립 분석</div>
+          <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
+            보도자료를 인용한 게 아니라, 공개 CSV를 직접 집계했습니다(그룹B 채택 <b>545건·79,947점</b>). 강변 대형쓰레기 1위는
+            <b> 담배꽁초(16.0%)</b> — 일회용 포장이 아니라 흡연·위생·파편류가 상위. 일회용 플라스틱 비율은 평균 <b>31.3%</b>(중앙값 27.6%).
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div>
+              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>품목 구성 상위 10 (비중)</div>
+              <div style={{ display: "grid", gap: 4 }}>
+                {COMPUTED_CATS.map((c) => (
+                  <div key={c.ko} style={{ display: "grid", gridTemplateColumns: "94px 1fr 34px", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 10.5, color: "#334155", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.ko}</span>
+                    <div style={{ height: 12, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${c.pct / 16 * 100}%`, background: "#0891b2", borderRadius: 4 }} />
+                    </div>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#0f172a", textAlign: "right" }}>{c.pct}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>발생원 지목률 (그룹D, yes+possibly)</div>
+              <div style={{ display: "grid", gap: 4 }}>
+                {COMPUTED_SOURCES.map((s) => (
+                  <div key={s.ko} style={{ display: "grid", gridTemplateColumns: "52px 1fr 34px", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 10.5, color: "#334155", fontWeight: 600 }}>{s.ko}</span>
+                    <div style={{ height: 12, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${s.pct}%`, background: s.pct >= 70 ? "#0e7490" : "#94a3b8", borderRadius: 4 }} />
+                    </div>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#0f172a", textAlign: "right" }}>{s.pct}%</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 10.5, color: "#94a3b8", marginTop: 7, lineHeight: 1.5 }}>
+                발생원 1·2위 = <b>방문객·주민</b>(육상 생활계). 그룹A 밀도 평균 0.88개/㎡(중앙값 0.48). → 소하천 발생원 라벨 우선순위와 정렬.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* PP → SEA:CUT 스키마 매핑 */}
+        <div style={{ marginTop: 12, ...card, padding: "12px 14px" }}>
+          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 10 }}>스키마 매핑 — PP 데이터 필드 → SEA:CUT 관측 스키마</div>
+          <div style={{ display: "grid", gap: 1, background: "#e2e8f0", borderRadius: 10, overflow: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+              <div style={{ background: "#f8fafc", padding: "6px 10px", fontSize: 10.5, fontWeight: 700, color: "#64748b" }}>Plastic Pirates (Zenodo)</div>
+              <div style={{ background: "#f8fafc", padding: "6px 10px", fontSize: 10.5, fontWeight: 700, color: "#0e7490" }}>/api/observations</div>
+            </div>
+            {SCHEMA_MAP.map(([a, b]) => (
+              <div key={a} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+                <div style={{ background: "#fff", padding: "7px 10px", fontSize: 11, color: "#334155", fontFamily: "ui-monospace,monospace" }}>{a}</div>
+                <div style={{ background: "#fff", padding: "7px 10px", fontSize: 11, color: "#0f172a", fontWeight: 600, fontFamily: "ui-monospace,monospace" }}>{b}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 10.5, color: "#94a3b8", marginTop: 8, lineHeight: 1.55 }}>
+            공개 데이터셋 2종: <b>강변 대형쓰레기</b>(DOI 15535434, 위 분석) + <b>플로팅 매크로·메소·마이크로</b>(DOI 15535538). 둘 다 12/10개국·5개 캠페인·동일 검증 파이프라인.
           </div>
         </div>
 
