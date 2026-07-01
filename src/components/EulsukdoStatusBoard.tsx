@@ -82,7 +82,7 @@ export default function EulsukdoStatusBoard() {
   // ITS CCTV(HLS) — 키 발급 시 영상 표시, 미발급이면 ok:false(NO_KEY)
   const cctv = useApi<any>("/api/cctv");
   const cctvStreams: any[] = cctv.data?.ok && Array.isArray(cctv.data?.content)
-    ? cctv.data.content.filter((c: any) => c.cctvurl).slice(0, 4)
+    ? cctv.data.content.filter((c: any) => c.stream || c.cctvurl).slice(0, 4)
     : [];
   const cctvNoKey = cctv.data && cctv.data.ok === false && cctv.data.reason === "NO_KEY";
 
@@ -183,7 +183,7 @@ export default function EulsukdoStatusBoard() {
           <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>📹 현장 CCTV 라이브 (ITS · 낙동강 하구 인근)</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 8 }}>
             {cctvStreams.map((c, i) => (
-              <CctvPlayer key={i} src={c.cctvurl} name={c.cctvname} />
+              <CctvPlayer key={i} src={c.stream || c.cctvurl} name={c.cctvname} />
             ))}
           </div>
         </div>

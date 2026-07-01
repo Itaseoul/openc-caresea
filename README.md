@@ -14,7 +14,7 @@ npm run dev                  # http://localhost:3000
 - `KMA_SERVICE_KEY` — data.go.kr 기상청 단기예보/특보/부산 강우. ★"Decoding(일반)" 키(코드가 인코딩 처리).
 - `HRFCO_KEY` — 한강홍수통제소 api.hrfco.go.kr 수위.
 - `SEOUL_KEY` — data.seoul.go.kr OA-1167 하천수위.
-- `ITS_KEY` — 국가교통정보센터 CCTV 스트림(`/api/cctv`).
+- `ITS_KEY` — 국가교통정보센터 CCTV 스트림(`/api/cctv`). 원본은 http라 라이브(https)에선 `/api/cctv/stream` 동일출처 프록시로 재생(혼합콘텐츠 차단 회피).
 - `KHOA_KEY` — 국립해양조사원 조위(하구 핫스팟 조석 트랩 보강). 없으면 정적 중립값.
 
 physical AI 적재 경로(선택, 미설정 시 응답만 반환·적재 생략):
