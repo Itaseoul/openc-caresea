@@ -68,7 +68,9 @@ export async function GET(req: NextRequest) {
         coordx: Number(d.coordx),
         coordy: Number(d.coordy),
         cctvformat: d.cctvformat, // HLS 등
-        cctvurl: d.cctvurl, // .m3u8 스트림 주소 (cctvType=1)
+        cctvurl: d.cctvurl, // 원본 스트림 주소(http) — 참고용
+        // 실제 재생용: 동일출처 프록시. 원본이 http라 https 라이브에선 이걸 써야 혼합콘텐츠 차단을 피함.
+        stream: d.cctvurl ? `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}` : null,
         road: res.type, // ex | its
       }))
     );
