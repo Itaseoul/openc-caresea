@@ -23,11 +23,15 @@ export async function GET(req: NextRequest) {
     const r = await fetch(url, { next: { revalidate: 300 } });
     const json: any = await r.json();
     const rows: any[] = json?.ListRiverStageService?.row ?? [];
-    const filtered = river ? rows.filter((x) => x.RVR_NM === river) : rows;
+    // ★서울 OA-1167의 RVR_NM/WATG_NM 에는 뒤 공백 패딩이 붙어 온다(예: "홍제천            ").
+    //   정확일치 필터가 이 공백 때문에 항상 실패했음 → 양쪽 trim 후 비교(수위 null 버그 수정).
+    const norm = (v: any) => String(v ?? "").trim();
+    const key = norm(river);
+    const filtered = river ? rows.filter((x) => norm(x.RVR_NM) === key) : rows;
     const items = filtered.map((x) => ({
-      river: x.RVR_NM,
-      station: x.WATG_NM,
-      gu: x.GU_OFC_NM,
+      river: norm(x.RVR_NM),
+      station: norm(x.WATG_NM),
+      gu: norm(x.GU_OFC_NM),
       level: num(x.RLTM_RVR_WATL_CNT),
       controlLevel: num(x.CNTRL_WATL), // 0이면 미설정
       planFloodLevel: num(x.PLAN_FLDE),
