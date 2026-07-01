@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { CCTV_REGIONS, DEFAULT_REGION_KEY, getRegion, isWaterCam } from "@/lib/cctvRegions";
 
 // 국가교통정보센터(ITS) CCTV OpenAPI 프록시 (openapi.its.go.kr)
 // 강·하천·교량을 지나는 도로 CCTV의 실시간 HLS(m3u8) 스트림 주소를 좌표 범위로 조회한다.
@@ -15,9 +16,6 @@ export const dynamic = "force-dynamic";
 // 한국 정부 API(openapi.its.go.kr)가 해외 리전 egress를 막는 정황 → 서울 리전에서 호출.
 export const preferredRegion = "icn1";
 
-// 낙동강 하구·을숙도 일대 기본 bbox (을숙도 ≈ 128.95E / 35.10N)
-const DEF = { minX: 128.8, maxX: 129.15, minY: 35.0, maxY: 35.3 };
-
 export async function GET(req: NextRequest) {
   const key = process.env.ITS_KEY;
   if (!key) {
@@ -26,12 +24,16 @@ export async function GET(req: NextRequest) {
         ok: false,
         reason: "NO_KEY",
         hint: ".env.local 에 ITS_KEY 설정. its.go.kr 회원가입 → 마이페이지 → 인증키 신청(무료).",
+        regions: CCTV_REGIONS.map((r) => ({ key: r.key, label: r.label, river: r.river })),
       },
       { status: 200 }
     );
   }
 
   const sp = req.nextUrl.searchParams;
+  // 지역 프리셋(대상 하천 하류) 우선 → 없으면 명시 bbox → 없으면 기본(부산 낙동강 하류)
+  const region = getRegion(sp.get("region")) ?? getRegion(DEFAULT_REGION_KEY)!;
+  const DEF = region.bbox;
   const minX = sp.get("minX") ?? String(DEF.minX);
   const maxX = sp.get("maxX") ?? String(DEF.maxX);
   const minY = sp.get("minY") ?? String(DEF.minY);
@@ -77,14 +79,20 @@ export async function GET(req: NextRequest) {
       // 실제 재생용: 동일출처 프록시. 원본이 http라 https 라이브에선 이걸 써야 혼합콘텐츠 차단을 피함.
       stream: d.cctvurl ? `/api/cctv/stream?u=${encodeURIComponent(d.cctvurl)}` : null,
       road: res.type, // ex | its
+      water: isWaterCam(d.cctvname), // 하천/교량 등 물길 화면 여부
     }))
   );
+
+  // 하천(물길) 카메라를 앞으로 — 히어로/보드가 앞에서부터 쓰면 바로 하천 화면이 나온다.
+  content.sort((a: any, b: any) => Number(b.water) - Number(a.water));
 
   const errors = results.filter((r: any) => r.error);
   // 전부 실패했을 때만 ok:false. 일부라도 성공하면 그 결과 + errors 로 응답.
   return NextResponse.json({
     ok: content.length > 0 || errors.length < results.length,
     count: content.length,
+    region: { key: region.key, label: region.label, river: region.river },
+    regions: CCTV_REGIONS.map((r) => ({ key: r.key, label: r.label, river: r.river })),
     bbox: { minX, maxX, minY, maxY },
     ...(errors.length ? { errors } : {}),
     content,

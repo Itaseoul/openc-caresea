@@ -130,10 +130,10 @@ export default function Proposal() {
           </div>
           <h1 className="mt-5 text-balance text-[1.95rem] font-bold leading-[1.25] tracking-tight text-white sm:text-[2.7rem]">
             도시의 작은 하천 병목에서 바다로 흘러가는 부유 쓰레기를,{" "}
-            <span className="text-brand-200">시민이 직접 막고 기록하고 공개합니다.</span>
+            <span className="text-brand-200">우리가 직접 막고 기록하고 공개합니다.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
-            강이 바다로 쓰레기를 넘기는 그 지점을 시민의 손으로 가로채는 실증 사업입니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원입니다.
+            강이 바다로 쓰레기를 넘기는 그 지점을 우리 손으로 가로채는 실증 사업입니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원입니다.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             {["연중 단기·무동력 실증", "오픈소스 도면·데이터 공개", "공개 데이터 기반 운영·안전"].map((t) => (
@@ -210,7 +210,7 @@ export default function Proposal() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-3xl px-5">
+      <div className="mx-auto max-w-5xl px-5">
         {/* ───────── 문제 ───────── */}
         <Section eyebrow="문제" title="정부도 상시 측정하지 않는 사각지대">
           <Figure
