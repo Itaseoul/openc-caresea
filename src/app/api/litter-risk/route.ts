@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { HOTSPOTS, predictAccumulationRisk, hotspotToObservation, alertFor, MODEL_VER, type RiskSignal } from "@/lib/litterRisk";
+import { HOTSPOTS, predictAccumulationRisk, hotspotToObservation, alertFor, estuaryLeadtimes, MODEL_VER, type RiskSignal } from "@/lib/litterRisk";
 import { kstIso, toJsonl } from "@/lib/observation";
 
 // 하류 퇴적 쓰레기 위험 예측 — "지금 이 시간" 핫스팟 순위.
@@ -135,6 +135,8 @@ export async function GET(req: NextRequest) {
       recipients: dispatchRecipients,
       sites: dispatch.map((p) => ({ id: p.id, name: p.name, level: p.level, action: p.alert.action })),
     },
+    // 상·하류 리드타임(추정) — 상류 길목→하구 이송 시간 = 하구 도달 전 예방 시간. 유속 가정 기반.
+    leadtimes: estuaryLeadtimes(),
     count: hotspotsWithAlert.length,
     hotspots: hotspotsWithAlert,
   });

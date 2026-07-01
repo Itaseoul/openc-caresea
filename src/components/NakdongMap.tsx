@@ -58,7 +58,7 @@ const RISK_COLOR: Record<string, string> = {
 export default function NakdongMap() {
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const [riskInfo, setRiskInfo] = useState<{ at: string; top: string } | null>(null);
+  const [riskInfo, setRiskInfo] = useState<{ at: string; top: string; dispatch: number } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -187,22 +187,61 @@ export default function NakdongMap() {
               radius: 12 + (Number(h.score) || 0) * 22,
               color, weight: 3, opacity: 0.9, fill: false, interactive: false,
             }).addTo(map);
+            // 능동 알림 발령(주의↑) 지점엔 🔔 배지 — 예측→알림 채널의 지도 표시
+            const dispatched = h.alert?.dispatch === true;
+            if (dispatched) {
+              L.marker([h.lat, h.lon] as any, {
+                interactive: false,
+                icon: L.divIcon({
+                  className: "",
+                  html: `<div style="transform:translate(14px,-16px);font-size:14px;filter:drop-shadow(0 1px 1px #fff)">🔔</div>`,
+                  iconSize: [16, 16], iconAnchor: [8, 8],
+                }),
+              }).addTo(map);
+            }
             const spotId = Object.keys(RISK_ID).find((k) => RISK_ID[k] === h.id);
             if (spotId && markersById[spotId]) {
               const { marker, base } = markersById[spotId];
               const rain = h.rainfall_mm != null ? `강우 ${h.rainfall_mm}mm` : "강우 정보 없음";
+              const alertLine = dispatched
+                ? `<div style="margin-top:4px;color:#b45309"><b>🔔 알림 발령</b> · ${(h.alert?.recipients ?? []).join(" · ")}<div style="color:#92400e">${h.alert?.action ?? ""}</div></div>`
+                : "";
               marker.bindPopup(
                 base +
                   `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #e2e8f0;font-size:12px">` +
                   `<b style="color:${color}">지금 퇴적 위험 ${h.level} · ${h.score}</b>` +
-                  `<div style="color:#64748b;margin-top:2px">${rain} · ${h.why ?? ""}</div></div>`
+                  `<div style="color:#64748b;margin-top:2px">${rain} · ${h.why ?? ""}</div>${alertLine}</div>`
               );
             }
           });
+
+          // 상·하류 리드타임(추정) — 상류 길목 → 하구 연결선 + 예방 시간 라벨
+          const estSpot = SPOTS.find((s) => s.track === "estuary");
+          if (estSpot && Array.isArray(rj.leadtimes)) {
+            rj.leadtimes.forEach((lt: any) => {
+              const spotId = Object.keys(RISK_ID).find((k) => RISK_ID[k] === lt.id);
+              const from = spotId ? SPOTS.find((s) => s.id === spotId) : null;
+              if (!from) return;
+              const a: [number, number] = [from.lat, from.lon];
+              const b: [number, number] = [estSpot.lat, estSpot.lon];
+              L.polyline([a, b], { color: "#0e7490", weight: 1.5, opacity: 0.5, dashArray: "2 6", interactive: false }).addTo(map);
+              const mid: [number, number] = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+              L.marker(mid as any, {
+                interactive: false,
+                icon: L.divIcon({
+                  className: "",
+                  html: `<div style="white-space:nowrap;font-size:10.5px;font-weight:700;color:#0e7490;background:rgba(255,255,255,.82);border-radius:6px;padding:1px 5px;box-shadow:0 0 0 1px #cffafe">~${lt.lead_lo_h}–${lt.lead_hi_h}h 리드</div>`,
+                  iconSize: [88, 16], iconAnchor: [44, 8],
+                }),
+              }).addTo(map);
+            });
+          }
+
           const top = rj.hotspots[0];
           setRiskInfo({
             at: typeof rj.generatedAt === "string" ? rj.generatedAt.slice(11, 16) : "",
             top: top ? `${top.name} · ${top.level} ${top.score}` : "",
+            dispatch: Number(rj.alertGovernance?.dispatchCount ?? 0),
           });
         }
       } catch {
@@ -245,10 +284,15 @@ export default function NakdongMap() {
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-full border-2 border-orange-500" /> 지금 퇴적 위험 후광 <span className="text-neutral-400">(관심·주의·높음)</span>
         </span>
+        <span className="inline-flex items-center gap-1.5">🔔 알림 발령 <span className="text-neutral-400">(주의↑)</span></span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-0.5 w-5 border-t-2 border-dashed border-cyan-600" /> 하구 도달 리드타임 <span className="text-neutral-400">(예방 시간·추정)</span>
+        </span>
       </div>
       {riskInfo && (
         <div className="mt-2 rounded-lg bg-rose-50/70 px-3 py-2 text-xs text-rose-900">
-          <b>지금 이 시간 퇴적 위험</b> · {riskInfo.top || "데이터 없음"}{" "}
+          <b>지금 이 시간 퇴적 위험</b> · {riskInfo.top || "데이터 없음"}
+          {riskInfo.dispatch > 0 && <span className="ml-1 font-semibold text-amber-700">· 🔔 알림 발령 {riskInfo.dispatch}건</span>}{" "}
           <span className="text-rose-400">({riskInfo.at} 기준 · 강우 first-flush 반영, 추정)</span>
         </div>
       )}
