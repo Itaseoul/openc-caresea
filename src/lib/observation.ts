@@ -66,6 +66,8 @@ export interface SeacutObservation {
   risk_score?: number | null; // 퇴적 위험 점수 0~1
   risk_level?: string | null; // 등급(낮음/관심/주의/높음)
   risk_model_ver?: string | null; // 예측 모델 버전
+  alert_dispatched?: boolean | null; // 이 예측이 능동 알림(주의↑) 발령 대상이었는지 — 예측→알림 채널의 감사 기록
+  alert_channel?: string | null; // 발령 채널(push+운영/운영/대시보드/none). 알림 거버넌스(litterRisk.alertFor) 출력
   anchored_at?: string | null; // 수거 중량(정답) 결합 시각 — (예측, 정답) 쌍 완성 표시
   photo_verified?: boolean | null; // 시민 관측 사진 검증 통과 여부(PlasticPirates식 4팀 검증) — 라벨 승격 게이트
   deid_flag: boolean; // 얼굴·번호판 비식별 처리 여부
@@ -220,6 +222,8 @@ export function buildObservation(input: BuildInput): SeacutObservation {
     risk_score: null,
     risk_level: null,
     risk_model_ver: null,
+    alert_dispatched: null,
+    alert_channel: null,
     photo_verified: null,
     deid_flag: true,
     is_estimate: true,
@@ -256,6 +260,8 @@ export function validateObservation(rec: unknown): { ok: boolean; errors: string
     e.push("count_ci 는 [하한, 상한]");
   if (r.photo_verified != null && typeof r.photo_verified !== "boolean")
     e.push("photo_verified 는 boolean");
+  if (r.alert_dispatched != null && typeof r.alert_dispatched !== "boolean")
+    e.push("alert_dispatched 는 boolean");
   return { ok: e.length === 0, errors: e };
 }
 

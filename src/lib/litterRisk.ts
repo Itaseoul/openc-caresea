@@ -284,6 +284,7 @@ export function hotspotToObservation(
 ): SeacutObservation {
   const t = ts ?? kstIso();
   const rain = signal.rainfall_mm ?? null;
+  const alert = alertFor(pred.level); // 예측 등급 → 알림 결정(같은 감사 레코드에 발령 여부·채널 기록)
   return {
     site_id: p.id,
     boom_id: null,
@@ -318,6 +319,8 @@ export function hotspotToObservation(
     risk_score: pred.score,
     risk_level: pred.level,
     risk_model_ver: MODEL_VER,
+    alert_dispatched: alert.dispatch,
+    alert_channel: alert.channel,
     deid_flag: true,
     is_estimate: true,
   };

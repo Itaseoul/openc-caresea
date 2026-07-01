@@ -498,6 +498,7 @@ export default function Proposal() {
               <li>· 예측은 <b>추정(is_estimate)</b>입니다 — 알림은 <b>출동 판단 보조</b>이지 자동 지시가 아닙니다.</li>
               <li>· 재난·안전 알림은 <b>안전신문고·재난문자와 중복하지 않습니다</b>(범위를 수거 운영으로 한정).</li>
               <li>· 알림 레코드에 개인정보는 없습니다(deid_flag). 수신 주체 확정 전까지는 내부 운영 알림입니다.</li>
+              <li>· 발령은 예측과 <b>같은 감사 레코드</b>에 남습니다(<code className="rounded bg-amber-100 px-1 text-[12px]">alert_dispatched</code>·채널). 저장소(DB/Blob) 연결 시 그대로 영속·추적됩니다.</li>
             </ul>
           </div>
         </Section>
