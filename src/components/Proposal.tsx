@@ -1,3 +1,4 @@
+import React from "react";
 import Dashboard from "@/components/Dashboard";
 import NakdongMap from "@/components/NakdongMap";
 import LitterRiskLoop from "@/components/LitterRiskLoop";
@@ -91,6 +92,23 @@ const GLOBAL_CASES: { tag: string; title: string; who: string; world: string; ta
   { tag: "표류 실측 (ground truth)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA · 제주 하구 · 갠지스",
     world: "GPS 드리프터를 흘려 실제 표류 경로를 좌표로 기록 — 예측의 정답지를 만든다.",
     take: "고정 붐이 드리프터의 종점 — 발생원→붐 전 경로를 라벨로(회수·재사용)." },
+];
+
+// 알림 거버넌스 — 예측이 "지금 정체됨"을 알릴 때, 누가·무엇을·어떤 근거로.
+// litterRisk의 RiskLevel(낮음/관심/주의/높음)에 매핑. is_estimate=true → 알림은 "출동 판단 보조"이지 자동 지시가 아니다.
+const ALERT_LADDER: { level: string; score: string; trigger: string; who: string; action: string; tone: "high" | "mid" | "low" | "base" }[] = [
+  { level: "높음", score: "≥ 0.60", trigger: "강우 first-flush × 트랩 집중 — 지금 쓸려와 걸리는 중", who: "현장 수거 코디 · 관할 구청 하천팀", action: "붐 비움·긴급 수거 출동 편성, 수위 단계 시 철거 판단", tone: "high" },
+  { level: "주의", score: "≥ 0.38", trigger: "정체 상승 — 강우 이송 또는 평시 퇴적 누적", who: "시민 수거단 · 이타서울 운영", action: "다음 정기 수거 우선순위 상향, 붐 장력·수위 점검", tone: "mid" },
+  { level: "관심", score: "≥ 0.18", trigger: "평시 정체 바닥 — 건기 standing 퇴적", who: "대시보드 표시(수동 확인)", action: "관측 지속, 순회 시 육안 확인", tone: "low" },
+  { level: "낮음", score: "< 0.18", trigger: "정상 — 특이 신호 없음", who: "—", action: "—", tone: "base" },
+];
+
+// 연대 — 알림이 울리면 각 주체가 맡는 행동(누가 무엇을). 예측→알림→행동의 사슬을 사람에 매핑.
+const COALITION: { who: string; role: string; onAlert: string }[] = [
+  { who: "시민 수거단", role: "현장 회수", onAlert: "주의↑ 시 우선 수거·품목 분류, 사진 검증 제보" },
+  { who: "사단법인 이타서울", role: "운영·데이터", onAlert: "알림 발령·기록, 붐 상태 점검, 데이터 공개" },
+  { who: "관할 구청 하천팀(사상·사하)", role: "점용·공공 수거 연계", onAlert: "높음 시 공공 청소 연계, 수위 단계 철거 협의" },
+  { who: "부산시 · KIOST", role: "하류 관측 데이터", onAlert: "하구 관측치 교환 — 상·하류 정합 검증" },
 ];
 
 function Section({
@@ -374,9 +392,88 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 데이터 루프 작동 — 예측·검증 폐루프 ───────── */}
-        <Section eyebrow="데이터 루프" title="예측하고, 실측으로 검증하는 폐루프">
-          <p>글로벌 동향의 데이터 루프를 우리도 이미 돌리고 있습니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다. 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
+        <Section id="predict" eyebrow="핵심 · 데이터 루프" title="언제·어디서 정체되는지를 먼저 안다">
+          <p>이 사업의 심장은 붐이 아니라 <b>부산 하천망에서 언제·어떻게 수거 가능한 쓰레기가 하류에 정체되는지 아는 것</b>입니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), 강우 직후 first-flush 타이밍과 합류부·복개출구·하구 조석 같은 <b>트랩 기하</b>로 "지금 이 시간 가장 걸려 있을 길목"을 순위로 냅니다. <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다 — 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
           <LitterRiskLoop />
+        </Section>
+
+        {/* ───────── 예측 → 알림 → 연대 — 운영 거버넌스 척추 ───────── */}
+        <Section id="govern" eyebrow="운영 거버넌스" title="정체를 알고, 알리고, 함께 걷어낸다">
+          <p>예측만으로는 쓰레기가 줄지 않습니다. <b>정체가 감지되면 누구에게 알리고, 그 사람이 무엇을 하는지</b>가 실제 회수를 만듭니다. 예측 등급이 곧 알림 등급이 되고, 알림 등급이 곧 연대 행동으로 이어지는 하나의 사슬입니다.</p>
+
+          {/* 3단 흐름 — 예측 → 알림 → 연대 */}
+          <div className="not-prose grid items-stretch gap-2.5 sm:grid-cols-[1fr_auto_1fr_auto_1fr]">
+            {[
+              { k: "1 · 정체 예측", t: "언제·어디서", d: "강우 first-flush × 트랩 기하로 지금 가장 걸려 있을 길목을 순위화", tone: "border-brand-200 bg-brand-50/60 text-brand-900" },
+              { k: "2 · 알림", t: "누구에게·무엇을", d: "등급별로 수신 주체와 행동을 미리 정해 두고 자동으로 올린다", tone: "border-amber-200 bg-amber-50/70 text-amber-900" },
+              { k: "3 · 연대 수거", t: "함께 걷어낸다", d: "시민·이타서울·구청·부산시가 각자의 역할로 출동·회수·연계", tone: "border-emerald-200 bg-emerald-50/70 text-emerald-900" },
+            ].map((s, i) => (
+              <React.Fragment key={s.k}>
+                <div className={`rounded-2xl border p-4 ${s.tone}`}>
+                  <div className="text-[11px] font-bold uppercase tracking-wider opacity-70">{s.k}</div>
+                  <div className="mt-1 text-[15px] font-bold">{s.t}</div>
+                  <p className="mt-1 text-[12.5px] leading-5 opacity-80">{s.d}</p>
+                </div>
+                {i < 2 && <div className="hidden items-center justify-center text-brand-300 sm:flex">→</div>}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* 알림 거버넌스 사다리 — 등급 → 트리거 → 수신 → 행동 */}
+          <div className="not-prose mt-2">
+            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">알림 거버넌스 — 예측 등급이 곧 알림·행동 등급</div>
+            <div className="overflow-hidden rounded-2xl border border-neutral-200">
+              <div className="hidden bg-neutral-50 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-neutral-400 sm:grid sm:grid-cols-[84px_1fr_1fr_1.2fr]">
+                <div>등급</div><div>트리거 · 정체 신호</div><div>알림 대상</div><div>행동</div>
+              </div>
+              {ALERT_LADDER.map((r) => {
+                const chip =
+                  r.tone === "high" ? "bg-red-100 text-red-700 ring-red-200"
+                  : r.tone === "mid" ? "bg-amber-100 text-amber-700 ring-amber-200"
+                  : r.tone === "low" ? "bg-sky-100 text-sky-700 ring-sky-200"
+                  : "bg-neutral-100 text-neutral-400 ring-neutral-200";
+                return (
+                  <div key={r.level} className="grid gap-1 border-t border-neutral-100 px-4 py-3 text-[13px] leading-5 sm:grid-cols-[84px_1fr_1fr_1.2fr] sm:items-start sm:gap-3">
+                    <div>
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ring-1 ${chip}`}>{r.level}</span>
+                      <span className="ml-1.5 text-[10.5px] tabular-nums text-neutral-400">{r.score}</span>
+                    </div>
+                    <div className="text-neutral-600"><span className="font-medium text-neutral-400 sm:hidden">트리거 · </span>{r.trigger}</div>
+                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">알림 · </span>{r.who}</div>
+                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">행동 · </span>{r.action}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 연대 — 알림이 울리면 각 주체가 맡는 행동 */}
+          <div className="not-prose">
+            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">연대 — 알림이 울릴 때 각자의 역할</div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {COALITION.map((c) => (
+                <div key={c.who} className="rounded-2xl border border-neutral-200 bg-white p-4">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="text-[14px] font-bold text-neutral-900">{c.who}</span>
+                    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-700 ring-1 ring-brand-100">{c.role}</span>
+                  </div>
+                  <p className="mt-1.5 flex gap-1.5 text-[12.5px] leading-5 text-neutral-600">
+                    <span className="font-bold text-brand-500">→</span>{c.onAlert}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 정직 경계 — 알림의 범위와 한계 */}
+          <div className="not-prose rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
+            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계 · 알림의 범위</div>
+            <ul className="mt-1.5 space-y-1 text-[13px] leading-6 text-amber-900/80">
+              <li>· 예측은 <b>추정(is_estimate)</b>입니다 — 알림은 <b>출동 판단 보조</b>이지 자동 지시가 아닙니다.</li>
+              <li>· 재난·안전 알림은 <b>안전신문고·재난문자와 중복하지 않습니다</b>(범위를 수거 운영으로 한정).</li>
+              <li>· 알림 레코드에 개인정보는 없습니다(deid_flag). 수신 주체 확정 전까지는 내부 운영 알림입니다.</li>
+            </ul>
+          </div>
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}

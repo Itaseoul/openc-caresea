@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 const ITEMS = [
   { id: "problem", label: "문제·해법" },
   { id: "context", label: "세계·근거" },
+  { id: "predict", label: "정체 예측" },
+  { id: "govern", label: "알림·연대" },
   { id: "dashboard", label: "작동 증거" },
   { id: "design", label: "사업 설계" },
   { id: "join", label: "함께하기" },
