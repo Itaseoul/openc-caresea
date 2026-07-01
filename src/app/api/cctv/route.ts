@@ -70,6 +70,47 @@ export async function GET(req: NextRequest) {
     });
   }
 
+  // ★제주시 하천 감시 CCTV — data.go.kr riverCctvService(KMA_SERVICE_KEY 공용). 62개 하천 HLS.
+  if (reqRegion?.dataGov === "jeju") {
+    const gkey = process.env.KMA_SERVICE_KEY;
+    try {
+      const url =
+        `https://apis.data.go.kr/6510000/riverCctvService/getRiverCctvList` +
+        `?serviceKey=${encodeURIComponent(gkey ?? "")}&pageNo=1&numOfRows=100&dataType=json`;
+      const r = await fetch(url, { next: { revalidate: 600 } });
+      const j = await r.json();
+      const raw = j?.response?.body?.items?.item ?? [];
+      const list = Array.isArray(raw) ? raw : [raw];
+      const content = list
+        .filter((it: any) => it?.useYn === "Y" && it?.cctvUrl)
+        .map((it: any) => ({
+          cctvname: it.spotNm,
+          coordx: Number(it.loCrdnt),
+          coordy: Number(it.laCrdnt),
+          cctvformat: "HLS",
+          cctvurl: it.cctvUrl,
+          stream: `/api/cctv/stream?u=${encodeURIComponent(it.cctvUrl)}`,
+          thumb: null,
+          road: "river",
+          water: true,
+        }));
+      return NextResponse.json({
+        ok: content.length > 0,
+        count: content.length,
+        source: "gov-open",
+        region: { key: reqRegion.key, label: reqRegion.label, river: reqRegion.river },
+        regions: regionsMeta,
+        note: "제주시 하천 감시 CCTV(data.go.kr riverCctvService) — 공공 API로 개방된 실시간 하천 영상",
+        content,
+      });
+    } catch (e) {
+      return NextResponse.json(
+        { ok: false, reason: "JEJU_FETCH_ERROR", message: String(e), region: { key: reqRegion.key, label: reqRegion.label, river: reqRegion.river }, regions: regionsMeta, content: [] },
+        { status: 200 }
+      );
+    }
+  }
+
   const key = process.env.ITS_KEY;
   if (!key) {
     return NextResponse.json(

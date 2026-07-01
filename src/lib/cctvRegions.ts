@@ -4,12 +4,14 @@
 // 첫 항목(부산 낙동강 하류)이 우리 실증 대상지.
 
 export type Bbox = { minX: number; maxX: number; minY: number; maxY: number };
-// static=true 인 지역은 ITS 조회 대신 고정 카메라 목록을 쓴다(예: 서귀포 하천 HLS 공개 실증).
-export type CctvRegion = { key: string; label: string; river: string; bbox: Bbox; static?: boolean };
+// static=고정목록(서귀포), dataGov=data.go.kr API 조회(제주시), 그 외=ITS 도로 CCTV.
+export type CctvRegion = { key: string; label: string; river: string; bbox: Bbox; static?: boolean; dataGov?: "jeju" };
 
 export const CCTV_REGIONS: CctvRegion[] = [
   // 실증 대상지 — 낙동강 하구로 흘러드는 소하천 길목(서낙동강교·강서낙동강교·서부산 낙동강교·조만강교)
   { key: "busan-nakdong", label: "부산 낙동강 하류", river: "낙동강", bbox: { minX: 128.88, maxX: 129.06, minY: 35.05, maxY: 35.26 } },
+  // ★제주시 하천 감시 CCTV — data.go.kr riverCctvService(하천 62개소, HLS). "진짜 하천" 개방 API.
+  { key: "jeju-si-river", label: "제주시 하천 (공공 API)", river: "제주시 하천", bbox: { minX: 126.2, maxX: 126.9, minY: 33.25, maxY: 33.55 }, dataGov: "jeju" },
   // ★지자체 하천 CCTV 개방 실증 — 서귀포시가 하천 영상을 HLS로 공개(도로 아닌 "진짜 하천"). ITS 아님(고정 목록).
   { key: "seogwipo-river", label: "제주 서귀포 하천 (개방 실증)", river: "서귀포 하천", bbox: { minX: 126.1, maxX: 126.9, minY: 33.2, maxY: 33.5 }, static: true },
   // 인천 남동·연수 — 장수천1교·논현교·신천·은행교
