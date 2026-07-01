@@ -3,8 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import CctvPlayer from "@/components/CctvPlayer";
 
 // 홈 최상단 히어로 — 대상 하천 하류(낙동강·장수천·한강·금강 등)의 라이브 CCTV.
-// "계획서"가 아니라 "이미 굴러가는 자산"으로 첫인상을 만든다.
-// 지역 탭 전환 + 지역 내 하천 카메라 자동 선택(실패하면 다음 카메라로 스킵).
+// 유튜브식 레이아웃: 좌측 큰 메인 플레이어 + 우측 채널 목록. 항상 16:9 자리를 유지(레이아웃 안 깨짐).
+// 스트림이 죽어도 스켈레톤/폴백으로 우아하게 처리하고, 다음 카메라로 자동 스킵한다.
+// "비 오는 지역"은 first-flush 관측 적기 → 배지·우선 정렬·자동 전환.
 
 type Cam = { cctvname?: string; stream?: string; cctvurl?: string; water?: boolean };
 type Region = { key: string; label: string; river: string };
@@ -15,10 +16,33 @@ export default function HomeHeroCctv() {
   const [regionKey, setRegionKey] = useState<string>("");
   const [cams, setCams] = useState<Cam[]>([]);
   const [idx, setIdx] = useState(0);
-  const [dead, setDead] = useState<Set<number>>(new Set()); // 재생 실패한 카메라 인덱스
-  const [rain, setRain] = useState<Record<string, Rain>>({}); // 지역별 강수(우기 관측 적기)
+  const [dead, setDead] = useState<Set<number>>(new Set());
+  const [rain, setRain] = useState<Record<string, Rain>>({});
+  const [loadingRegion, setLoadingRegion] = useState(true);
 
-  // 지역별 "지금 비" 상태 — first-flush 관측 적기 배지·정렬용
+  const loadRegion = useCallback((key: string) => {
+    setLoadingRegion(true);
+    setCams([]);
+    setIdx(0);
+    setDead(new Set());
+    const q = key ? `?region=${encodeURIComponent(key)}` : "";
+    fetch(`/api/cctv${q}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d?.ok || !Array.isArray(d.content)) return;
+        if (Array.isArray(d.regions) && d.regions.length) setRegions(d.regions);
+        if (d.region?.key) setRegionKey(d.region.key);
+        setCams(d.content.filter((c: Cam) => c.stream || c.cctvurl).slice(0, 12));
+      })
+      .catch(() => {})
+      .finally(() => setLoadingRegion(false));
+  }, []);
+
+  useEffect(() => {
+    loadRegion("");
+  }, [loadRegion]);
+
+  // 지역별 강수(우기 관측 적기)
   useEffect(() => {
     let alive = true;
     fetch("/api/rain-regions")
@@ -35,29 +59,6 @@ export default function HomeHeroCctv() {
     };
   }, []);
 
-  // 지역 카메라 로드
-  const loadRegion = useCallback((key: string) => {
-    setCams([]);
-    setIdx(0);
-    setDead(new Set());
-    const q = key ? `?region=${encodeURIComponent(key)}` : "";
-    fetch(`/api/cctv${q}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (!d?.ok || !Array.isArray(d.content)) return;
-        if (Array.isArray(d.regions) && d.regions.length) setRegions(d.regions);
-        if (d.region?.key) setRegionKey(d.region.key);
-        // 하천(물길) 카메라 우선(API가 이미 water-first 정렬) → 스트림 있는 것만
-        const list = d.content.filter((c: Cam) => c.stream || c.cctvurl);
-        setCams(list.slice(0, 10));
-      })
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    loadRegion("");
-  }, [loadRegion]);
-
   // 현재 카메라가 죽으면 다음 살아있는 카메라로
   const handleFail = useCallback(
     (failedIdx: number) => {
@@ -68,10 +69,9 @@ export default function HomeHeroCctv() {
       });
       setIdx((cur) => {
         if (cur !== failedIdx) return cur;
-        // 다음 후보 탐색
-        for (let step = 1; step <= cams.length; step++) {
+        for (let step = 1; step < cams.length; step++) {
           const cand = (failedIdx + step) % cams.length;
-          if (!dead.has(cand) && cand !== failedIdx) return cand;
+          if (!dead.has(cand)) return cand;
         }
         return cur;
       });
@@ -79,7 +79,7 @@ export default function HomeHeroCctv() {
     [cams.length, dead]
   );
 
-  // 최초 1회: 대상지(부산)가 비 안 오고 다른 지역이 비 오면 그 지역으로 자동 전환(우기 관측 우선)
+  // 최초 1회: 대상지(부산)가 비 안 오고 다른 지역이 비 오면 그 지역으로 자동 전환
   const autoRef = useRef(false);
   useEffect(() => {
     if (autoRef.current || !regionKey || !Object.keys(rain).length) return;
@@ -92,14 +92,26 @@ export default function HomeHeroCctv() {
     if (wet && wet.key !== regionKey) loadRegion(wet.key);
   }, [rain, regions, regionKey, loadRegion]);
 
-  if (cams.length === 0) return null;
-  const safeIdx = Math.min(idx, cams.length - 1);
-  const cur = cams[safeIdx];
+  const retryAll = () => {
+    setDead(new Set());
+    setIdx(0);
+  };
+  const pickCam = (i: number) => {
+    setDead((prev) => {
+      if (!prev.has(i)) return prev;
+      const next = new Set(prev);
+      next.delete(i); // 죽은 카메라 다시 시도 허용
+      return next;
+    });
+    setIdx(i);
+  };
 
-  // 비 오는 지역을 앞으로 정렬(우기 관측 적기 우선 노출)
   const sortedRegions = [...regions].sort((a, b) => Number(!!rain[b.key]?.raining) - Number(!!rain[a.key]?.raining));
   const curRaining = rain[regionKey]?.raining;
   const curMm = rain[regionKey]?.rain_mm;
+  const allDead = cams.length > 0 && dead.size >= cams.length;
+  const safeIdx = Math.min(idx, Math.max(0, cams.length - 1));
+  const cur = cams[safeIdx];
 
   return (
     <section style={{ maxWidth: 1120, margin: "0 auto", padding: "20px 16px 4px" }}>
@@ -122,7 +134,7 @@ export default function HomeHeroCctv() {
 
       {/* 지역(하천) 탭 — 비 오는 지역 우선 */}
       {regions.length > 1 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
           {sortedRegions.map((r) => {
             const wet = rain[r.key]?.raining;
             const active = r.key === regionKey;
@@ -152,38 +164,96 @@ export default function HomeHeroCctv() {
         </div>
       )}
 
-      <CctvPlayer key={`${regionKey}-${safeIdx}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big onFail={() => handleFail(safeIdx)} />
-
-      {/* 지역 내 카메라 전환 */}
-      {cams.length > 1 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-          {cams.map((c, i) => (
-            <button
-              key={i}
-              onClick={() => setIdx(i)}
-              disabled={dead.has(i)}
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                padding: "5px 10px",
-                borderRadius: 999,
-                cursor: dead.has(i) ? "not-allowed" : "pointer",
-                border: i === safeIdx ? "1px solid #0e7490" : "1px solid #e2e8f0",
-                background: i === safeIdx ? "#0e7490" : "#fff",
-                color: dead.has(i) ? "#cbd5e1" : i === safeIdx ? "#fff" : "#475569",
-                maxWidth: 220,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                textDecoration: dead.has(i) ? "line-through" : "none",
-              }}
-              title={c.cctvname}
-            >
-              {c.cctvname || `채널 ${i + 1}`}
-            </button>
-          ))}
+      {/* 유튜브식: 좌 메인 크게 + 우 목록 */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-start" }}>
+        <div style={{ flex: "3 1 460px", minWidth: 0 }}>
+          {loadingRegion ? (
+            <SkeletonPlayer />
+          ) : allDead ? (
+            <FallbackPanel onRetry={retryAll} />
+          ) : cur ? (
+            <CctvPlayer key={`${regionKey}-${safeIdx}`} src={cur.stream || cur.cctvurl || ""} name={cur.cctvname} big onFail={() => handleFail(safeIdx)} />
+          ) : (
+            <SkeletonPlayer />
+          )}
         </div>
-      )}
+
+        {/* 우측 채널 목록 */}
+        <div style={{ flex: "1 1 230px", minWidth: 200 }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", letterSpacing: ".05em", marginBottom: 6 }}>
+            채널 {cams.length ? `· ${cams.length}` : ""}
+          </div>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 4, maxHeight: 300, overflowY: "auto" }}>
+            {loadingRegion
+              ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+              : cams.map((c, i) => {
+                  const active = i === safeIdx && !allDead;
+                  const isDead = dead.has(i);
+                  return (
+                    <li key={i}>
+                      <button
+                        onClick={() => pickCam(i)}
+                        title={isDead ? "일시 오프라인 — 다시 시도" : c.cctvname}
+                        style={{
+                          width: "100%",
+                          textAlign: "left",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "7px 9px",
+                          borderRadius: 8,
+                          cursor: "pointer",
+                          border: active ? "1px solid #0e7490" : "1px solid #eef2f6",
+                          background: active ? "#ecfeff" : "#fff",
+                          color: isDead ? "#94a3b8" : "#334155",
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: 999, flex: "none", background: isDead ? "#cbd5e1" : "#16a34a" }} />
+                        <span style={{ fontSize: 12.5, fontWeight: active ? 800 : 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {c.cctvname || `채널 ${i + 1}`}
+                        </span>
+                        {c.water && !isDead && <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 800, color: "#0369a1" }}>하천</span>}
+                        {isDead && <span style={{ marginLeft: "auto", fontSize: 10, color: "#cbd5e1" }}>오프라인</span>}
+                      </button>
+                    </li>
+                  );
+                })}
+          </ul>
+        </div>
+      </div>
     </section>
+  );
+}
+
+// 16:9 스켈레톤
+function SkeletonPlayer() {
+  return (
+    <div style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: 14, overflow: "hidden", border: "1px solid #e2e8f0", background: "linear-gradient(100deg,#0f172a 30%,#1e293b 50%,#0f172a 70%)", backgroundSize: "200% 100%", animation: "cctvshimmer 1.3s linear infinite" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 12, gap: 8 }}>
+        <span style={{ width: 15, height: 15, border: "2px solid rgba(148,163,184,.35)", borderTopColor: "#e2e8f0", borderRadius: 999, animation: "cctvspin .8s linear infinite" }} />
+        현장 영상 연결 중…
+      </div>
+      <style>{`@keyframes cctvspin{to{transform:rotate(360deg)}}@keyframes cctvshimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
+    </div>
+  );
+}
+
+function SkeletonRow() {
+  return <div style={{ height: 34, borderRadius: 8, background: "linear-gradient(100deg,#f1f5f9 30%,#e2e8f0 50%,#f1f5f9 70%)", backgroundSize: "200% 100%", animation: "cctvshimmer 1.3s linear infinite" }} />;
+}
+
+// 전 카메라 연결 불가 시 폴백(레이아웃 유지)
+function FallbackPanel({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: 14, overflow: "hidden", border: "1px solid #e2e8f0", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, textAlign: "center", padding: 20 }}>
+      <div style={{ fontSize: 32 }}>🌊</div>
+      <div style={{ fontSize: 14, fontWeight: 800, color: "#e2e8f0" }}>현장 영상이 일시적으로 연결되지 않습니다</div>
+      <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.6, maxWidth: 380 }}>
+        공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다. 잠시 후 자동으로 복구됩니다 — 지금 바로 다시 시도할 수도 있어요.
+      </div>
+      <button onClick={onRetry} style={{ marginTop: 2, padding: "8px 16px", borderRadius: 999, border: "none", background: "#0e7490", color: "#fff", fontSize: 12.5, fontWeight: 800, cursor: "pointer" }}>
+        ↻ 다시 시도
+      </button>
+    </div>
   );
 }
