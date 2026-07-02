@@ -156,6 +156,39 @@ export default function NakdongMap() {
         }),
       }).addTo(map);
 
+      // 표류 예측 오버레이 — /api/observations/drift/forecast (OpenDrift/라그랑주 앙상블).
+      //  예측·실측 폐루프의 "예측" 축: 범위(envelope)·평균경로(mean_path)·24h 도달분포(endpoints).
+      //  실측 DriftTrack이 적재되면 이 위에 겹쳐 검증한다.
+      try {
+        const fr = await fetch("/api/observations/drift/forecast");
+        const fj = await fr.json();
+        if (!cancelled && map && fj?.ok && fj.geojson) {
+          L.geoJSON(fj.geojson, {
+            interactive: false,
+            style: (f: any) => {
+              const k = f.properties?.kind;
+              if (k === "envelope")
+                return { color: "#0ea5e9", weight: 1, opacity: 0.5, fillColor: "#38bdf8", fillOpacity: 0.1, dashArray: "2 4", interactive: false };
+              if (k === "mean_path")
+                return { color: "#d97706", weight: 3, opacity: 0.9, interactive: false };
+              if (k === "sample_track")
+                return { color: "#38bdf8", weight: 1, opacity: 0.3, interactive: false };
+              return { interactive: false };
+            },
+            pointToLayer: (_f: any, ll: any) =>
+              L.circleMarker(ll, { radius: 2.2, weight: 0, fillColor: "#2563eb", fillOpacity: 0.5, interactive: false }),
+          }).addTo(map);
+
+          const rel = fj.meta?.release;
+          if (rel)
+            L.circleMarker([rel.lat, rel.lon], { radius: 5, color: "#ffffff", weight: 2, fillColor: "#4338ca", fillOpacity: 1, interactive: false })
+              .addTo(map)
+              .bindTooltip("예측 투하점 · 감전천", { direction: "left", offset: [-8, 0], className: "nak-tt" });
+        }
+      } catch {
+        /* 예측 오버레이 실패 — 베이스·위험 지도는 정상, 치명적 아님 */
+      }
+
       // 지점 마커 (실제 물길은 OSM 오버레이로 표시 — 합성 직선 점선은 혼란을 줘 제거)
       const markersById: Record<string, { marker: any; base: string }> = {};
       SPOTS.forEach((s) => {
@@ -277,6 +310,12 @@ export default function NakdongMap() {
         ))}
         <span className="inline-flex items-center gap-1.5">
           <span className="text-sky-500">▼</span> 낙동강 → 남해 흐름
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-0.5 w-5 rounded bg-amber-600" /> 표류 예측 평균경로
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-sm border border-sky-400 bg-sky-300/30" /> 예측 범위 · 도달분포 <span className="text-neutral-400">(앙상블)</span>
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개)</span>
