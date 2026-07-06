@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import { validateDriftTrack, toJsonl, kstIso, type DriftTrack } from "@/lib/observation";
 import { trackDistanceM } from "@/lib/geo";
+import { driftStore } from "@/lib/driftStore";
 
 // GPS 드리프터 궤적 적재 — 표류 예측의 "어디로·어떻게" 정답 라벨(학습 루프 보강).
 //  POST /api/observations/drift  (본문: 궤적 1건 또는 배열, DriftTrack 스키마)
@@ -85,6 +86,15 @@ export async function POST(req: NextRequest) {
 
   const jsonl = toJsonl(accepted);
 
+  // 영속 적재(R2 공유 데이터 평면). R2 미설정 시 로컬 파일로 폴백(개발/벤치). seacut이 읽는 동일 버킷.
+  if (accepted.length) {
+    try {
+      await driftStore.appendTracks(accepted);
+    } catch {
+      /* 저장 실패는 응답을 막지 않는다(아래 persisted로 상태 노출). */
+    }
+  }
+
   // 선택적 적재: DRIFT_SINK_PATH 설정 시 JSONL append.
   let persisted: string | null = null;
   const sink = process.env[SINK_ENV];
@@ -102,6 +112,7 @@ export async function POST(req: NextRequest) {
       ok: rejected.length === 0,
       acceptedCount: accepted.length,
       receivedAt: kstIso(),
+      storage: driftStore.storage(),
       rejected,
       persisted,
       tracks: accepted.map((t) => ({
