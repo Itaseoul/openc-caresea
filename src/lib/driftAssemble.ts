@@ -43,7 +43,7 @@ export function assembleTracks(pings: Ping[]): DriftTrack[] {
   }
   const tracks: DriftTrack[] = [];
   byDev.forEach((arr, dev) => {
-    arr.sort((a, b) => a.ts.localeCompare(b.ts));
+    arr.sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts)); // ★실시각(epoch) 정렬. 문자열 비교면 ...Z와 +09:00 혼재 시 오정렬
     let seg: Ping[] = [];
     const flush = () => {
       if (!seg.length) return;
