@@ -10,6 +10,7 @@ export interface Ping {
   lon: number;
   ts: string; // ISO8601. 수신 시 비어 있으면 라우트가 서버 시각으로 채운다.
   site_id?: string | null;
+  batt?: number | null; // 배터리 전압(V, 선택) — 원격 소진 감시
 }
 
 const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
@@ -30,7 +31,8 @@ export function validatePing(rec: unknown): { ok: boolean; value?: Ping; errors:
   if (ts && !ISO_RE.test(ts)) ts = ""; // 형식 오류면 버리고 서버 시각으로
   if (e.length) return { ok: false, errors: e };
   const site_id = typeof r.site_id === "string" ? r.site_id : null;
-  return { ok: true, value: { device_id, lat, lon, ts, site_id }, errors: [] };
+  const batt = typeof r.batt === "number" && Number.isFinite(r.batt) ? r.batt : null;
+  return { ok: true, value: { device_id, lat, lon, ts, site_id, batt }, errors: [] };
 }
 
 // ping 배열을 기기별·시간순으로 묶어 DriftTrack 배열로 조립. 2시간 공백에서 궤적을 분리한다.
@@ -47,7 +49,7 @@ export function assembleTracks(pings: Ping[]): DriftTrack[] {
     let seg: Ping[] = [];
     const flush = () => {
       if (!seg.length) return;
-      const points: DriftPoint[] = seg.map((p) => ({ ts: p.ts, lat: p.lat, lon: p.lon }));
+      const points: DriftPoint[] = seg.map((p) => ({ ts: p.ts, lat: p.lat, lon: p.lon, batt: p.batt ?? null }));
       const first = seg[0];
       tracks.push({
         track_id: `${dev}-${first.ts.replace(/[^0-9]/g, "").slice(0, 14)}`,
@@ -102,7 +104,7 @@ export function tracksToLiveGeoJSON(
     if (last) {
       features.push({
         type: "Feature",
-        properties: { id, site_id: t.site_id, ts: last.ts, kind: "last" },
+        properties: { id, site_id: t.site_id, ts: last.ts, batt: last.batt ?? null, kind: "last" },
         geometry: { type: "Point", coordinates: [last.lon, last.lat] },
       });
     }

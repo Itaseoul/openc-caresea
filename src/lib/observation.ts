@@ -79,6 +79,7 @@ export interface DriftPoint {
   ts: string; // ISO8601 (+09:00)
   lat: number;
   lon: number;
+  batt?: number | null; // 배터리 전압(V) — 원격 소진 감시(선택)
   speed_est?: number | null; // 구간 표류 속도 추정(m/s)
 }
 
