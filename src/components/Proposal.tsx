@@ -514,7 +514,7 @@ export default function Proposal() {
               })}
             </div>
             <p className="mt-2.5 text-[11.5px] leading-5 text-neutral-400">
-              구청과 부산시 수신 주체는 <b>협약(MOU)과 점용허가로 정형화</b>되어야 알림을 받는 실체가 됩니다. 그 문서팩 초안은 <a href="/permit" className="font-semibold text-brand-600 hover:underline">행정 허가 에이전트</a>가 스팟별로 생성합니다. 현재는 내부 운영 알림 기준이며 상태를 있는 그대로 표시합니다.
+              구청과 부산시 수신 주체는 <b>협약(MOU)과 점용허가로 정형화</b>되어야 알림을 받는 실체가 됩니다. 그 문서팩 초안은 <a href="/permit" className="font-semibold text-brand-600 hover:underline">하천 점용허가 생성기</a>가 스팟별로 생성합니다. 현재는 내부 운영 알림 기준이며 상태를 있는 그대로 표시합니다.
             </p>
           </div>
 
