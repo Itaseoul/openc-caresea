@@ -42,7 +42,7 @@ function CopyBlock({ title, text }: { title: string; text: string }) {
             );
           }}
           style={{
-            fontSize: 11, fontWeight: 700, color: copied ? "#16a34a" : "#0e7490",
+            fontSize: 11, fontWeight: 700, color: copied ? "#16a34a" : "#1f5290",
             background: "#fff", border: "1px solid #e2e8f0", borderRadius: 7,
             padding: "3px 9px", cursor: "pointer",
           }}
@@ -113,8 +113,8 @@ export default function PermitGenerator() {
               style={{
                 fontSize: 12.5, fontWeight: 700,
                 color: active ? "#fff" : "#334155",
-                background: active ? "#0e7490" : "#fff",
-                border: "1px solid " + (active ? "#0e7490" : "#e2e8f0"),
+                background: active ? "#1f5290" : "#fff",
+                border: "1px solid " + (active ? "#1f5290" : "#e2e8f0"),
                 borderRadius: 999, padding: "6px 12px", cursor: "pointer",
               }}
             >
@@ -142,7 +142,7 @@ export default function PermitGenerator() {
       <Block title="필요한 허가">
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 6 }}>
           {permits.map((p) => (
-            <div key={p.name} style={{ borderLeft: "3px solid #0e7490", padding: "2px 0 2px 10px" }}>
+            <div key={p.name} style={{ borderLeft: "3px solid #1f5290", padding: "2px 0 2px 10px" }}>
               <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a" }}>
                 {p.name}{" "}
                 {p.flag && (
@@ -169,7 +169,7 @@ export default function PermitGenerator() {
           {reqs.map((r) => (
             <div key={r.clause} style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12 }}>
               <span style={{ flex: "0 0 auto", color: "#94a3b8" }}>☐</span>
-              <span style={{ flex: "0 0 auto", fontWeight: 700, color: "#0e7490", minWidth: 92 }}>{r.clause}</span>
+              <span style={{ flex: "0 0 auto", fontWeight: 700, color: "#1f5290", minWidth: 92 }}>{r.clause}</span>
               <span style={{ color: "#475569", lineHeight: 1.5 }}>{r.item}</span>
             </div>
           ))}
@@ -179,7 +179,7 @@ export default function PermitGenerator() {
       {/* 문서팩 */}
       <Block title="사전채움 문서팩 (초안)">
         <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 4 }}>
-          스팟 데이터로 자동 채움. 〔 〕 항목과 수치는 현장값으로 보완하고, 제출 전 최신 판본·처분청을 확인하세요.
+          지점 정보로 자동으로 채운 초안입니다. 〔 〕 항목과 수치는 현장값으로 보완하고, 제출 전 최신 판본과 처분청을 확인하세요.
         </div>
         {use === "cctv" ? (
           <>

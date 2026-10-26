@@ -18,9 +18,9 @@ const STATS = [
 ];
 
 export const metadata = {
-  title: "전국 소하천 정비율 — SEA:CUT 정책 컨텍스트",
+  title: "전국 소하천 정비율 | SEA:CUT 정책 컨텍스트",
   description:
-    "전국 22,099곳 소하천의 시도별 정비율 지도. 평균 46.5%, 서울 79.1% ~ 광주 11.5% — 재정력에 따른 '빈익빈 부익부'.",
+    "전국 22,099곳 소하천의 시도별 정비율 지도입니다. 평균 46.5%, 서울 79.1% ~ 광주 11.5%로 재정력에 따른 '빈익빈 부익부'를 보여 줍니다.",
 };
 
 export default function StreamsPage() {
@@ -32,12 +32,12 @@ export default function StreamsPage() {
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "20px 16px 40px" }}>
         <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 정책 컨텍스트</div>
         <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", marginTop: 4, lineHeight: 1.25 }}>
-          전국 소하천 정비율 — <span style={{ color: "#dc2626" }}>"빈익빈 부익부"</span>
+          전국 소하천 정비율: <span style={{ color: "#dc2626" }}>"빈익빈 부익부"</span>
         </h1>
         <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.65, marginTop: 8, maxWidth: 720 }}>
           전국 소하천 <b>22,099곳</b>, 총연장 <b>55,679km</b>. 평균 정비율은 <b>46.5%</b>로,
-          서울(79.1%)과 광주(11.5%)의 격차가 7배에 이릅니다. 2020년 소하천 정비사업이 지자체 자체 사업으로 전환된 뒤,
-          재정력에 따라 정비 격차가 벌어졌습니다. SEA:CUT은 이 사각지대에 시민·오픈소스로 메우는 실증입니다.
+          서울(79.1%)과 광주(11.5%)의 격차가 7배에 이릅니다. 2020년 소하천 정비사업이 지자체 자체 사업으로 전환된 뒤
+          재정력에 따라 정비 격차가 벌어졌다는 지적이 있습니다. SEA:CUT은 이 사각지대를 시민 참여와 오픈소스로 메우려는 실증을 기획하고 있습니다.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 8, margin: "16px 0 18px" }}>
@@ -84,20 +84,20 @@ export default function StreamsPage() {
             세로선 = 전국 평균 46.5%
           </div>
           <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
-            17개 시도 전체 ({filled}곳) · 출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준)
+            17개 시도 전체 ({filled}곳), 출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준)
           </div>
         </div>
 
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 13, color: "#92400e", lineHeight: 1.65 }}>
-          하천정비 사업 예산의 지방 이양(2020) 이후 3년간 소하천 피해 규모 <b>2,499억원</b>. 재정이 열악한 지자체엔 큰 부담이라는 지적. 도시 소하천 병목의 부유 쓰레기·홍수 위험은 데이터·도면을 <b>공개</b>해 누구나 복제하는 SEA:CUT의 OpenBoom으로 보완할 수 있습니다.
+          하천정비 사업 예산의 지방 이양(2020) 이후 3년간 소하천 피해 규모 <b>2,499억원</b>. 재정이 열악한 지자체엔 큰 부담이라는 지적이 있습니다. SEA:CUT은 데이터와 도면을 <b>공개</b>해 누구나 복제할 수 있게 하려는 OpenBoom으로 도시 소하천 병목의 부유 쓰레기 문제를 보완하려 합니다.
         </div>
 
         <div style={{ marginTop: 18, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>
-          출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준) p.305 「지역별 소하천 정비」 (동일 데이터가 한병도 의원실 2024 국정감사로도 인용). 지도 GeoJSON southkorea-maps (kostat 2018) · 베이스맵 OpenTopoMap(CC-BY-SA) · CARTO · OpenStreetMap. 본 페이지는 공공데이터 기반 정책 컨텍스트이며 안전·정책 자문이 아닙니다.
+          출처: 행정안전부 『2024 행정안전통계연보』(2023.12.31 기준) p.305 「지역별 소하천 정비」 (동일 데이터가 한병도 의원실 2024 국정감사로도 인용). 지도 GeoJSON southkorea-maps (kostat 2018) · 베이스맵 OpenTopoMap(CC-BY-SA) · OpenStreetMap. 본 페이지는 공공데이터 기반 정책 배경 자료이며 안전이나 정책 자문이 아닙니다.
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
-          ← <a href="/" style={{ color: "#0e7490", textDecoration: "underline" }}>openc 메인 (제안서)</a> · <a href="/eulsukdo" style={{ color: "#0e7490", textDecoration: "underline" }}>을숙도 하구 후보지</a> · <a href="/dashboard" style={{ color: "#0e7490", textDecoration: "underline" }}>운영·안전 대시보드</a>
+          ← <a href="/" style={{ color: "#1f5290", textDecoration: "underline" }}>openc 메인</a> | <a href="/eulsukdo" style={{ color: "#1f5290", textDecoration: "underline" }}>을숙도 하구 후보지</a> | <a href="/dashboard" style={{ color: "#1f5290", textDecoration: "underline" }}>운영과 안전 대시보드</a>
         </div>
       </div>
     </main>

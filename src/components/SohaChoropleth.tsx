@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { simpleLight, osmStandard, placeLabels } from "./basemaps";
 import "leaflet/dist/leaflet.css";
 import { SOHA_DATA, colorFor, LEGEND } from "./sohaData";
 
@@ -33,16 +34,8 @@ export default function SohaChoropleth() {
       mapRef.current = map;
 
       // 베이스맵 프리셋 — 강·하천 가시성 위주로 선택
-      // 기본은 깔끔한 CARTO Voyager, "하천·지형"은 OpenTopoMap(강/소하천을 파란 선+지형 음영으로 또렷하게)
-      const voyager = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
-      );
+      // 기본은 채도 낮춘 OSM, "하천·지형"은 OpenTopoMap(강/소하천을 파란 선+지형 음영으로 또렷하게)
+      const voyager = simpleLight(L);
       const topoMap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> · SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
@@ -85,8 +78,8 @@ export default function SohaChoropleth() {
       L.control
         .layers(
           {
-            "하천·지형 (OpenTopoMap)": topoMap,
-            "기본 (Voyager)": voyager,
+            "하천과 지형 (OpenTopoMap)": topoMap,
+            "기본 지도": voyager,
             "OSM 표준": osm,
           },
           {},

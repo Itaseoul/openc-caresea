@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { simpleLight, osmStandard, placeLabels } from "./basemaps";
 import "leaflet/dist/leaflet.css";
 
 type Props = { lat: number; lng: number; label: string; sub?: string };
 
-// 관측 지점 위치 지도 — 하천이 잘 보이는 CARTO Voyager 베이스맵 + 지점 마커.
+// 관측 지점 위치 지도 — 심플 라이트(채도 낮춘 OSM) 베이스맵 + 지점 마커.
 // 부모(Dashboard)에서 next/dynamic ssr:false로 import → leaflet은 클라이언트에서만 로드.
 export default function RiverMap({ lat, lng, label, sub }: Props) {
   const elRef = useRef<HTMLDivElement>(null);
@@ -27,19 +28,14 @@ export default function RiverMap({ lat, lng, label, sub }: Props) {
       });
       mapRef.current = map;
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 19,
-      }).addTo(map);
+      simpleLight(L).addTo(map);
 
       // 관측·거치 후보 지점 마커 (브랜드 청록 원형 — 아이콘 에셋 의존 없음)
       L.circleMarker([lat, lng], {
         radius: 9,
-        color: "#0e7490",
+        color: "#1f5290",
         weight: 3,
-        fillColor: "#06b6d4",
+        fillColor: "#3772b7",
         fillOpacity: 0.9,
       })
         .addTo(map)

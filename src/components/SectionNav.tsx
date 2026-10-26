@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 // 스티키 앵커 내비 — 긴 랜딩에서 심사자가 관심 섹션으로 바로 점프.
 // 스크롤 스파이로 현재 구간을 강조. 모바일은 가로 스크롤.
 const ITEMS = [
-  { id: "problem", label: "문제·해법" },
-  { id: "context", label: "세계·근거" },
+  { id: "problem", label: "문제와 해법" },
+  { id: "context", label: "세계와 근거" },
   { id: "predict", label: "정체 예측" },
-  { id: "govern", label: "알림·연대" },
-  { id: "dashboard", label: "작동 증거" },
+  { id: "govern", label: "알림과 연대" },
+  { id: "dashboard", label: "대시보드" },
   { id: "design", label: "사업 설계" },
   { id: "join", label: "함께하기" },
 ];
@@ -54,7 +54,7 @@ export default function SectionNav() {
           href="#join"
           className="ml-auto hidden shrink-0 rounded-full bg-brand-50 px-3 py-1.5 text-[13px] font-semibold text-brand-700 ring-1 ring-brand-100 transition hover:bg-brand-100 sm:inline-block"
         >
-          후원·문의
+          후원, 문의
         </a>
       </div>
     </nav>

@@ -274,7 +274,7 @@ export default function CctvPlayer({
           </div>
           <button
             onClick={() => setRetryNonce((n) => n + 1)}
-            style={{ position: "relative", marginTop: 2, padding: "6px 14px", borderRadius: 999, border: "1px solid #334155", background: "#0e7490", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+            style={{ position: "relative", marginTop: 2, padding: "6px 14px", borderRadius: 999, border: "1px solid #334155", background: "#1f5290", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
           >
             ↻ 실시간 다시 시도
           </button>

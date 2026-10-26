@@ -23,43 +23,43 @@ const CONTACT = {
 //   이미지는 전부 공공·공개 라이선스(Wikimedia Commons, public/img/). 출처·라이선스는 푸터에 명시.
 
 const LOGFRAME: { k: string; t: string; d: string; tag: string }[] = [
-  { k: "Mission", t: "사명", tag: "왜", d: "도시 하천 병목의 부유 쓰레기가 바다로 유입되는 것을 시민 참여로 줄이고, 작은 하천의 데이터 사각지대를 공개 데이터로 메운다." },
-  { k: "Outcomes", t: "영향", tag: "무엇이 달라지나", d: "학장천 한 병목에서 부유 쓰레기 흐름이 활동 전후로 달라지는지를 측정 가능한 숫자로 보인다. 도시 소하천은 저수기에도 부유물이 늘 흐르므로 연중 측정하며, 비 직후 폭증 구간은 보너스 고신호 측정창으로 본다. 차단율은 보수적으로 약 팔 퍼센트로 본다. 시민의 책임감 변화를 함께 기록한다." },
-  { k: "Outputs", t: "산출", tag: "만드는 것", d: "OpenBoom 한 기의 실증, 운영·안전 알리미와 데이터 인프라, 활동 전후 부유 쓰레기 흐름 곡선, 누구나 복제하는 공개 도면과 데이터." },
-  { k: "Activities", t: "활동", tag: "하는 일", d: "구청 사전 협의와 점용 허가, 단기·무동력 거치(연중 가능), 주 일 회 시민 수거와 품목 분류, 영상과 수위 기록, 수위 단계에 따른 철거와 원상 복구." },
-  { k: "Inputs", t: "투입", tag: "넣는 것", d: "삼천만 원을 자재와 설치와 안전과 보험과 수거 운영과 데이터에 배분. 시민과 학교, 공공 데이터 네 종, 작은 하천은 자체 사물인터넷 계측으로 보완." },
-  { k: "Governance", t: "거버넌스", tag: "누가 받치나", d: "운영은 사단법인 이타서울, 점용 허가는 관할 구청, 거버넌스 우산은 글로벌 반려해변 협력체와 부산시, 데이터 백본은 이타시티. OpenBoom 이름과 인증은 안전 기준 충족 복제본에만 부여." },
+  { k: "Mission", t: "사명", tag: "왜", d: "도시 하천 병목의 부유 쓰레기가 바다로 유입되는 것을 시민 참여로 줄이고, 작은 하천의 데이터 사각지대를 공개 데이터로 메웁니다." },
+  { k: "Outcomes", t: "영향", tag: "무엇이 달라지나", d: "학장천 한 병목에서 부유 쓰레기 흐름이 활동 전후로 달라지는지를 측정 가능한 숫자로 보입니다. 도시 소하천은 저수기에도 부유물이 늘 흐르므로 연중 측정하며, 비 직후 부유물이 크게 느는 구간은 신호가 강한 측정 구간으로 봅니다. 차단율은 보수적으로 약 팔 퍼센트로 봅니다. 시민의 책임감 변화를 함께 기록합니다." },
+  { k: "Outputs", t: "산출", tag: "만드는 것", d: "OpenBoom 한 기의 실증, 운영과 안전 알리미, 데이터 인프라, 활동 전후 부유 쓰레기 흐름 곡선, 누구나 복제할 수 있는 공개 도면과 데이터입니다." },
+  { k: "Activities", t: "활동", tag: "하는 일", d: "구청 사전 협의와 점용 허가, 단기 무동력 거치(연중 가능), 주 일 회 시민 수거와 품목 분류, 영상과 수위 기록, 수위 단계에 따른 철거와 원상 복구입니다." },
+  { k: "Inputs", t: "투입", tag: "넣는 것", d: "삼천만 원을 자재와 설치와 안전과 보험과 수거 운영과 데이터에 배분합니다. 시민과 학교, 공공 데이터 네 종을 쓰고, 작은 하천은 자체 사물인터넷 계측으로 보완합니다." },
+  { k: "Governance", t: "거버넌스", tag: "누가 받치나", d: "운영은 사단법인 이타서울, 점용 허가는 관할 구청, 거버넌스 우산은 글로벌 반려해변 협력체와 부산시, 데이터 백본은 이타시티입니다. OpenBoom 이름과 인증은 안전 기준을 충족한 복제본에만 부여합니다." },
 ];
 
 // 공개 이미지 메타(출처·라이선스) — public/img/, 원본 Wikimedia Commons.
 type ImgMeta = { src: string; place: string; by: string; lic: string; href: string };
 const IMG: Record<string, ImgMeta> = {
-  eulsukdo: { src: "/img/eulsukdo.jpg", place: "부산 낙동강 하구·을숙도", by: "FriedC", lic: "CC BY-SA 3.0", href: "https://commons.wikimedia.org/wiki/File:Saha-gu_eulsuk-do.jpg" },
+  eulsukdo: { src: "/img/eulsukdo.jpg", place: "부산 낙동강 하구, 을숙도", by: "FriedC", lic: "CC BY-SA 3.0", href: "https://commons.wikimedia.org/wiki/File:Saha-gu_eulsuk-do.jpg" },
   seoul: { src: "/img/seoul-stream.jpg", place: "서울 도심 소하천(은평구)", by: "Huntsmanleader", lic: "CC0", href: "https://commons.wikimedia.org/wiki/File:Eunpyeong-gu_2023-11-07.jpg" },
   thames: { src: "/img/thames-litter.jpg", place: "영국 템스강 부유 쓰레기 트랩", by: "Camster2", lic: "CC BY-SA 3.0", href: "https://commons.wikimedia.org/wiki/File:I_eat_rubbish_-_river_Thames.JPG" },
   bubble: { src: "/img/bubble-barrier.jpg", place: "네덜란드 암스테르담 Great Bubble Barrier", by: "The Great Bubble Barrier", lic: "CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Bubble_Barrier_Amsterdam.jpg" },
   wheel: { src: "/img/trash-wheel.jpg", place: "미국 볼티모어 Inner Harbor Water Wheel", by: "U.S. Army Corps of Engineers", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:Army_Corps_of_Engineers_-_Inner_Harbor_Water_Wheel_-_26723076854.jpg" },
-  cleanup: { src: "/img/river-cleanup.jpg", place: "시민 하천 참여·모니터링", by: "U.S. Fish and Wildlife Service", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:River_cleanup_(53625668820).jpg" },
+  cleanup: { src: "/img/river-cleanup.jpg", place: "시민 하천 참여와 모니터링", by: "U.S. Fish and Wildlife Service", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:River_cleanup_(53625668820).jpg" },
   satellite: { src: "/img/sat-sentinel2.jpg", place: "Copernicus Sentinel-2 위성의 해안 관측", by: "European Space Agency", lic: "CC BY-SA 3.0 IGO", href: "https://commons.wikimedia.org/wiki/File:South_Georgia_Island_as_seen_by_Sentinel-2.jpg" },
-  drifter: { src: "/img/gps-drifter.jpg", place: "GPS 드리프터(추적 부표) 투하 — NOAA 표류 실측", by: "U.S. Navy / Lt. Cmdr. C. M. Bell", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:US_Navy_080120-N-0493B-005_Mineman_2nd_Class_Matthew_Rishovd,_left,_works_with_an_unidentified_Sailor_to_deploy_a_National_Oceanic_and_Atmospheric_Administration_drifter_buoy_off_the_coast_of_Senegal.jpg" },
+  drifter: { src: "/img/gps-drifter.jpg", place: "GPS 드리프터(추적 부표) 방류, NOAA 표류 실측", by: "U.S. Navy / Lt. Cmdr. C. M. Bell", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:US_Navy_080120-N-0493B-005_Mineman_2nd_Class_Matthew_Rishovd,_left,_works_with_an_unidentified_Sailor_to_deploy_a_National_Oceanic_and_Atmospheric_Administration_drifter_buoy_off_the_coast_of_Senegal.jpg" },
   edgeShip: { src: "/img/edge-ship.jpg", place: "상업선 기반 해양 모니터링(흑해)", by: "HopsonRoad", lic: "CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Container_ship_Reecon_Whale_on_Black_Sea_near_Constan%C8%9Ba_Romania.jpg" },
-  debris: { src: "/img/marine-debris.jpg", place: "수상 부유 쓰레기 집적 — NOAA Marine Debris", by: "NOAA Marine Debris Program", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:A_trash-laden_marina_(8009117813).jpg" },
+  debris: { src: "/img/marine-debris.jpg", place: "수상 부유 쓰레기 집적, NOAA Marine Debris", by: "NOAA Marine Debris Program", lic: "Public domain", href: "https://commons.wikimedia.org/wiki/File:A_trash-laden_marina_(8009117813).jpg" },
 };
 
 // 상단 "지금 바로 확인 가능한 준비" — 사이트가 실제로 보유한 자산을 한 곳에 모은 인덱스(전부 실재 페이지·앵커).
 const READY: { href: string; tag: string; title: string; desc: string; icon: IconName }[] = [
-  { href: "#dashboard", tag: "가동 중", title: "라이브 운영·안전 대시보드", desc: "강수·하천 수위·호우특보를 한 화면에서 보고 거치·수거·철거를 판단합니다.", icon: "monitor" },
-  { href: "#dashboard", tag: "공개데이터 4종", title: "데이터 파이프라인 연동", desc: "기상청·한강홍수통제소·서울특별시·부산광역시를 프록시로 안전 연동.", icon: "data" },
-  { href: "/streams", tag: "전국 지도", title: "소하천 정비율 지도", desc: "서울 79.1% ~ 광주 11.5% · 전국 평균 46.5%의 정책 사각지대를 시각화.", icon: "map" },
-  { href: "/protocol", tag: "시민과학 표준", title: "시민 수거 → 표준 관측·라벨", desc: "EU Plastic Pirates(14개국·2.5만 명·390개 강) 벤치마크로 사진 검증 게이트를 설계.", icon: "globe" },
-  { href: "/permit", tag: "문서팩", title: "하천 점용허가 생성기", desc: "거치 스팟별 행정 사전 협의·점용 허가 문서를 자동 구성합니다.", icon: "doc" },
-  { href: "/eulsukdo", tag: "실증 후보지", title: "부산 낙동강 하구 입지 검토", desc: "을숙도·학장천 거치 후보와 규제·허가 선결 조건을 사전 분석.", icon: "pin" },
+  { href: "#dashboard", tag: "실시간 공개 데이터", title: "운영, 안전 대시보드", desc: "강수, 하천 수위, 호우특보를 한 화면에 모아 거치, 수거, 철거 판단을 돕도록 만들었습니다.", icon: "monitor" },
+  { href: "#dashboard", tag: "공개데이터 4종", title: "데이터 파이프라인 연동", desc: "기상청, 한강홍수통제소, 서울특별시, 부산광역시 자료를 우리 서버를 거쳐 안전하게 연동합니다.", icon: "data" },
+  { href: "/streams", tag: "전국 지도", title: "소하천 정비율 지도", desc: "서울 79.1% ~ 광주 11.5%, 전국 평균 46.5%의 정책 사각지대를 지도로 보여 줍니다.", icon: "map" },
+  { href: "/protocol", tag: "시민과학 표준", title: "시민 수거를 표준 관측과 라벨로", desc: "EU Plastic Pirates(14개국, 2.5만 명, 390개 강) 벤치마크로 사진 검증 절차를 설계했습니다.", icon: "globe" },
+  { href: "/permit", tag: "문서팩", title: "하천 점용허가 생성기", desc: "거치 스팟별 행정 사전 협의와 점용 허가 문서 초안을 자동으로 구성합니다.", icon: "doc" },
+  { href: "/eulsukdo", tag: "실증 후보지", title: "부산 낙동강 하구 입지 검토", desc: "을숙도, 학장천 거치 후보와 규제, 허가 선결 조건을 공개 자료로 사전 분석했습니다.", icon: "pin" },
   { href: "https://www.unep.org/", tag: "국제 정합", title: "UNEP 글로벌 플라스틱 허브 회원", desc: "사단법인 이타서울은 등록 회원으로 source to sea 원칙 위에서 활동합니다.", icon: "globe" },
 ];
 
 // 문제 섹션 지표 — 본문 카피에서 추출한 사실만(새 수치 없음).
 const PROBLEM_STATS: { v: string; l: string }[] = [
-  { v: "80%+", l: "해양 쓰레기 중 육지·강 기원" },
+  { v: "80%+", l: "해양 쓰레기 중 육지와 강 기원" },
   { v: "22,000+", l: "전국 작은 하천(소하천) 수" },
   { v: "1/10", l: "자동 계측 설치 목표 비율" },
   { v: "사실상 0", l: "공개된 실시간 수위 자료" },
@@ -67,51 +67,51 @@ const PROBLEM_STATS: { v: string; l: string }[] = [
 
 // OpenBoom 설계 스펙 — 본문 카피 기반.
 const BOOM_SPECS = [
-  "재생 HDPE 밀폐 부체", "폐스티로폼 미사용", "표층만 차단", "어류·조류 통과",
-  "홍수 시 한쪽 분리 안전", "비굴착 고정", "폭 3~4m 최소 복제 단위", "1~2인 하루 설치·철거",
+  "재생 HDPE 밀폐 부체", "폐스티로폼 미사용", "표층만 차단", "어류와 조류 통과",
+  "홍수 시 한쪽 분리 안전", "비굴착 고정", "폭 3~4m 최소 복제 단위", "1~2인 하루 설치와 철거",
 ];
 
 // 글로벌 AI·데이터 정화 동향 — 검증 사례(원문 직접 확인).
 // 근거: docs/글로벌-AI-정화사례-벤치마킹-심층스터디.md, docs/GPS-드리프터-표류실측-심층스터디.md.
 // world=세계가 하는 것, take=SEA:CUT이 소하천·시민 규모로 가져오는 것.
 const GLOBAL_CASES: { tag: string; title: string; who: string; world: string; take: string }[] = [
-  { tag: "시민과학·데이터", title: "유럽 14개국 청소년의 강 플라스틱 추적", who: "PlasticPiratesEU · DLR",
-    world: "공통 과학 프로토콜과 사진 검증으로 청소년 2.5만 명이 390개 강을 측정해 오픈데이터로 공개.",
-    take: "시민 수거를 표준 관측·라벨로 승격(사진 검증 게이트)." },
-  { tag: "엣지 AI", title: "상업선의 저전력 AI 카메라 부유물 탐지", who: "ADIS · The Ocean Cleanup",
-    world: "약 6W NPU 카메라가 배 위에서 직접 탐지하고, 원본 영상 대신 잘린 탐지·메타데이터만 전송.",
-    take: "OpenBoom 엣지 카메라도 영상 미전송·메타데이터만(비식별·저전력)." },
-  { tag: "위성 탐지·예측", title: "위성으로 부유물 탐지하고 표류를 예측", who: "ADOPT · ESA·EPFL",
-    world: "Sentinel-2 위성 영상에 머신러닝을 얹어 24시간 표류를 예측하고 정화팀을 그 지점으로 보낸다.",
-    take: "위성 대신 근접 카메라가 cm급으로 본다 — 우리는 발생원에 더 가깝다." },
-  { tag: "탐지→표류", title: "위성 분할 + 표류 모델로 누적 구역 식별", who: "DEEP-PLAST · 흑해",
-    world: "U-Net++ 분할과 Lagrangian 표류 모델로 쓰레기가 쌓이는 곳을 짚는다.",
-    take: "하류 퇴적 위험 예측(litter-risk)의 아키텍처 참조." },
-  { tag: "경로 최적화", title: "수거선 동선 최적화로 회수 효율 향상", who: "INFORMS · Operations Research",
-    world: "비선형 경로 최적화로 같은 비용에 더 많이, 더 짧은 시간에 걷어낸다.",
-    take: "시민 수거 동선·붐 비움 출동의 우선순위 최적화." },
-  { tag: "표류 실측 (ground truth)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA · 제주 하구 · 갠지스",
-    world: "GPS 드리프터를 흘려 실제 표류 경로를 좌표로 기록 — 예측의 정답지를 만든다.",
-    take: "고정 붐이 드리프터의 종점 — 발생원→붐 전 경로를 라벨로(회수·재사용)." },
+  { tag: "시민과학, 데이터", title: "유럽 14개국 청소년의 강 플라스틱 추적", who: "PlasticPiratesEU, DLR",
+    world: "공통 과학 프로토콜과 사진 검증으로 청소년 2.5만 명이 390개 강을 측정해 오픈데이터로 공개했습니다.",
+    take: "시민 수거를 표준 관측과 라벨로 승격하는 방식(사진 검증 절차)을 가져옵니다." },
+  { tag: "엣지 AI", title: "상업선의 저전력 AI 카메라 부유물 탐지", who: "ADIS, The Ocean Cleanup",
+    world: "약 6W NPU 카메라가 배 위에서 직접 탐지하고, 원본 영상 대신 잘라 낸 탐지 이미지와 메타데이터만 전송합니다.",
+    take: "OpenBoom 엣지 카메라도 영상을 보내지 않고 메타데이터만 보내도록 설계합니다(비식별, 저전력)." },
+  { tag: "위성 탐지와 예측", title: "위성으로 부유물 탐지하고 표류를 예측", who: "ADOPT, ESA, EPFL",
+    world: "Sentinel-2 위성 영상에 머신러닝을 얹어 24시간 표류를 예측하고 정화팀을 그 지점으로 보냅니다.",
+    take: "위성 대신 근접 카메라로 cm급 관측을 계획하며, 관측 위치가 발생원에 더 가깝습니다." },
+  { tag: "탐지→표류", title: "위성 분할 + 표류 모델로 누적 구역 식별", who: "DEEP-PLAST, 흑해",
+    world: "U-Net++ 분할과 Lagrangian 표류 모델로 쓰레기가 쌓이는 곳을 짚어 냅니다.",
+    take: "하류 퇴적 위험 예측(litter-risk)의 구조를 설계할 때 참조합니다." },
+  { tag: "경로 최적화", title: "수거선 동선 최적화로 회수 효율 향상", who: "INFORMS, Operations Research",
+    world: "비선형 경로 최적화로 같은 비용에 더 많이, 더 짧은 시간에 걷어냅니다.",
+    take: "시민 수거 동선과 붐 비움 출동의 우선순위를 정할 때 참고합니다." },
+  { tag: "표류 실측 (ground truth)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA, 제주 하구, 갠지스",
+    world: "GPS 드리프터를 흘려 실제 표류 경로를 좌표로 기록하고, 예측과 맞대어 볼 정답지를 만듭니다.",
+    take: "고정 붐을 드리프터의 종점으로 삼아 발생원에서 붐까지의 경로를 라벨로 남깁니다(회수, 재사용)." },
 ];
 
 // 알림 거버넌스 — 예측이 "지금 정체됨"을 알릴 때, 누가·무엇을·어떤 근거로.
 // litterRisk의 RiskLevel(낮음/관심/주의/높음)에 매핑. is_estimate=true → 알림은 "출동 판단 보조"이지 자동 지시가 아니다.
 const ALERT_LADDER: { level: string; score: string; trigger: string; who: string; action: string; tone: "high" | "mid" | "low" | "base" }[] = [
-  { level: "높음", score: "≥ 0.60", trigger: "강우 first-flush × 트랩 집중 — 지금 쓸려와 걸리는 중", who: "현장 수거 코디 · 관할 구청 하천팀", action: "붐 비움·긴급 수거 출동 편성, 수위 단계 시 철거 판단", tone: "high" },
-  { level: "주의", score: "≥ 0.38", trigger: "정체 상승 — 강우 이송 또는 평시 퇴적 누적", who: "시민 수거단 · 이타서울 운영", action: "다음 정기 수거 우선순위 상향, 붐 장력·수위 점검", tone: "mid" },
-  { level: "관심", score: "≥ 0.18", trigger: "평시 정체 바닥 — 건기 standing 퇴적", who: "대시보드 표시(수동 확인)", action: "관측 지속, 순회 시 육안 확인", tone: "low" },
-  { level: "낮음", score: "< 0.18", trigger: "정상 — 특이 신호 없음", who: "—", action: "—", tone: "base" },
+  { level: "높음", score: "≥ 0.60", trigger: "강우 first-flush × 트랩 집중: 지금 쓸려 와 걸리는 중", who: "현장 수거 코디, 관할 구청 하천팀", action: "붐 비움과 긴급 수거 출동 편성, 수위 단계에 따른 철거 판단", tone: "high" },
+  { level: "주의", score: "≥ 0.38", trigger: "정체 상승: 강우 이송 또는 평시 퇴적 누적", who: "시민 수거단, 이타서울 운영", action: "다음 정기 수거 우선순위 상향, 붐 장력과 수위 점검", tone: "mid" },
+  { level: "관심", score: "≥ 0.18", trigger: "평시 정체 바닥: 건기에 쌓여 머무는 퇴적(standing stock)", who: "대시보드 표시(수동 확인)", action: "관측 지속, 순회 시 육안 확인", tone: "low" },
+  { level: "낮음", score: "< 0.18", trigger: "정상, 특이 신호 없음", who: "—", action: "—", tone: "base" },
 ];
 
 // 연대 — 알림이 울리면 각 주체가 맡는 행동(누가 무엇을). 예측→알림→행동의 사슬을 사람에 매핑.
 // instrument = 그 주체를 실제로 묶는 수단(허가·협약), status = 현재 단계(정직). 정형 주체는 /permit 문서팩으로 연결.
 type CoalStatus = "활동 중" | "준비" | "협의 전";
 const COALITION: { who: string; role: string; onAlert: string; instrument: string; status: CoalStatus; href?: string }[] = [
-  { who: "시민 수거단", role: "현장 회수", onAlert: "주의↑ 시 우선 수거·품목 분류, 사진 검증 제보", instrument: "시민 참여·사례비 예산", status: "활동 중" },
-  { who: "사단법인 이타서울", role: "운영·데이터", onAlert: "알림 발령·기록, 붐 상태 점검, 데이터 공개", instrument: "운영 주체(UNEP 플라스틱 허브 회원)", status: "활동 중" },
-  { who: "관할 구청 하천팀(사상·사하)", role: "점용·공공 수거 연계", onAlert: "높음 시 공공 청소 연계, 수위 단계 철거 협의", instrument: "하천 점용허가·소하천 협의 (소하천정비법 §14)", status: "준비", href: "/permit" },
-  { who: "부산시 · KIOST", role: "하류 관측 데이터", onAlert: "하구 관측치 교환 — 상·하류 정합 검증", instrument: "민관 데이터 협약(MOU)·기부채납", status: "협의 전", href: "/permit" },
+  { who: "시민 수거단", role: "현장 회수", onAlert: "주의 이상일 때 우선 수거와 품목 분류, 사진 검증 제보", instrument: "시민 참여, 사례비 예산", status: "활동 중" },
+  { who: "사단법인 이타서울", role: "운영, 데이터", onAlert: "알림 발령과 기록, 붐 상태 점검, 데이터 공개", instrument: "운영 주체(UNEP 플라스틱 허브 회원)", status: "활동 중" },
+  { who: "관할 구청 하천팀(사상, 사하)", role: "점용, 공공 수거 연계", onAlert: "높음 시 공공 청소 연계, 수위 단계 철거 협의", instrument: "하천 점용허가, 소하천 협의 (소하천정비법 §14)", status: "준비", href: "/permit" },
+  { who: "부산시, KIOST", role: "하류 관측 데이터", onAlert: "하구 관측치 교환, 상류와 하류 정합 검증", instrument: "민관 데이터 협약(MOU), 기부채납", status: "협의 전", href: "/permit" },
 ];
 
 function Section({
@@ -144,7 +144,7 @@ function Figure({ img, caption, ratio = "aspect-[16/9]", note }: { img: ImgMeta;
       <figcaption className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3.5 py-2.5 text-[12px] leading-5">
         <span className="font-medium text-neutral-600">{note ?? caption}</span>
         <a href={img.href} target="_blank" rel="noreferrer noopener" className="text-neutral-400 hover:text-brand-700">
-          © {img.by} · {img.lic}
+          © {img.by}, {img.lic}
         </a>
       </figcaption>
     </figure>
@@ -168,15 +168,15 @@ export default function Proposal() {
             </div>
             <h1 className="mt-4 text-balance text-3xl font-bold leading-[1.2] tracking-tight text-white sm:text-4xl lg:text-[2.6rem]">
               도시의 작은 하천에서 바다로 흘러가는 부유 쓰레기를,{" "}
-              <span className="text-brand-200">우리가 직접 막고, 기록하고, 공개합니다.</span>
+              <span className="text-brand-200">우리가 직접 막고 기록하고 공개하려 합니다.</span>
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/80 sm:text-base">
-              강이 바다로 쓰레기를 넘기는 그 지점을 우리 손으로 가로채는 실증 사업입니다. 오른쪽은 지금 이 순간 대상 하천 하류의 라이브 CCTV — 계획이 아니라 이미 작동하는 화면입니다.
+              강물과 함께 쓰레기가 바다로 흘러드는 지점에서 부유 쓰레기를 가로채는 실증을 기획하고, 관련 공개 자료를 정리해 둔 곳입니다. 오른쪽은 대상 하천 하류의 공공 CCTV 실시간 화면입니다.
             </p>
 
             {/* 신뢰 배지 스트립 */}
             <div className="mt-5 flex flex-wrap gap-2">
-              {["UN환경계획 글로벌 플라스틱 허브 회원", "공개데이터 4종 연동", "라이브 실증 운영 중"].map((t) => (
+              {["UN환경계획 글로벌 플라스틱 허브 회원", "공개데이터 4종 연동", "실증 기획 단계"].map((t) => (
                 <span key={t} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur">
                   <span className="h-1 w-1 rounded-full bg-brand-300" aria-hidden />
                   {t}
@@ -200,10 +200,10 @@ export default function Proposal() {
 
             <div className="mt-7 flex flex-wrap gap-2.5">
               <a href="#dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50">
-                <MiniIcon name="monitor" /> 작동하는 대시보드 보기
+                <MiniIcon name="monitor" /> 대시보드 보기
               </a>
               <a href="#join" className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
-                협업·후원 문의
+                협업, 후원 문의
               </a>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function Proposal() {
 
         <div className="absolute bottom-2 right-3 z-10">
           <a href={IMG.eulsukdo.href} target="_blank" rel="noreferrer noopener" className="rounded bg-black/30 px-2 py-0.5 text-[10.5px] text-white/70 backdrop-blur hover:text-white">
-            ▲ {IMG.eulsukdo.place} · © {IMG.eulsukdo.by} {IMG.eulsukdo.lic}
+            ▲ {IMG.eulsukdo.place}, © {IMG.eulsukdo.by} {IMG.eulsukdo.lic}
           </a>
         </div>
       </header>
@@ -227,12 +227,12 @@ export default function Proposal() {
       {/* ───────── 소하천 특화 지도 — 가장 메인 ───────── */}
       <section className="border-b border-neutral-100 bg-white">
         <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
-          <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">실증 무대 · 소하천 길목</div>
+          <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">실증 후보지, 소하천 길목</div>
           <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">
-            낙동강 하구로 흘러드는 소하천, 그 길목을 잡는다
+            낙동강 하구로 흘러드는 소하천의 길목을 살핍니다
           </h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
-            바다로 들어오기 직전, 낙동강 지류 소하천 합류부가 SEA:CUT의 무대입니다. 사상구 감전천(엄궁동에서 학장천에 합류해 낙동강으로 드는 길목)은 부산시 협력 데이터 실증을, 사하구 괴정천은 무동력 붐 물리 실증을 맡고, 학장천 엄궁동은 운영·안전 대시보드의 관측 지점입니다. 을숙도 하구는 4중 중첩 규제를 풀며 단계적으로 확장합니다. 부산시와 한국해양과학기술원이 낙동강 하구의 육상 기인 부유 쓰레기를 위성·드론·AI로 분석하는 가운데, SEA:CUT은 그 상류 발생 지점인 소하천 길목에 집중합니다.
+            바다로 들어오기 직전의 낙동강 지류 소하천 합류부가 SEA:CUT이 살피는 곳입니다. 기획안에서 사상구 감전천(엄궁동에서 학장천에 합류해 낙동강으로 드는 길목)은 부산시 협력 데이터 실증 후보, 사하구 괴정천은 무동력 차단막(붐) 물리 실증 후보이고, 학장천 엄궁동은 운영, 안전 대시보드의 관측 지점입니다. 을숙도 하구는 4중으로 겹친 규제를 검토하며 단계적으로 확장하는 안입니다. 부산시와 한국해양과학기술원이 낙동강 하구의 육상 기인(육지에서 흘러온) 부유 쓰레기를 위성, 드론, AI로 분석하고 있고, SEA:CUT은 그 상류 발생 지점인 소하천 길목을 다룹니다.
           </p>
           <div className="mt-6">
             <NakdongMap />
@@ -242,17 +242,17 @@ export default function Proposal() {
           <div className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-brand-50/40">
             <div className="grid gap-px bg-brand-100 sm:grid-cols-2">
               <div className="bg-white p-5">
-                <div className="text-xs font-bold uppercase tracking-wider text-brand-600">하류 · 관측</div>
-                <div className="mt-1 text-[15px] font-bold text-neutral-900">부산시 — 드론·AI로 하구를 본다</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-brand-600">하류 관측</div>
+                <div className="mt-1 text-[15px] font-bold text-neutral-900">부산시: 드론과 AI로 하구를 관측합니다</div>
                 <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
-                  부산시는 사하구 다대동 홍티항 드론 스테이션과 AI 영상분석으로 낙동강 하구로 유입되는 해양쓰레기의 경로·유입량을 <b>하류에서</b> 관측·분석합니다. 을숙도·다대포 등 연안 거점을 순회합니다. <span className="text-neutral-400">(부산시 발표, 2026 · 자동 스테이션은 출범 단계)</span>
+                  부산시는 사하구 다대동 홍티항 드론 스테이션과 AI 영상분석으로 낙동강 하구로 유입되는 해양쓰레기의 경로와 유입량을 <b>하류에서</b> 관측하고 분석합니다. 을숙도, 다대포 등 연안 거점을 순회합니다. <span className="text-neutral-400">(부산시 발표, 2026, 자동 스테이션은 출범 단계)</span>
                 </p>
               </div>
               <div className="bg-white p-5">
-                <div className="text-xs font-bold uppercase tracking-wider text-brand-700">상류 · 차단</div>
-                <div className="mt-1 text-[15px] font-bold text-neutral-900">SEA:CUT — 발생원에서 가로챈다</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-brand-700">상류 차단</div>
+                <div className="mt-1 text-[15px] font-bold text-neutral-900">SEA:CUT: 발생원 가까이에서 가로챕니다</div>
                 <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
-                  같은 낙동강 하구 문제를, 우리는 쓰레기가 바다로 나가기 <b>전</b>의 소하천 길목에서 무동력 붐으로 차단·기록합니다. <b>하류 관측(부산시)과 상류 차단(SEA:CUT)이 만나</b> source-to-sea 한 축을 완성합니다.
+                  같은 낙동강 하구 문제를 SEA:CUT은 쓰레기가 바다로 나가기 <b>전</b>의 소하천 길목에서 무동력 붐으로 차단하고 기록하는 방식으로 다루려 합니다. <b>하류 관측(부산시)과 상류 차단(SEA:CUT)을 이으면</b> 발생원에서 바다까지(source-to-sea) 잇는 흐름의 한 축이 됩니다.
                 </p>
               </div>
             </div>
@@ -263,10 +263,10 @@ export default function Proposal() {
       {/* ───────── 준비 현황 스트립 — "이 준비들이 가시적으로 보이는" 핵심 ───────── */}
       <section id="ready" className="border-b border-neutral-100 bg-gradient-to-b from-brand-50/70 to-white">
         <div className="mx-auto max-w-5xl px-5 py-12 sm:py-14">
-          <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">지금 바로 확인 가능한 준비</div>
-          <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">말이 아니라, 지금 바로 작동합니다</h2>
+          <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">공개 자료와 도구</div>
+          <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">지금 열어 볼 수 있는 자료와 도구</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
-            아래는 심사 시점에 주소를 열어 바로 확인할 수 있는 결과물입니다. 라이브 대시보드, 공개 데이터 연동, 정책 지도, 행정 문서 생성기, 실증지 분석이 모두 작동합니다.
+            아래 항목은 주소를 열어 바로 볼 수 있습니다. 공개 데이터 대시보드, 데이터 연동, 정책 지도, 행정 문서 생성기, 실증 후보지 분석을 모아 두었습니다.
           </p>
           <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {READY.map((r) => {
@@ -301,10 +301,10 @@ export default function Proposal() {
         <Section id="problem" eyebrow="문제" title="아무도 상시 측정하지 않는 소하천">
           <Figure
             img={IMG.seoul}
-            caption="도시의 작은 하천 — 콘크리트 고가 아래를 흐르는 도심 소하천"
-            note="도시의 작은 하천 병목 — 실시간 감시의 사각지대"
+            caption="도시의 작은 하천, 콘크리트 고가 아래를 흐르는 도심 소하천"
+            note="도시의 작은 하천 병목, 실시간 감시의 사각지대"
           />
-          <p>해양 쓰레기의 팔할 이상은 육지에서 강을 타고 들어옵니다. 그런데 그 통로인 작은 하천은 실시간 감시의 사각지대입니다.</p>
+          <p>해양 쓰레기의 80% 이상은 육지에서 강을 타고 들어옵니다. 그런데 그 통로인 작은 하천은 실시간 감시의 사각지대입니다.</p>
           <p>국가하천과 지방하천은 실시간 수위 관측망이 있지만, 작은 하천은 별도 법으로 관리되고 전국 이만 이천여 곳에 이릅니다. 일부에 자동 계측이 설치되고 있으나 목표는 전체의 십분의 일이며 그 데이터도 기관 내부에서만 흐릅니다. 공개된 실시간 수위 자료는 사실상 없습니다.</p>
           <div className="not-prose grid grid-cols-2 gap-3 sm:grid-cols-4">
             {PROBLEM_STATS.map((s) => (
@@ -317,26 +317,26 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 접근 = 오픈소스 ───────── */}
-        <Section eyebrow="접근" title="같은 원리, 오픈소스로 연다">
+        <Section eyebrow="접근" title="같은 원리를 오픈소스로 엽니다">
           <p>세계에는 이미 작은 하천의 부유 쓰레기를 막는 검증된 장치가 있습니다. 미국 Osprey Initiative의 Litter Gitter는 특허 장치이며 설치와 유지와 수거를 회사가 대행하는 상용 서비스입니다. 효과는 분명하지만 한 회사가 소유하고 운영하므로 다른 지역이 스스로 재현하기 어렵습니다.</p>
-          <p>SEA:CUT의 OpenBoom은 같은 수리 원리를 따르되 도면과 자재 명세와 운영 절차를 모두 공개합니다. 한 곳에서 검증한 설계를 다른 마을이 추가 비용을 거의 들이지 않고 그대로 세울 수 있습니다. 우리의 성공 지표는 우리가 몇 킬로그램을 건졌는가가 아니라, 제삼의 시민 단체가 우리 도움 없이 다른 하천에 같은 붐을 세웠는가입니다.</p>
+          <p>SEA:CUT의 OpenBoom은 같은 수리 원리를 따르되 도면과 자재 명세와 운영 절차를 모두 공개할 계획입니다. 한 곳에서 검증한 설계를 다른 마을이 추가 비용을 거의 들이지 않고 그대로 세울 수 있습니다. 우리가 정한 성공 지표는 제삼의 시민 단체가 우리 도움 없이 다른 하천에 같은 붐을 세웠는가입니다.</p>
 
           {/* 상용(특허) vs 오픈소스 대비 */}
           <div className="not-prose grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-              <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">상용 · 특허</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">상용, 특허</div>
               <div className="mt-1 text-base font-bold text-neutral-800">Osprey Litter Gitter</div>
               <ul className="mt-3 space-y-1.5 text-[13px] leading-5 text-neutral-600">
                 <li className="flex gap-2"><span className="text-neutral-300">—</span> 특허 장치, 한 회사가 소유</li>
-                <li className="flex gap-2"><span className="text-neutral-300">—</span> 설치·유지·수거를 회사가 대행</li>
-                <li className="flex gap-2"><span className="text-neutral-300">—</span> 비용 지불·의뢰 필요, 자립 재현 어려움</li>
+                <li className="flex gap-2"><span className="text-neutral-300">—</span> 설치, 유지, 수거를 회사가 대행</li>
+                <li className="flex gap-2"><span className="text-neutral-300">—</span> 비용 지불과 의뢰 필요, 자립 재현 어려움</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-brand-200 bg-brand-50/60 p-5">
-              <div className="text-xs font-bold uppercase tracking-wider text-brand-600">오픈소스 · 공유 설계</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-brand-600">오픈소스, 공유 설계</div>
               <div className="mt-1 text-base font-bold text-brand-900">SEA:CUT OpenBoom</div>
               <ul className="mt-3 space-y-1.5 text-[13px] leading-5 text-brand-900/80">
-                <li className="flex gap-2"><span className="text-brand-500">+</span> 도면·자재 명세·운영 절차 전면 공개</li>
+                <li className="flex gap-2"><span className="text-brand-500">+</span> 도면, 자재 명세, 운영 절차 공개 계획</li>
                 <li className="flex gap-2"><span className="text-brand-500">+</span> 추가 비용 거의 없이 그대로 복제</li>
                 <li className="flex gap-2"><span className="text-brand-500">+</span> 성공 지표 = 제삼자가 스스로 세운 붐</li>
               </ul>
@@ -345,25 +345,25 @@ export default function Proposal() {
 
           {/* 참고: 세계에서 운영 중인 다른 검증 사례 갤러리(보조 비주얼, 정확한 출처) */}
           <div className="not-prose mt-2">
-            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">참고 — 세계에서 운영 중인 하천 부유물 차단·수거 장치</div>
+            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">참고: 세계에서 운영 중인 하천 부유물 차단, 수거 장치</div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <Figure img={IMG.thames} ratio="aspect-[4/3]" caption={IMG.thames.place} note="영국 템스강 · 부유 쓰레기 트랩(연 40톤 수거)" />
-              <Figure img={IMG.bubble} ratio="aspect-[4/3]" caption={IMG.bubble.place} note="네덜란드 암스테르담 · 기포막 차단(Bubble Barrier)" />
-              <Figure img={IMG.wheel} ratio="aspect-[4/3]" caption={IMG.wheel.place} note="미국 볼티모어 · 수차식 부유물 수거(Trash Wheel)" />
+              <Figure img={IMG.thames} ratio="aspect-[4/3]" caption={IMG.thames.place} note="영국 템스강, 부유 쓰레기 트랩(연 40톤 수거)" />
+              <Figure img={IMG.bubble} ratio="aspect-[4/3]" caption={IMG.bubble.place} note="네덜란드 암스테르담, 기포막 차단(Bubble Barrier)" />
+              <Figure img={IMG.wheel} ratio="aspect-[4/3]" caption={IMG.wheel.place} note="미국 볼티모어, 수차식 부유물 수거(Trash Wheel)" />
             </div>
           </div>
         </Section>
 
         {/* ───────── 글로벌 동향 = AI·데이터 정화 루프 ───────── */}
-        <Section id="context" eyebrow="글로벌 동향" title="세계는 데이터로 정화 루프를 닫는다">
-          <p>세계의 하천·해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서, <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집·위성 탐지·표류 예측·수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
-          <p>SEA:CUT은 이 흐름을 외해·위성이 아니라 <b>소하천·하구 규모로, 시민·무동력으로</b> 가져옵니다. OpenBoom은 단순한 차단막이 아니라 그 데이터 루프의 첫 계측점입니다.</p>
+        <Section id="context" eyebrow="글로벌 동향" title="세계의 정화는 데이터 루프로 옮겨 가고 있습니다">
+          <p>세계의 하천과 해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서 <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집, 위성 탐지, 표류 예측, 수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
+          <p>SEA:CUT은 이 흐름을 <b>소하천과 하구 규모에서, 시민 참여와 무동력 장치로</b> 가져오려 합니다. OpenBoom은 차단막이면서 그 데이터 루프의 첫 계측점이 되도록 설계합니다.</p>
 
           {/* 글로벌 사례 이미지 갤러리(자유 라이선스, 출처 표기) */}
           <div className="not-prose">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Figure img={IMG.satellite} ratio="aspect-[4/3]" caption={IMG.satellite.place} note="위성 탐지 — Sentinel-2(ADOPT·DEEP-PLAST)" />
-              <Figure img={IMG.drifter} ratio="aspect-[4/3]" caption={IMG.drifter.place} note="GPS 드리프터 — 표류 실측 라벨" />
+              <Figure img={IMG.satellite} ratio="aspect-[4/3]" caption={IMG.satellite.place} note="위성 탐지, Sentinel-2(ADOPT, DEEP-PLAST)" />
+              <Figure img={IMG.drifter} ratio="aspect-[4/3]" caption={IMG.drifter.place} note="GPS 드리프터, 표류 실측 라벨" />
               <Figure img={IMG.edgeShip} ratio="aspect-[4/3]" caption={IMG.edgeShip.place} note="상업선 엣지 AI(ADIS)" />
               <Figure img={IMG.debris} ratio="aspect-[4/3]" caption={IMG.debris.place} note="해양 부유 쓰레기 실태" />
             </div>
@@ -389,24 +389,24 @@ export default function Proposal() {
 
           {/* 정직 경계 — 도메인 갭(타 도메인 수치 직접 인용 금지) */}
           <div className="not-prose rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
-            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계 · 도메인 갭</div>
-            <p className="mt-1.5 text-[13px] leading-6 text-amber-900/80">위성·외해·대형 선단의 성능 수치(예: 수거효율 60% 향상, 탐지 F1 0.84)는 측정 환경이 달라 <b>우리 소하천 성능으로 직접 인용하지 않습니다.</b> SEA:CUT의 강점은 위성 해상도가 아니라, 발생원에 가까운 <b>상류 차단 위치</b>와 고정 붐의 <b>연속 시계열</b>입니다.</p>
+            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계: 도메인 갭</div>
+            <p className="mt-1.5 text-[13px] leading-6 text-amber-900/80">위성, 외해, 대형 선단의 성능 수치(예: 수거효율 60% 향상, 탐지 F1 0.84)는 측정 환경이 달라 <b>우리 소하천 성능으로 직접 인용하지 않습니다.</b> SEA:CUT이 기대하는 장점은 발생원에 가까운 <b>상류 차단 위치</b>와 고정 붐의 <b>연속 시계열</b>입니다.</p>
           </div>
         </Section>
 
         {/* ───────── 데이터 루프 작동 — 예측·검증 폐루프 ───────── */}
-        <Section id="predict" eyebrow="핵심 · 데이터 루프" title="언제·어디서 정체되는지를 먼저 안다">
-          <p>이 사업의 심장은 붐이 아니라 <b>부산 하천망에서 언제·어떻게 수거 가능한 쓰레기가 하류에 정체되는지 아는 것</b>입니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실값으로 지금 작동하며(물리 휴리스틱 0단계), 강우 직후 first-flush 타이밍과 합류부·복개출구·하구 조석 같은 <b>트랩 기하</b>로 "지금 이 시간 가장 걸려 있을 길목"을 순위로 냅니다. <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증합니다 — 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
+        <Section id="predict" eyebrow="핵심: 데이터 루프" title="언제, 어디서 정체되는지 먼저 살핍니다">
+          <p>이 기획의 중심은 <b>부산 하천망에서 언제, 어떻게 수거 가능한 쓰레기가 하류에 정체되는지 아는 것</b>입니다. 아래 <b>하류 퇴적 위험 예측</b>은 부산 강우 실측값을 받아 계산하는 시험 단계 모델이며(물리 휴리스틱 0단계), 비가 막 내린 직후 쌓인 쓰레기가 한꺼번에 쓸려 오는 초기 강우 쓸림(first-flush) 시점과 합류부, 복개 출구, 하구 조석 같은 <b>트랩 기하</b>로 "지금 이 시간 가장 걸려 있을 길목"을 순위로 냅니다. <b>GPS 드리프터 실측</b>으로 그 예측이 맞았는지 검증하는 계획입니다. 수거 중량이 "얼마나"의 정답이라면, 드리프터 궤적은 "어디로"의 정답입니다.</p>
           <LitterRiskLoop />
 
           {/* 상·하류 정합 — 하구 도달 전 리드타임(예방 시간) */}
           <div className="not-prose mt-2 rounded-2xl border border-brand-100 bg-brand-50/40 p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <div className="text-[13px] font-bold text-neutral-800">상·하류 정합 — 하구 도달 전 리드타임</div>
-              <div className="text-[11px] text-neutral-400">표면유속 0.2~0.6 m/s 가정 · 추정</div>
+              <div className="text-[13px] font-bold text-neutral-800">상류와 하류 정합: 하구 도달 전 리드타임(미리 확보하는 시간)</div>
+              <div className="text-[11px] text-neutral-400">표면유속 0.2~0.6 m/s 가정, 추정</div>
             </div>
             <p className="mt-1 text-[12px] leading-5 text-neutral-500">
-              상류 길목에서 막으면 <b>바다에 닿기 전 이만큼의 시간</b>이 확보됩니다. 상류 고위험 알림은 부산시·KIOST의 하구 관측보다 이 리드타임만큼 <b>앞섭니다</b>. 이것이 상류 차단의 값 — 관측이 아니라 예방입니다.
+              상류 길목에서 막으면 <b>바다에 닿기 전 이만큼의 시간</b>이 확보됩니다. 상류 고위험 알림은 부산시와 KIOST의 하구 관측보다 이 리드타임만큼 <b>앞설 수 있습니다</b>. 상류 차단은 이 시간을 예방에 쓰려는 것입니다.
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {estuaryLeadtimes().map((lt) => (
@@ -421,21 +421,21 @@ export default function Proposal() {
               ))}
             </div>
             <p className="mt-2.5 text-[11px] leading-4 text-neutral-400">
-              ⚠️ 유속 가정 기반 추정치입니다. <a href="/permit" className="font-semibold text-brand-600 hover:underline">MOU 데이터 교환</a>으로 하구 관측(부산시·KIOST)과 연결되면, 상류 알림 → 하구 유입 확인의 <b>실측 지연</b>으로 교정합니다.
+              ⚠️ 유속 가정 기반 추정치입니다. <a href="/permit" className="font-semibold text-brand-600 hover:underline">MOU 데이터 교환</a>으로 하구 관측(부산시, KIOST)과 연결되면, 상류 알림 → 하구 유입 확인의 <b>실측 지연</b>으로 교정할 계획입니다.
             </p>
           </div>
         </Section>
 
         {/* ───────── 예측 → 알림 → 연대 — 운영 거버넌스 척추 ───────── */}
-        <Section id="govern" eyebrow="운영 거버넌스" title="정체를 알고, 알리고, 함께 걷어낸다">
-          <p>예측만으로는 쓰레기가 줄지 않습니다. <b>정체가 감지되면 누구에게 알리고, 그 사람이 무엇을 하는지</b>가 실제 회수를 만듭니다. 예측 등급이 곧 알림 등급이 되고, 알림 등급이 곧 연대 행동으로 이어지는 하나의 사슬입니다.</p>
+        <Section id="govern" eyebrow="운영 거버넌스" title="정체를 알고, 알리고, 함께 걷어냅니다">
+          <p>예측만으로는 쓰레기가 줄지 않습니다. <b>정체가 감지되면 누구에게 알리고, 그 사람이 무엇을 하는지</b>가 실제 회수를 만듭니다. 예측 등급에 따라 알림 등급이 정해지고, 알림 등급에 따라 함께 할 행동이 정해집니다.</p>
 
           {/* 3단 흐름 — 예측 → 알림 → 연대 */}
           <div className="not-prose grid items-stretch gap-2.5 sm:grid-cols-[1fr_auto_1fr_auto_1fr]">
             {[
-              { k: "1 · 정체 예측", t: "언제·어디서", d: "강우 first-flush × 트랩 기하로 지금 가장 걸려 있을 길목을 순위화", tone: "border-brand-200 bg-brand-50/60 text-brand-900" },
-              { k: "2 · 알림", t: "누구에게·무엇을", d: "등급별로 수신 주체와 행동을 미리 정해 두고 자동으로 올린다", tone: "border-amber-200 bg-amber-50/70 text-amber-900" },
-              { k: "3 · 연대 수거", t: "함께 걷어낸다", d: "시민·이타서울·구청·부산시가 각자의 역할로 출동·회수·연계", tone: "border-emerald-200 bg-emerald-50/70 text-emerald-900" },
+              { k: "1. 정체 예측", t: "언제, 어디서", d: "강우 first-flush × 트랩 기하로 지금 가장 걸려 있을 길목을 순위로 매깁니다", tone: "border-brand-200 bg-brand-50/60 text-brand-900" },
+              { k: "2. 알림", t: "누구에게, 무엇을", d: "등급별로 수신 주체와 행동을 미리 정해 두고 자동으로 올립니다", tone: "border-amber-200 bg-amber-50/70 text-amber-900" },
+              { k: "3. 연대 수거", t: "함께 걷어내기", d: "시민, 이타서울, 구청, 부산시가 각자의 역할로 출동, 회수, 연계합니다", tone: "border-emerald-200 bg-emerald-50/70 text-emerald-900" },
             ].map((s, i) => (
               <React.Fragment key={s.k}>
                 <div className={`rounded-2xl border p-4 ${s.tone}`}>
@@ -450,10 +450,10 @@ export default function Proposal() {
 
           {/* 알림 거버넌스 사다리 — 등급 → 트리거 → 수신 → 행동 */}
           <div className="not-prose mt-2">
-            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">알림 거버넌스 — 예측 등급이 곧 알림·행동 등급</div>
+            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">알림 거버넌스: 예측 등급이 곧 알림과 행동 등급입니다</div>
             <div className="overflow-hidden rounded-2xl border border-neutral-200">
               <div className="hidden bg-neutral-50 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-neutral-400 sm:grid sm:grid-cols-[84px_1fr_1fr_1.2fr]">
-                <div>등급</div><div>트리거 · 정체 신호</div><div>알림 대상</div><div>행동</div>
+                <div>등급</div><div>트리거, 정체 신호</div><div>알림 대상</div><div>행동</div>
               </div>
               {ALERT_LADDER.map((r) => {
                 const chip =
@@ -467,9 +467,9 @@ export default function Proposal() {
                       <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ring-1 ${chip}`}>{r.level}</span>
                       <span className="ml-1.5 text-[10.5px] tabular-nums text-neutral-400">{r.score}</span>
                     </div>
-                    <div className="text-neutral-600"><span className="font-medium text-neutral-400 sm:hidden">트리거 · </span>{r.trigger}</div>
-                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">알림 · </span>{r.who}</div>
-                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">행동 · </span>{r.action}</div>
+                    <div className="text-neutral-600"><span className="font-medium text-neutral-400 sm:hidden">트리거: </span>{r.trigger}</div>
+                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">알림: </span>{r.who}</div>
+                    <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">행동: </span>{r.action}</div>
                   </div>
                 );
               })}
@@ -479,8 +479,8 @@ export default function Proposal() {
           {/* 연대 — 알림이 울리면 각 주체가 맡는 행동 + 그를 묶는 수단·현재 상태 */}
           <div className="not-prose">
             <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <div className="text-[12.5px] font-semibold text-neutral-500">연대 — 알림이 울릴 때 각자의 역할과 그를 묶는 수단</div>
-              <div className="text-[11px] text-neutral-400">상태: 활동 중 · 준비 · 협의 전 (정직 표시)</div>
+              <div className="text-[12.5px] font-semibold text-neutral-500">연대: 알림이 울릴 때 각자의 역할과 그를 묶는 수단</div>
+              <div className="text-[11px] text-neutral-400">상태: 활동 중, 준비, 협의 전 (있는 그대로 표시)</div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {COALITION.map((c) => {
@@ -500,7 +500,7 @@ export default function Proposal() {
                     <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-neutral-100 pt-2.5">
                       <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ring-1 ${st}`}>{c.status}</span>
                       <span className="text-[11.5px] text-neutral-500">{c.instrument}</span>
-                      {c.href && <span className="text-[11px] font-semibold text-brand-600">· 문서팩 →</span>}
+                      {c.href && <span className="text-[11px] font-semibold text-brand-600">문서팩 →</span>}
                     </div>
                   </>
                 );
@@ -514,24 +514,24 @@ export default function Proposal() {
               })}
             </div>
             <p className="mt-2.5 text-[11.5px] leading-5 text-neutral-400">
-              구청·부산시 수신 주체는 <b>협약(MOU)·점용허가로 정형화</b>되어야 알림을 받는 실체가 됩니다 — 그 문서팩을 <a href="/permit" className="font-semibold text-brand-600 hover:underline">행정 허가 에이전트</a>가 스팟별로 생성합니다. 현재는 내부 운영 알림 기준이며 상태를 있는 그대로 표시합니다.
+              구청과 부산시 수신 주체는 <b>협약(MOU)과 점용허가로 정형화</b>되어야 알림을 받는 실체가 됩니다. 그 문서팩 초안은 <a href="/permit" className="font-semibold text-brand-600 hover:underline">행정 허가 에이전트</a>가 스팟별로 생성합니다. 현재는 내부 운영 알림 기준이며 상태를 있는 그대로 표시합니다.
             </p>
           </div>
 
           {/* 정직 경계 — 알림의 범위와 한계 */}
           <div className="not-prose rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
-            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계 · 알림의 범위</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-amber-700">정직 경계: 알림의 범위</div>
             <ul className="mt-1.5 space-y-1 text-[13px] leading-6 text-amber-900/80">
-              <li>· 예측은 <b>추정(is_estimate)</b>입니다 — 알림은 <b>출동 판단 보조</b>이지 자동 지시가 아닙니다.</li>
-              <li>· 재난·안전 알림은 <b>안전신문고·재난문자와 중복하지 않습니다</b>(범위를 수거 운영으로 한정).</li>
-              <li>· 알림 레코드에 개인정보는 없습니다(deid_flag). 수신 주체 확정 전까지는 내부 운영 알림입니다.</li>
-              <li>· 발령은 예측과 <b>같은 감사 레코드</b>에 남습니다(<code className="rounded bg-amber-100 px-1 text-[12px]">alert_dispatched</code>·채널). 저장소(DB/Blob) 연결 시 그대로 영속·추적됩니다.</li>
+              <li>· 예측은 <b>추정값</b>입니다. 알림은 <b>출동 판단 보조</b>이며 자동 지시가 아닙니다.</li>
+              <li>· 재난, 안전 알림은 <b>안전신문고, 재난문자와 중복하지 않습니다</b>(범위를 수거 운영으로 한정).</li>
+              <li>· 알림 기록에 개인정보는 없습니다. 수신 주체 확정 전까지는 내부 운영 알림입니다.</li>
+              <li>· 발령 여부와 채널은 예측과 <b>같은 기록</b>에 남습니다. 저장소를 연결하면 그대로 저장되고 추적됩니다.</li>
             </ul>
           </div>
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}
-        <Section id="design" eyebrow="설계" title="사업 설계 — 로그프레임">
+        <Section id="design" eyebrow="설계" title="사업 설계: 로그프레임">
           <p className="not-prose -mt-1 text-[13px] text-neutral-500">투입에서 사명까지, 결과의 사슬(results chain)로 설계했습니다.</p>
           <div className="not-prose space-y-2.5">
             {LOGFRAME.map((r, i) => (
@@ -553,13 +553,13 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── OpenBoom ───────── */}
-        <Section eyebrow="핵심 산출" title="OpenBoom — 무동력 오픈소스 차단 붐">
+        <Section eyebrow="핵심 산출" title="OpenBoom: 무동력 오픈소스 차단 붐">
           <div className="not-prose">
             <BoomDiagram />
           </div>
           <div className="space-y-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-5 sm:p-6">
             <p className="text-neutral-700">작은 하천 전용의 오픈소스 표층 부유 쓰레기 차단 붐입니다. 밀폐형 재생 고밀도 폴리에틸렌 부체를 쓰며 폐스티로폼은 쓰지 않습니다. 표층만 막아 어류와 새는 통과시키고, 홍수 시 한쪽 연결이 끊어지는 안전 장치를 둡니다. 하상을 굴착하지 않습니다.</p>
-            <p className="text-neutral-700">물리 설계만이 아니라 자재 조달과 교육과 진입 단계와 데이터 표준과 행정 협의 방법까지 하나의 생태계로 공개합니다. 폭 삼사 미터 작은 하천 한 칸을 최소 복제 단위로 표준화하여 한두 사람이 하루 안에 설치하고 철거합니다. 시민이 병목 지점을 사진과 위치로 제보하는 기능을 두되 안전신문고와 중복되지 않게 범위를 한정합니다.</p>
+            <p className="text-neutral-700">물리 설계와 함께 자재 조달, 교육, 진입 단계, 데이터 표준, 행정 협의 방법까지 하나의 묶음으로 공개하는 것을 목표로 합니다. 폭 삼사 미터 작은 하천 한 칸을 최소 복제 단위로 표준화하여 한두 사람이 하루 안에 설치하고 철거할 수 있게 설계합니다. 시민이 병목 지점을 사진과 위치로 제보하는 기능을 두되 안전신문고와 중복되지 않게 범위를 한정합니다.</p>
             <div className="flex flex-wrap gap-2">
               {BOOM_SPECS.map((s) => (
                 <span key={s} className="rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-medium text-brand-800">{s}</span>
@@ -569,30 +569,30 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 근거: source to sea ───────── */}
-        <Section eyebrow="근거" title="발원지에서 바다까지 — Source to Sea 정합">
+        <Section eyebrow="근거" title="발원지에서 바다까지: Source to Sea 정합">
           <div className="not-prose">
             <SourceToSeaDiagram />
           </div>
-          <p>SEA:CUT은 우리의 비유가 아니라 국제 공식 관리 프레임 위에 있습니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원이며, 육지 기원 오염을 출발지에서 차단한다는 source to sea 원칙을 따릅니다.</p>
+          <p>SEA:CUT은 국제 관리 프레임인 source to sea 위에서 설계했습니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원이며, 육지 기원 오염을 출발지에서 차단한다는 source to sea 원칙을 따릅니다.</p>
         </Section>
 
         {/* ───────── 라이브 대시보드 ───────── */}
-        <Section id="dashboard" eyebrow="사전 검증 · 작동하는 증거" title="이미 작동하는 실증 운영·안전 알리미">
+        <Section id="dashboard" eyebrow="공개 데이터 대시보드" title="실증 운영과 안전 알리미(시험판)">
           <div className="not-prose -mt-1 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[12px] font-semibold text-emerald-700">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            LIVE · 공개 데이터 실시간 연동
+            LIVE 공개 데이터 실시간 연동
           </div>
-          <p>우리는 계획만 제출하지 않습니다. 아래는 공개 데이터로 지금 작동하는 운영·안전 대시보드입니다. 강수와 하천 수위를 한 화면에서 보고, 무동력 차단 붐을 언제 거치·수거·철거할지 판단합니다. 이 시스템·시민 참여·데이터 파이프라인은 계절과 무관하게 연중 굴러가며, 비 직후는 부유물이 폭증하는 보너스 고신호 측정창입니다. 작은 하천의 실시간 수위는 공개 자료가 없어 자체 계측으로 메웁니다.</p>
+          <p>아래는 공개 데이터를 받아 보여 주는 운영, 안전 대시보드입니다. 강수와 하천 수위를 한 화면에 모아, 무동력 차단 붐을 언제 거치, 수거, 철거할지 판단하는 데 쓰도록 만들었습니다. 도시 소하천은 연중 부유물이 흐르므로 계절과 관계없이 쓸 수 있게 설계했고, 비가 온 직후는 부유물이 크게 늘어 신호가 강한 측정 구간입니다. 작은 하천의 실시간 수위는 공개 자료가 없어 자체 계측으로 메울 계획입니다.</p>
           <div className="not-prose mt-5">
             <Dashboard />
           </div>
         </Section>
 
         {/* ───────── 정직 경계 ───────── */}
-        <Section eyebrow="원칙" title="정직의 경계 — 과장하지 않는다">
+        <Section eyebrow="원칙" title="정직의 경계: 과장하지 않습니다">
           <p className="text-sm leading-7 text-neutral-500">수면 붐은 떠 있는 쓰레기만 잡습니다. 홍수 시 안전이 가장 큰 관문이므로 소형과 탈착과 비굴착으로 대응하고 수위 단계에 따라 철거합니다. 영상 분석은 존재와 추세를 보여주는 보조 수단이며 자동 정확 집계를 약속하지 않습니다. 첫 시도는 학습으로 봅니다. 시 청소를 대체하지 않고 보완하며, 주민에게 무급 노동을 전가하지 않도록 사례비를 예산에 반영합니다.</p>
         </Section>
 
@@ -600,10 +600,10 @@ export default function Proposal() {
         <Section eyebrow="확장" title="두 번째 병목까지, 복제의 비용">
           <Figure
             img={IMG.cleanup}
-            caption="시민이 직접 하천을 돌보고 기록하는 참여 — 복제의 출발점"
-            note="시민 참여로 굴러가는 운영 — 다음 병목으로 복제되는 모델"
+            caption="시민이 직접 하천을 돌보고 기록하는 참여, 복제의 출발점"
+            note="시민 참여로 굴러가는 운영, 다음 병목으로 복제되는 모델"
           />
-          <p>첫 한 기의 한계는 분명합니다. 그러나 OpenBoom의 가치는 두 번째 병목을 세우는 비용이 얼마나 낮아지는가에 있습니다. 한 곳에서 검증한 도면과 데이터와 운영 절차는 공개되어 있어 다른 하천이 처음부터 다시 설계할 필요가 없습니다. 부산 학장천에서 검증한 방법을 다른 도시 하천이 그대로 가져다 쓰는 것이 이 사업의 끝그림입니다.</p>
+          <p>첫 한 기의 한계는 분명합니다. 그러나 OpenBoom의 가치는 두 번째 병목을 세우는 비용이 얼마나 낮아지는가에 있습니다. 한 곳에서 검증한 도면과 데이터와 운영 절차를 공개하면 다른 하천이 처음부터 다시 설계할 필요가 없습니다. 부산 학장천에서 검증할 방법을 다른 도시 하천이 그대로 가져다 쓰는 것이 이 사업의 최종 목표입니다.</p>
           <div className="not-prose flex items-center gap-2 sm:gap-3">
             <ReplicaCard label="학장천 1기" highlight />
             <span className="text-brand-300">→</span>
@@ -623,15 +623,15 @@ export default function Proposal() {
             <span className="h-px w-8 bg-brand-600" aria-hidden />
             함께하기
           </div>
-          <h2 className="mb-2 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">이 실증을 같이 밀어주세요</h2>
+          <h2 className="mb-2 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">이 실증 기획에 함께해 주세요</h2>
           <p className="mb-6 max-w-2xl text-[15px] leading-7 text-neutral-600">
-            지금 작동하는 실증을 더 많은 소하천으로 복제하려 합니다. 후원·공공 협업·오픈소스 기여 — 어느 문으로든 함께할 수 있습니다.
+            이 실증을 더 많은 소하천으로 넓히려 합니다. 후원, 공공 협업, 오픈소스 기여 중 어느 방법으로든 함께할 수 있습니다.
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
             {[
-              { icon: "heart", tag: "개인·기업", title: "후원하기", desc: "자재·설치·안전·데이터에 쓰이는 3천만 원 실증을 함께 채웁니다.", href: CONTACT.donate, cta: "후원 문의" },
-              { icon: "handshake", tag: "지자체·부처", title: "공공 협업", desc: "소하천 점용 협의·데이터 공유·공동 실증을 제안해 주세요.", href: CONTACT.partner, cta: "협업 제안" },
-              { icon: "code", tag: "개발자·엔지니어", title: "오픈소스 기여", desc: "OpenBoom 도면과 데이터 파이프라인은 공개되어 있습니다.", href: CONTACT.github, cta: "GitHub 열기", external: true },
+              { icon: "heart", tag: "개인, 기업", title: "후원하기", desc: "자재, 설치, 안전, 데이터에 쓰일 3천만 원 실증 예산을 함께 채웁니다.", href: CONTACT.donate, cta: "후원 문의" },
+              { icon: "handshake", tag: "지자체, 부처", title: "공공 협업", desc: "소하천 점용 협의, 데이터 공유, 공동 실증을 제안해 주세요.", href: CONTACT.partner, cta: "협업 제안" },
+              { icon: "code", tag: "개발자, 엔지니어", title: "오픈소스 기여", desc: "데이터 파이프라인 코드는 공개되어 있고, OpenBoom 도면은 공개할 계획입니다.", href: CONTACT.github, cta: "GitHub 열기", external: true },
             ].map((c) => (
               <a
                 key={c.title}
@@ -659,23 +659,23 @@ export default function Proposal() {
         <footer className="space-y-3 border-t border-neutral-200 py-10 text-xs leading-5 text-neutral-400">
           <div className="space-y-1.5">
             <p className="text-[13px] text-neutral-600">
-              <span className="font-semibold text-neutral-700">사단법인 이타서울</span> · 문의{" "}
-              <a href={CONTACT.email} className="font-medium text-brand-700 hover:underline">{CONTACT.emailText}</a> ·{" "}
+              <span className="font-semibold text-neutral-700">사단법인 이타서울</span> | 문의{" "}
+              <a href={CONTACT.email} className="font-medium text-brand-700 hover:underline">{CONTACT.emailText}</a> |{" "}
               <a href={CONTACT.github} target="_blank" rel="noreferrer noopener" className="font-medium text-brand-700 hover:underline">GitHub</a>
             </p>
             <p>
-              <span className="font-medium text-neutral-500">데이터 출처</span> · 기상청 · 한강홍수통제소 · 서울특별시 열린데이터광장 · 부산광역시
+              <span className="font-medium text-neutral-500">데이터 출처</span>: 기상청, 한강홍수통제소, 서울특별시 열린데이터광장, 부산광역시
             </p>
-            <p>서울·부산 공공데이터는 공공누리 제2유형(출처표시 + 상업적 이용금지)에 따라 비영리로 표시합니다.</p>
+            <p>서울과 부산 공공데이터는 공공누리 제2유형(출처표시 + 상업적 이용금지)에 따라 비영리로 표시합니다.</p>
             <p>powered by 이타시티 · SEA:CUT · openc.caresea.kr</p>
           </div>
           <div className="border-t border-neutral-100 pt-3">
-            <p className="mb-1.5 font-medium text-neutral-500">이미지 출처 (공공·공개 라이선스, Wikimedia Commons)</p>
+            <p className="mb-1.5 font-medium text-neutral-500">이미지 출처 (공공, 공개 라이선스, Wikimedia Commons)</p>
             <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
               {Object.values(IMG).map((m) => (
                 <li key={m.src}>
                   <a href={m.href} target="_blank" rel="noreferrer noopener" className="hover:text-brand-700">
-                    {m.place} — © {m.by} · {m.lic}
+                    {m.place}, © {m.by}, {m.lic}
                   </a>
                 </li>
               ))}
@@ -689,7 +689,7 @@ export default function Proposal() {
         href="#join"
         className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-1.5 rounded-full bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/20 transition hover:bg-brand-800 sm:hidden"
       >
-        <MiniIcon name="heart" size={16} /> 후원·문의
+        <MiniIcon name="heart" size={16} /> 후원, 문의
       </a>
     </main>
   );
@@ -717,10 +717,10 @@ function ReplicaCard({ label, highlight, muted }: { label: string; highlight?: b
 function BoomDiagram() {
   return (
     <div className="mb-1 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-      <svg viewBox="0 0 440 230" className="h-auto w-full" role="img" aria-label="OpenBoom 단면 개념도 — 표층 차단·어류 통과·홍수 시 분리·비굴착 고정">
+      <svg viewBox="0 0 440 230" className="h-auto w-full" role="img" aria-label="OpenBoom 단면 개념도: 표층 차단, 어류 통과, 홍수 시 분리, 비굴착 고정">
         <defs>
           <marker id="arr" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
-            <path d="M0 0 L7 3.5 L0 7 z" fill="#0891b2" />
+            <path d="M0 0 L7 3.5 L0 7 z" fill="#2563a8" />
           </marker>
         </defs>
         {/* 하늘 / 물 / 하상 */}
@@ -736,18 +736,18 @@ function BoomDiagram() {
         <text x="70" y="92" fontSize="9.5" fill="#94a3b8">떠내려온 부유 쓰레기</text>
 
         {/* 부체(float) — 수면 캡슐 */}
-        <rect x="196" y="97" width="30" height="14" rx="7" fill="#0891b2" stroke="#0e7490" strokeWidth="1.5" />
-        <text x="211" y="84" textAnchor="middle" fontSize="9.5" fill="#0e7490">재생 HDPE 부체</text>
+        <rect x="196" y="97" width="30" height="14" rx="7" fill="#2563a8" stroke="#1f5290" strokeWidth="1.5" />
+        <text x="211" y="84" textAnchor="middle" fontSize="9.5" fill="#1f5290">재생 HDPE 부체</text>
 
         {/* 표층 차단막(skirt) */}
-        <rect x="206" y="111" width="10" height="40" fill="#0891b2" opacity="0.2" />
-        <line x1="211" y1="111" x2="211" y2="151" stroke="#0e7490" strokeWidth="2.5" strokeLinecap="round" />
+        <rect x="206" y="111" width="10" height="40" fill="#2563a8" opacity="0.2" />
+        <line x1="211" y1="111" x2="211" y2="151" stroke="#1f5290" strokeWidth="2.5" strokeLinecap="round" />
         <text x="224" y="138" fontSize="9.5" fill="#334155">표층만 차단</text>
 
         {/* 어류·조류는 막 아래로 통과 */}
-        <path d="M286 176 q-18 -7 -40 0" stroke="#0891b2" strokeWidth="1.3" fill="none" markerEnd="url(#arr)" opacity="0.75" />
+        <path d="M286 176 q-18 -7 -40 0" stroke="#2563a8" strokeWidth="1.3" fill="none" markerEnd="url(#arr)" opacity="0.75" />
         <text x="290" y="180" fontSize="13">🐟</text>
-        <text x="246" y="196" fontSize="9.5" fill="#334155">어류·조류는 아래로 통과</text>
+        <text x="246" y="196" fontSize="9.5" fill="#334155">어류와 조류는 아래로 통과</text>
 
         {/* 오른쪽: 홍수 시 한쪽 분리(끊어지는 연결=빨강 점선) */}
         <line x1="226" y1="104" x2="332" y2="104" stroke="#dc2626" strokeWidth="1.7" strokeDasharray="4 3" />
@@ -767,7 +767,7 @@ function BoomDiagram() {
 function SourceToSeaDiagram() {
   return (
     <div className="mb-1 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4">
-      <svg viewBox="0 0 420 96" className="h-auto w-full" role="img" aria-label="source to sea — 육지에서 바다까지">
+      <svg viewBox="0 0 420 96" className="h-auto w-full" role="img" aria-label="source to sea: 육지에서 바다까지">
         <defs>
           <marker id="s2s" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
             <path d="M0 0 L7 3.5 L0 7 z" fill="#94a3b8" />
@@ -776,16 +776,16 @@ function SourceToSeaDiagram() {
         {/* 노드 1: 육지(도시) */}
         <g>
           <rect x="8" y="30" width="96" height="40" rx="10" fill="#f1f5f9" stroke="#e2e8f0" />
-          <text x="56" y="48" textAnchor="middle" fontSize="12" fontWeight="700" fill="#334155">육지 · 도시</text>
+          <text x="56" y="48" textAnchor="middle" fontSize="12" fontWeight="700" fill="#334155">육지, 도시</text>
           <text x="56" y="62" textAnchor="middle" fontSize="9.5" fill="#64748b">쓰레기 발생원</text>
         </g>
         <line x1="104" y1="50" x2="158" y2="50" stroke="#94a3b8" strokeWidth="1.6" markerEnd="url(#s2s)" />
         {/* 노드 2: 소하천 병목 = SEA:CUT 차단 지점 */}
         <g>
-          <rect x="160" y="22" width="100" height="56" rx="10" fill="#ecfeff" stroke="#a5f3fc" strokeWidth="1.6" />
-          <text x="210" y="42" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0e7490">소하천 병목</text>
-          <text x="210" y="56" textAnchor="middle" fontSize="9.5" fill="#0891b2">SEA:CUT OpenBoom</text>
-          <text x="210" y="69" textAnchor="middle" fontSize="9.5" fill="#0891b2">여기서 가로챈다</text>
+          <rect x="160" y="22" width="100" height="56" rx="10" fill="#eef4fb" stroke="#b8cfec" strokeWidth="1.6" />
+          <text x="210" y="42" textAnchor="middle" fontSize="12" fontWeight="800" fill="#1f5290">소하천 병목</text>
+          <text x="210" y="56" textAnchor="middle" fontSize="9.5" fill="#2563a8">SEA:CUT OpenBoom</text>
+          <text x="210" y="69" textAnchor="middle" fontSize="9.5" fill="#2563a8">여기서 가로챕니다</text>
         </g>
         <line x1="260" y1="50" x2="314" y2="50" stroke="#94a3b8" strokeWidth="1.6" markerEnd="url(#s2s)" />
         {/* 노드 3: 바다 */}

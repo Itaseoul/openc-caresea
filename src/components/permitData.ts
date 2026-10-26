@@ -227,7 +227,7 @@ export function pathway(s: Spot, use: UseType = "boom"): string[] {
   if (use === "cctv") {
     steps.push("설치·연계 — 엣지 비식별화 적용, 환경데이터 추출, 이타시티·지자체 공유 개시");
   } else {
-    steps.push("거치·운영 — 주 1회 수거, 영상·수위 기록, 수위 단계 철거 SOP");
+    steps.push("거치·운영 — 주 1회 수거, 영상과 수위 기록, 수위 단계별 철거 절차(SOP)");
   }
   return steps;
 }

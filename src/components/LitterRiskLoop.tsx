@@ -87,7 +87,7 @@ export default function LitterRiskLoop() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
             </span>
-            <span className="text-[13px] font-bold text-neutral-800">하류 퇴적 위험 예측 — 라이브</span>
+            <span className="text-[13px] font-bold text-neutral-800">하류 퇴적 위험 예측: 라이브</span>
           </div>
           <span className="text-[11px] text-neutral-400">
             {risk.loading ? "불러오는 중…" : risk.data?.generatedAt ? risk.data.generatedAt.slice(5, 16).replace("T", " ") : ""}
@@ -97,16 +97,16 @@ export default function LitterRiskLoop() {
           부산 강우 실값 → 물리 휴리스틱(발생원 × 트랩 × first-flush).{" "}
           {rain.length
             ? `강우 감지: ${rain.map((r) => `${r.area} ${r.rainfall_mm}mm`).join(", ")}`
-            : "현재 건기 — 평시 정체 퇴적 위주"}
+            : "현재 건기, 평시 정체 퇴적 위주"}
         </p>
         {/* 지금 능동 알림(주의 이상) 요약 — 예측→알림→연대 사슬의 라이브 발령 */}
         {gov && gov.dispatchCount > 0 && (
           <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/70 p-3">
             <div className="flex items-center gap-1.5 text-[12px] font-bold text-amber-800">
-              <span aria-hidden>🔔</span> 지금 알림 발령 {gov.dispatchCount}건 · 수신 {gov.recipients.join(", ")}
+              <span aria-hidden>🔔</span> 지금 알림 기준 해당 {gov.dispatchCount}건, 수신 대상 {gov.recipients.join(", ")}
             </div>
             <p className="mt-0.5 text-[11px] leading-4 text-amber-900/70">
-              예측 등급이 곧 알림 등급 — 주의 이상에서 해당 주체로 능동 발령됩니다. (출동 판단 보조, 자동 지시 아님)
+              예측 등급이 곧 알림 등급입니다. 주의 이상이면 해당 주체에게 알리도록 설계했습니다(출동 판단 보조, 자동 지시 아님).
             </p>
           </div>
         )}
@@ -132,8 +132,8 @@ export default function LitterRiskLoop() {
                 {h.alert?.dispatch && (
                   <p className="mt-1.5 flex flex-wrap items-center gap-1 text-[11px] leading-4 text-amber-700">
                     <span className="rounded bg-amber-100 px-1.5 py-0.5 font-semibold ring-1 ring-amber-200">🔔 알림</span>
-                    <span className="font-medium">{h.alert.recipients.join(" · ")}</span>
-                    <span className="text-amber-600">— {h.alert.action}</span>
+                    <span className="font-medium">{h.alert.recipients.join(", ")}</span>
+                    <span className="text-amber-600">: {h.alert.action}</span>
                   </p>
                 )}
               </div>
@@ -157,7 +157,7 @@ function ValidationPanel({ val, loading }: { val: ValResp | null | undefined; lo
   const v = val?.ok ? val.validation : undefined;
   return (
     <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-      <span className="text-[13px] font-bold text-neutral-800">예측 검증 — GPS 드리프터 실측 폐루프</span>
+      <span className="text-[13px] font-bold text-neutral-800">예측 검증: GPS 드리프터 실측 폐루프</span>
       {v ? (
         <div className="mt-3">
           <div className="grid grid-cols-3 gap-2">
@@ -172,7 +172,7 @@ function ValidationPanel({ val, loading }: { val: ValResp | null | undefined; lo
                   {m.track_id} <span className="text-neutral-300">→</span> {m.nearest_name}
                 </span>
                 <span className={`flex-none font-semibold ${m.hit ? "text-emerald-600" : m.within_radius ? "text-amber-600" : "text-neutral-400"}`}>
-                  {m.distance_m}m · {m.hit ? "적중" : m.within_radius ? "근접" : "빗나감"}
+                  {m.distance_m}m, {m.hit ? "적중" : m.within_radius ? "근접" : "빗나감"}
                 </span>
               </div>
             ))}
@@ -183,13 +183,13 @@ function ValidationPanel({ val, loading }: { val: ValResp | null | undefined; lo
           <p className="text-[12px] leading-5 text-neutral-500">
             {loading
               ? "불러오는 중…"
-              : "드리프터 캘리브레이션 캠페인 전 — 적재된 궤적 0건. 아래는 검증이 작동하는 방식입니다. GPS 드리프터를 흘려 실제 표류 종점을 기록하면, 그 종점이 상위 예측 핫스팟 반경 내에 도달했는지로 예측을 검증합니다."}
+              : "드리프터 캘리브레이션 캠페인 전이라 적재된 궤적은 0건입니다. 아래는 검증 방식입니다. GPS 드리프터를 흘려 실제 표류 종점을 기록하면, 그 종점이 상위 예측 핫스팟 반경 내에 도달했는지로 예측을 검증합니다."}
           </p>
           <ValidationDiagram />
         </div>
       )}
       <p className="mt-3 text-[11px] leading-4 text-neutral-400">
-        정직 경계: 라벨 0단계의 휴리스틱·약지도 검증입니다. 학습형 모델이 아니며, 드리프터는 상시 도구가 아니라 간헐 캘리브레이션입니다.
+        정직 경계: 라벨 0단계의 휴리스틱과 약지도 검증입니다. 학습형 모델이 아니며, 드리프터는 상시 도구가 아니라 간헐 캘리브레이션입니다.
       </p>
     </div>
   );
@@ -208,21 +208,21 @@ function Stat({ label, v }: { label: string; v: string }) {
 function ValidationDiagram() {
   return (
     <div className="mt-3 overflow-hidden rounded-xl border border-neutral-200 bg-white">
-      <svg viewBox="0 0 420 150" className="h-auto w-full" role="img" aria-label="예측-실측 검증 — 드리프터 종점이 예측 핫스팟 검증 반경 내 도달하면 적중">
+      <svg viewBox="0 0 420 150" className="h-auto w-full" role="img" aria-label="예측-실측 검증: 드리프터 종점이 예측 핫스팟 검증 반경 내 도달하면 적중">
         <defs>
           <marker id="dv" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
             <path d="M0 0 L7 3.5 L0 7 z" fill="#94a3b8" />
           </marker>
         </defs>
         {/* 예측 핫스팟 #1 + 검증 반경 */}
-        <circle cx="120" cy="82" r="36" fill="#ecfeff" stroke="#67e8f9" strokeWidth="1.2" strokeDasharray="4 3" />
-        <circle cx="120" cy="82" r="7" fill="#0891b2" />
+        <circle cx="120" cy="82" r="36" fill="#eef4fb" stroke="#8cb0dd" strokeWidth="1.2" strokeDasharray="4 3" />
+        <circle cx="120" cy="82" r="7" fill="#2563a8" />
         <text x="120" y="82" dy="-14" textAnchor="middle" fontSize="8.5" fill="#94a3b8">검증 반경</text>
-        <text x="120" y="138" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#0e7490">예측 핫스팟 #1</text>
+        <text x="120" y="138" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#1f5290">예측 핫스팟 #1</text>
 
         {/* 드리프터 투하 → 궤적(점선) → 종점(반경 내 = 적중) */}
         <circle cx="312" cy="28" r="4" fill="#64748b" />
-        <text x="312" y="20" textAnchor="middle" fontSize="9" fill="#64748b">드리프터 투하</text>
+        <text x="312" y="20" textAnchor="middle" fontSize="9" fill="#64748b">드리프터 방류</text>
         <path d="M308 32 C 250 66, 188 58, 132 80" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3 3" fill="none" markerEnd="url(#dv)" />
         <circle cx="130" cy="80" r="5" fill="#16a34a" />
         <text x="196" y="104" textAnchor="middle" fontSize="9" fill="#16a34a">종점이 반경 내 도달 = 적중(hit)</text>

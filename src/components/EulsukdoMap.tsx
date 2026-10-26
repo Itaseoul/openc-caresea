@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { simpleLight, osmStandard, placeLabels } from "./basemaps";
 import "leaflet/dist/leaflet.css";
 import { SITES, CANDIDATES } from "./eulsukdoData";
 
@@ -39,20 +40,9 @@ export default function EulsukdoMap() {
         subdomains: "abc",
         maxZoom: 17,
       });
-      const voyager = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
-      );
+      const voyager = osmStandard(L);
       // 위성 위에 지명 라벨(투명 오버레이) — 위치 식별 도움
-      const labels = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png",
-        { subdomains: "abcd", maxZoom: 19, pane: "shadowPane", opacity: 0.9 }
-      );
+      const labels = placeLabels(L, { pane: "shadowPane", opacity: 0.9 });
       imagery.addTo(map);
       labels.addTo(map);
 
@@ -82,8 +72,8 @@ export default function EulsukdoMap() {
         .layers(
           {
             "위성 (Esri Imagery)": imagery,
-            "하천·지형 (OpenTopoMap)": topoMap,
-            "기본 (Voyager)": voyager,
+            "하천과 지형 (OpenTopoMap)": topoMap,
+            "기본 지도": voyager,
           },
           { "지명 라벨": labels },
           { collapsed: false, position: "topright" }

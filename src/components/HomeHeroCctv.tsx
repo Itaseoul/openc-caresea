@@ -130,10 +130,10 @@ export default function HomeHeroCctv() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#e2e8f0" }}>
           <span style={{ width: 8, height: 8, borderRadius: 999, background: "#34d399", boxShadow: "0 0 0 4px rgba(52,211,153,.2)", animation: "cctvpulse 1.6s infinite" }} />
-          지금 · {regionLabel || "현장"}
+          지금 {regionLabel || "현장"}
         </div>
         {curRaining && (
-          <span title="비 직후엔 소하천 부유물이 폭증(first-flush)합니다 — 지금이 관측 가치가 가장 큰 순간입니다." style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(14,116,144,.9)", color: "#fff", fontSize: 11, fontWeight: 800 }}>
+          <span title="비가 온 직후에는 소하천 부유물이 크게 늘어납니다(first-flush). 지금은 관측 가치가 큰 때입니다." style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(14,116,144,.9)", color: "#fff", fontSize: 11, fontWeight: 800 }}>
             🌧 관측 적기{typeof curMm === "number" && curMm > 0 ? ` ${curMm}mm/h` : ""}
           </span>
         )}
@@ -161,9 +161,9 @@ export default function HomeHeroCctv() {
                   borderRadius: 999,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
-                  border: active ? "1px solid #22d3ee" : "1px solid rgba(255,255,255,.2)",
+                  border: active ? "1px solid #5b8cc9" : "1px solid rgba(255,255,255,.2)",
                   background: active ? "rgba(34,211,238,.18)" : "rgba(255,255,255,.06)",
-                  color: active ? "#a5f3fc" : wet ? "#bae6fd" : "#cbd5e1",
+                  color: active ? "#b8cfec" : wet ? "#bae6fd" : "#cbd5e1",
                 }}
               >
                 {wet && <span aria-hidden>🌧</span>}
@@ -198,11 +198,11 @@ export default function HomeHeroCctv() {
               <button
                 key={i}
                 onClick={() => pickCam(i)}
-                title={isDead ? "일시 오프라인 — 다시 시도" : c.cctvname}
+                title={isDead ? "일시 오프라인, 다시 시도" : c.cctvname}
                 aria-pressed={active}
                 style={{ flex: "none", width: 104, cursor: "pointer", background: "transparent", border: "none", padding: 0, textAlign: "left" }}
               >
-                <span style={{ position: "relative", display: "block", width: 104, height: 58, borderRadius: 8, overflow: "hidden", background: "#0f172a", border: active ? "2px solid #22d3ee" : "2px solid transparent" }}>
+                <span style={{ position: "relative", display: "block", width: 104, height: 58, borderRadius: 8, overflow: "hidden", background: "#0f172a", border: active ? "2px solid #5b8cc9" : "2px solid transparent" }}>
                   {c.thumb ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={c.thumb} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: isDead ? 0.35 : 1 }} />
@@ -212,7 +212,7 @@ export default function HomeHeroCctv() {
                   {active && <span style={{ position: "absolute", top: 3, left: 3, fontSize: 8, fontWeight: 800, color: "#fff", background: "rgba(16,185,129,.92)", padding: "1px 4px", borderRadius: 3 }}>LIVE</span>}
                   {isDead && <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: "#e2e8f0", background: "rgba(2,6,23,.55)" }}>오프라인</span>}
                 </span>
-                <span style={{ display: "block", marginTop: 3, fontSize: 10.5, fontWeight: active ? 800 : 600, color: active ? "#a5f3fc" : "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <span style={{ display: "block", marginTop: 3, fontSize: 10.5, fontWeight: active ? 800 : 600, color: active ? "#b8cfec" : "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {c.cctvname || `채널 ${i + 1}`}
                 </span>
               </button>
@@ -256,9 +256,9 @@ function FallbackPanel({ onRetry, poster }: { onRetry: () => void; poster?: stri
       <div style={{ position: "relative", fontSize: 28 }}>{poster ? "🖼" : "🌊"}</div>
       <div style={{ position: "relative", fontSize: 13.5, fontWeight: 800, color: "#e2e8f0" }}>{poster ? "실시간 영상이 잠시 끊겼습니다" : "현장 영상이 일시적으로 연결되지 않습니다"}</div>
       <div style={{ position: "relative", fontSize: 11.5, color: "#cbd5e1", lineHeight: 1.5, maxWidth: 320 }}>
-        {poster ? "최근 정지영상을 보여드리고 있어요. 공공 CCTV 스트림이 곧 복구됩니다." : "공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다."}
+        {poster ? "최근 정지영상을 보여 드리고 있습니다. 공공 CCTV 스트림이 복구되면 실시간 영상으로 돌아갑니다." : "공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다."}
       </div>
-      <button onClick={onRetry} style={{ position: "relative", marginTop: 2, padding: "7px 15px", borderRadius: 999, border: "none", background: "#0e7490", color: "#fff", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>↻ 실시간 다시 시도</button>
+      <button onClick={onRetry} style={{ position: "relative", marginTop: 2, padding: "7px 15px", borderRadius: 999, border: "none", background: "#1f5290", color: "#fff", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>↻ 실시간 다시 시도</button>
     </div>
   );
 }

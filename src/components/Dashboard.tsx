@@ -31,7 +31,7 @@ type Theme = { tag: string; solid: string; tint: string; border: string; text: s
 const THEME: Record<string, Theme> = {
   danger: { tag: "철거 권고", solid: "#dc2626", tint: "#fef2f2", border: "#fecaca", text: "#b91c1c", icon: "alert" },
   watch: { tag: "주의", solid: "#f59e0b", tint: "#fffbeb", border: "#fde68a", text: "#b45309", icon: "rain" },
-  ok: { tag: "거치·측정 적기", solid: "#16a34a", tint: "#f0fdf4", border: "#bbf7d0", text: "#15803d", icon: "camera" },
+  ok: { tag: "거치, 측정 적기", solid: "#16a34a", tint: "#f0fdf4", border: "#bbf7d0", text: "#15803d", icon: "camera" },
   neutral: { tag: "평상", solid: "#64748b", tint: "#f8fafc", border: "#e2e8f0", text: "#475569", icon: "sun" },
 };
 
@@ -85,20 +85,20 @@ export default function Dashboard() {
   const busanItem = busanRain.data?.items?.[0];
 
   // ---- ActionAlert 판정 (철거 > 주의 > 거치측정적기 > 평상) ----
-  let key = "neutral", title = "평상 — 특이사항 없음", sub = "", note = "";
+  let key = "neutral", title = "평상: 특이사항 없음", sub = "", note = "";
   if (heavyRain || levelDanger) {
-    key = "danger"; title = "붐 비상 철거 — 둔치 장비 철수";
-    sub = heavyRain && levelDanger ? "호우특보 발효 · 수위 위험선 도달" : heavyRain ? "호우특보 발효 — 철거 절차 가동" : "수위 위험선 도달 — 즉시 철수";
+    key = "danger"; title = "붐 비상 철거: 둔치 장비 철수";
+    sub = heavyRain && levelDanger ? "호우특보 발효, 수위 위험선 도달" : heavyRain ? "호우특보 발효: 철거 절차 가동" : "수위 위험선 도달: 즉시 철수";
   } else if (raining || levelWatch) {
-    key = "watch"; title = "둔치 진입 주의 — 다리 위만";
-    sub = raining ? `강우 진행 중 (${rn1}mm) · 증수 가능` : "수위 주의선 접근 · 둔치 주의";
+    key = "watch"; title = "둔치 진입 주의: 다리 위에서만";
+    sub = raining ? `강우 진행 중 (${rn1}mm), 증수 가능` : "수위 주의선 접근, 둔치 주의";
   } else if (rehNum >= 60) {
-    key = "ok"; title = "측정·거치 윈도우 — 지금 진입 가능";
-    sub = "비 직후 베이스라인 적기 · 강수·특보 없음";
-    note = "정밀 윈도우 판정은 강우 이벤트 기록(M2) 연동 예정 — 현재는 강수·예보·습도 근사";
+    key = "ok"; title = "측정, 거치 윈도우: 지금 진입 가능";
+    sub = "비 직후 베이스라인 적기, 강수와 특보 없음";
+    note = "정밀 윈도우 판정은 강우 이벤트 기록(M2) 연동 예정입니다. 현재는 강수, 예보, 습도로 근사합니다.";
   } else {
-    key = "neutral"; title = "평상 — 특이사항 없음";
-    sub = "맑음 · 강수/특보 없음" + (riverAvailable ? " · 수위 안전" : "");
+    key = "neutral"; title = "평상: 특이사항 없음";
+    sub = "맑음, 강수/특보 없음" + (riverAvailable ? ", 수위 안전" : "");
   }
   const tk = THEME[key];
 
@@ -126,7 +126,7 @@ export default function Dashboard() {
   const fillPct = level != null && planFlood ? Math.max(2, Math.min(100, (level / planFlood) * 100)) : 0;
   const riverColor = levelDanger ? "#dc2626" : levelWatch ? "#f59e0b" : "#16a34a";
   const watchPct = +Math.min(100, (watchLine / planFlood) * 100).toFixed(1);
-  const statusLabel = levelDanger ? "위험 — 계획홍수위 초과" : levelWatch ? "주의 — 증수 진행" : "안전권";
+  const statusLabel = levelDanger ? "위험: 계획홍수위 초과" : levelWatch ? "주의: 증수 진행" : "안전권";
   const statusTint = levelDanger ? "#fef2f2" : levelWatch ? "#fffbeb" : "#f0fdf4";
   const statusBorder = levelDanger ? "#fecaca" : levelWatch ? "#fde68a" : "#bbf7d0";
   const collectedAt = (hje?.collectedAt as string) ?? `${baseTime} 수집`;
@@ -164,7 +164,7 @@ export default function Dashboard() {
         {/* 헤더 */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
           <div>
-            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 실증 운영·안전 모니터</div>
+            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 실증 운영과 안전 모니터</div>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-.02em", marginTop: 2 }}>openc.caresea.kr</div>
           </div>
           <button onClick={refresh} style={{ display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 11, padding: "8px 11px", cursor: "pointer", color: "#475569", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}>
@@ -191,8 +191,8 @@ export default function Dashboard() {
           <div style={{ background: "#dc2626", color: "#fff", borderRadius: 14, padding: "14px 16px", marginBottom: 12, display: "flex", gap: 12, alignItems: "flex-start", boxShadow: "0 10px 24px -10px rgba(220,38,38,.65)" }}>
             <span style={{ flex: "0 0 auto", marginTop: 1 }}><Icon name="alert" size={22} color="#fff" /></span>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-.01em" }}>호우특보 발효 — 철거 절차 가동</div>
-              <div style={{ opacity: 0.92, fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>하천변·둔치 출입을 통제하고 무동력 붐 비상 철거 절차를 가동하세요.</div>
+              <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-.01em" }}>호우특보 발효: 철거 절차 가동</div>
+              <div style={{ opacity: 0.92, fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>하천변과 둔치 출입을 통제하고 무동력 붐 비상 철거 절차를 가동하십시오.</div>
             </div>
           </div>
         )}
@@ -228,7 +228,7 @@ export default function Dashboard() {
 
           <div style={{ background: nowcast.bg, border: `1px solid ${nowcast.borderC}`, borderRadius: 18, padding: 16 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
-              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>지금 비?</div>
+              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>지금 강수</div>
               {ncstDemo ? chip("데모", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0")}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 13, margin: "10px 0 13px" }}>
@@ -281,11 +281,11 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 13, lineHeight: 1.55 }}>성산2교 · {collectedAt}<br />사천교 게이지 없음 → 하류 성산2교 대체</div>
+                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 13, lineHeight: 1.55 }}>성산2교, {collectedAt}<br />사천교에 수위계가 없어 하류 성산2교 값을 씁니다</div>
               </>
             ) : (
               <div style={{ marginTop: 12, background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12, padding: 14, fontSize: 12.5, color: "#64748b", lineHeight: 1.65 }}>
-                {site.label} 구간은 공공 실시간 수위 데이터가 없습니다. <b style={{ color: "#475569" }}>자체 IoT 수위 계측{site.busanArea ? " + 강우" : ""}</b>으로 판단하세요.
+                {site.label} 구간은 공공 실시간 수위 데이터가 없습니다. <b style={{ color: "#475569" }}>자체 IoT 수위 계측{site.busanArea ? " + 강우" : ""}</b>으로 판단할 예정입니다.
                 {site.busanArea && (
                   <>
                     <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 강우 ({site.busanArea})</div>
@@ -304,7 +304,7 @@ export default function Dashboard() {
         <div style={{ ...card, marginBottom: 12 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
             <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>시간별 예보</div>
-            <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>향후 8시간 · POP 강수확률</span>
+            <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>향후 8시간, 강수확률(POP)</span>
           </div>
           {forecast.length === 0 ? (
             <div style={{ fontSize: 13, color: "#94a3b8", padding: "8px 2px" }}>예보 데이터 수신 대기</div>
@@ -330,30 +330,30 @@ export default function Dashboard() {
         {/* 관측 지점 지도 (추가) */}
         <div style={{ ...card, marginBottom: 12 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-            <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>관측 지점 · 하천 위치</div>
+            <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>관측 지점과 하천 위치</div>
             <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{site.region}</span>
           </div>
-          <RiverMap lat={site.lat} lng={site.lon} label={site.label} sub={riverAvailable ? `계획홍수위 ${planFlood}m · 무동력 붐 거치 후보` : "자체 IoT 수위 계측 예정 · 거치 후보"} />
+          <RiverMap lat={site.lat} lng={site.lon} label={site.label} sub={riverAvailable ? `계획홍수위 ${planFlood}m, 무동력 붐 거치 후보` : "자체 IoT 수위 계측 예정, 거치 후보"} />
         </div>
 
         {/* 강우 이벤트 (M2) */}
         <div style={{ border: "1.5px dashed #cbd5e1", borderRadius: 18, padding: 17, marginBottom: 16, background: "#fafbfc" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 6, padding: "2px 7px" }}>M2 예정</span>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 이벤트 · 측정 윈도우 카운터</div>
+            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 6, padding: "2px 7px" }}>다음 단계 예정</span>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 기록과 측정 적기 계산</div>
           </div>
-          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작·종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 거치·측정 적기를 정밀 판정합니다. 현재는 자리만 잡아둔 상태입니다.</div>
+          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작과 종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 거치와 측정의 적기를 판단하는 기능입니다. 현재는 자리만 잡아 둔 상태입니다.</div>
         </div>
 
         {/* 출처 */}
         <div style={{ paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>출처</div>
-          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7 }}>기상청 · 한강홍수통제소 · 서울특별시(공공누리 제2유형, 비상업) · 부산광역시</div>
-          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보·관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보·현장 판단과 병행하세요.</div>
+          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7 }}>기상청, 한강홍수통제소, 서울특별시(공공누리 제2유형, 비상업), 부산광역시</div>
+          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보와 관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보, 현장 판단과 병행하십시오.</div>
           <div style={{ fontSize: 11, color: "#475569", marginTop: 11 }}>
-            정책 컨텍스트 → <a href="/streams" style={{ color: "#0e7490", textDecoration: "underline" }}>전국 소하천 정비율 지도</a> (서울 79.1% ~ 광주 11.5%, 평균 46.5%)
+            정책 배경 → <a href="/streams" style={{ color: "#1f5290", textDecoration: "underline" }}>전국 소하천 정비율 지도</a> (서울 79.1% ~ 광주 11.5%, 평균 46.5%)
           </div>
-          <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700, marginTop: 11 }}>powered by 이타시티 · SEA:CUT — openc.caresea.kr</div>
+          <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700, marginTop: 11 }}>powered by 이타시티 · SEA:CUT · openc.caresea.kr</div>
         </div>
 
       </div>

@@ -6,7 +6,7 @@
 const MEMBERS = ["유권선", "이진주", "한다원", "장지현", "이기쁨", "한유사랑", "김도훈", "양선화", "김현우"];
 
 // 이름 → 안정적 브랜드 계열 톤(청록 단색조로 좁혀 정돈감)
-const TONES = ["#0e7490", "#0891b2", "#155e75", "#0d9488", "#0369a1", "#164e63", "#06b6d4", "#0e7490", "#0891b2"];
+const TONES = ["#1f5290", "#2563a8", "#1c4475", "#0d9488", "#0369a1", "#193a61", "#3772b7", "#1f5290", "#2563a8"];
 function toneOf(name: string) {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
@@ -23,7 +23,7 @@ export default function MembersRow() {
         </div>
         <h2 className="mb-2 text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">멤버 {MEMBERS.length}명</h2>
         <p className="mb-6 max-w-2xl text-[15px] leading-7 text-neutral-600">
-          운영·데이터·현장·행정을 나눠 맡아 이 실증을 함께 굴리는 사람들입니다. 사단법인 이타서울 소속.
+          운영, 데이터, 현장, 행정을 나눠 맡아 이 실증 기획을 함께하는 사람들입니다. 사단법인 이타서울 소속입니다.
         </p>
 
         <ul className="flex flex-wrap items-start gap-x-5 gap-y-5">

@@ -10,7 +10,10 @@
 }
 
 body {
-  @apply bg-white text-neutral-900 antialiased;
+  background: #f4f4f2;
+  color: #1d2124;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* 시간별 예보 등 가로 스크롤 영역의 가는 스크롤바 */
@@ -42,7 +45,7 @@ body {
 a:focus-visible,
 button:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #0e7490;
+  outline: 2px solid #2563a8;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -57,3 +60,6 @@ button:focus-visible,
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* 공용 베이스맵(OSM)의 채도를 낮춰 심플 라이트로 — basemaps.ts simpleLight */
+.tiles-muted { filter: saturate(0.25) brightness(1.06) contrast(0.95); }

@@ -130,11 +130,11 @@ export default function EulsukdoStatusBoard() {
   return (
     <div style={{ marginTop: 16, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "12px 14px" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
-        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>🌊 실시간 수문 상황 — 낙동강 하구(국가·지방하천)</div>
-        <div style={{ fontSize: 10.5, color: "#cbd5e1" }}>출처 HRFCO 오픈API · 10분 갱신</div>
+        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>🌊 실시간 수문 상황: 낙동강 하구(국가, 지방하천)</div>
+        <div style={{ fontSize: 10.5, color: "#cbd5e1" }}>출처 HRFCO 오픈API, 10분 갱신</div>
       </div>
 
-      {loading && <div style={{ fontSize: 12.5, color: "#94a3b8", padding: "10px 0" }}>실시간 수위·유량 불러오는 중…</div>}
+      {loading && <div style={{ fontSize: 12.5, color: "#94a3b8", padding: "10px 0" }}>실시간 수위와 유량 불러오는 중…</div>}
 
       {!loading && rows.length > 0 && (
         <>
@@ -148,7 +148,7 @@ export default function EulsukdoStatusBoard() {
                   )}
                 </div>
                 <div style={{ marginTop: 6, display: "flex", alignItems: "baseline", gap: 8 }}>
-                  <span style={{ fontSize: 20, fontWeight: 800, color: "#0e7490", lineHeight: 1 }}>{r.wl ?? "—"}</span>
+                  <span style={{ fontSize: 20, fontWeight: 800, color: "#1f5290", lineHeight: 1 }}>{r.wl ?? "—"}</span>
                   <span style={{ fontSize: 11, color: "#94a3b8" }}>m</span>
                   {r.fw !== null && <span style={{ fontSize: 11, color: "#64748b" }}>· {r.fw} m³/s</span>}
                 </div>
@@ -161,7 +161,7 @@ export default function EulsukdoStatusBoard() {
             ))}
           </div>
           <div style={{ marginTop: 7, fontSize: 10.5, color: "#cbd5e1" }}>
-            을숙도 반경 {RADIUS_KM}km 내 가까운 순 · {pickedBy} 기준 선정
+            을숙도 반경 {RADIUS_KM}km 내 가까운 순, {pickedBy} 기준 선정
           </div>
         </>
       )}
@@ -170,9 +170,9 @@ export default function EulsukdoStatusBoard() {
       {!loading && rows.length === 0 && (
         <div style={{ fontSize: 12, color: "#475569", lineHeight: 1.65, background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "9px 11px" }}>
           {infoOk ? (
-            <>응답에 을숙도 반경 {RADIUS_KM}km 내 관측소가 없습니다. 배포 후 <code style={{ fontSize: 11 }}>/api/hrfco?type=waterlevel&info=1</code> 응답의 좌표·<b>obsnm</b>을 확인해 반경/키워드를 조정하세요.</>
+            <>응답에 을숙도 반경 {RADIUS_KM}km 내 관측소가 없습니다. 배포 후 <code style={{ fontSize: 11 }}>/api/hrfco?type=waterlevel&info=1</code> 응답의 좌표와 <b>obsnm</b>을 확인해 반경과 키워드를 조정해야 합니다.</>
           ) : (
-            <><b>실시간 데이터 대기 중.</b> HRFCO 키가 등록 도메인(openc.caresea.kr)·IP에 바인딩돼 <b>로컬에서는 940 인증 실패</b>가 정상입니다. 배포 환경에서 실데이터가 표시됩니다. (그 전까지는 아래 외부 링크로 확인)</>
+            <><b>실시간 데이터 대기 중.</b> HRFCO 키가 등록 도메인(openc.caresea.kr)과 IP에 바인딩되어 있어 <b>로컬에서는 940 인증 실패</b>가 정상입니다. 배포 환경에서 실데이터가 표시됩니다. (그 전까지는 아래 외부 링크로 확인)</>
           )}
         </div>
       )}
@@ -180,7 +180,7 @@ export default function EulsukdoStatusBoard() {
       {/* CCTV 라이브(HLS) — ITS 키 발급 시 영상 직접 표시(리버캠과 동일 원리) */}
       {cctvStreams.length > 0 && (
         <div style={{ marginTop: 12 }}>
-          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>📹 현장 CCTV 라이브 (ITS · 낙동강 하구 인근)</div>
+          <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700, marginBottom: 6 }}>📹 현장 CCTV 라이브 (ITS, 낙동강 하구 인근)</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 10 }}>
             {cctvStreams.map((c, i) => (
               <CctvPlayer key={i} src={c.stream || c.cctvurl} name={c.cctvname} big />
@@ -190,27 +190,27 @@ export default function EulsukdoStatusBoard() {
       )}
       {cctvNoKey && (
         <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.6, background: "#f1f5f9", border: "1px dashed #cbd5e1", borderRadius: 10, padding: "9px 11px" }}>
-          📹 <b>CCTV 영상 플레이어 준비 완료</b> — <b>ITS 인증키</b>만 발급해 Vercel 환경변수 <code style={{ fontSize: 11 }}>ITS_KEY</code>에 넣으면 낙동강 하구 인근 도로·교량 CCTV가 <b>이 자리에 바로 재생</b>됩니다(리버캠과 동일 방식).{" "}
-          <a href="https://www.its.go.kr" target="_blank" rel="noopener noreferrer" style={{ color: "#0e7490", fontWeight: 700, textDecoration: "underline" }}>its.go.kr 인증키 신청 ↗</a>
+          📹 <b>CCTV 영상 플레이어를 준비해 두었습니다.</b> <b>ITS 인증키</b>를 발급해 Vercel 환경변수 <code style={{ fontSize: 11 }}>ITS_KEY</code>에 넣으면 낙동강 하구 인근 도로·교량 CCTV가 <b>이 자리에 바로 재생</b>됩니다(리버캠과 같은 방식).{" "}
+          <a href="https://www.its.go.kr" target="_blank" rel="noopener noreferrer" style={{ color: "#1f5290", fontWeight: 700, textDecoration: "underline" }}>its.go.kr 인증키 신청 ↗</a>
         </div>
       )}
 
       {/* 현장 영상 — 임베드 약관 미확정이라 외부 링크로 (정직) */}
       <div style={{ marginTop: 10, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 6 }}>
         <a href="https://n.flood.go.kr/observation/waterlevel/waterLevelCCTV.do" target="_blank" rel="noopener noreferrer"
-           style={{ display: "block", padding: "9px 11px", background: "#ecfeff", border: "1px solid #a5f3fc", borderRadius: 10, textDecoration: "none" }}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, color: "#0e7490" }}>📹 수위관측 CCTV (홍수정보시스템) ↗</div>
-          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>국가·지방하천 현장 영상. 임베드 약관 확인 전 외부 링크로 연결.</div>
+           style={{ display: "block", padding: "9px 11px", background: "#eef4fb", border: "1px solid #b8cfec", borderRadius: 10, textDecoration: "none" }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, color: "#1f5290" }}>📹 수위관측 CCTV (홍수정보시스템) ↗</div>
+          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>국가, 지방하천 현장 영상입니다. 임베드 약관을 확인하기 전까지 외부 링크로 연결합니다.</div>
         </a>
         <a href="https://www.hrfco.go.kr/sumun/cctvRtmp.do" target="_blank" rel="noopener noreferrer"
            style={{ display: "block", padding: "9px 11px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, textDecoration: "none" }}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, color: "#0e7490" }}>📹 주요지점 수위동영상 (HRFCO) ↗</div>
-          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>홍수통제소 직접 영상 페이지.</div>
+          <div style={{ fontSize: 12.5, fontWeight: 800, color: "#1f5290" }}>📹 주요지점 수위동영상 (HRFCO) ↗</div>
+          <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>홍수통제소의 영상 페이지입니다.</div>
         </a>
       </div>
 
       <div style={{ marginTop: 9, fontSize: 10.5, color: "#94a3b8", lineHeight: 1.6 }}>
-        ※ 소하천 스마트계측(수위·유속·유량·CCTV)은 지자체 관제용으로 <b>외부 공개 API가 없습니다</b>(2026 조사). 위 수치는 인접 <b>국가·지방하천</b> 본류 데이터로, 소하천 직접 상황이 아닌 <b>하구 본류 참고치</b>입니다.
+        ※ 소하천 스마트계측(수위, 유속, 유량, CCTV)은 지자체 관제용으로 <b>외부 공개 API가 없습니다</b>(2026 조사). 위 수치는 인접 <b>국가, 지방하천</b> 본류 데이터로, 소하천 직접 상황이 아닌 <b>하구 본류 참고치</b>입니다.
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { simpleLight, osmStandard, placeLabels } from "./basemaps";
 import "leaflet/dist/leaflet.css";
 
-// 낙동강 하구 소하천 실증 지도 — Ocean Cleanup식 심플 라이트(CARTO Positron) 베이스 위에
+// 낙동강 하구 소하천 실증 지도 — Ocean Cleanup식 심플 라이트(채도 낮춘 OSM) 베이스 위에
 // 지류 소하천 길목(감전천·학장천·괴정천)과 하구(을숙도)를 트랙 색으로, 낙동강→남해 흐름을 화살표로.
 // "use client" + useEffect 내 동적 import(leaflet) → 서버 컴포넌트(Proposal)에서 일반 import 가능.
 
@@ -23,7 +24,7 @@ const SPOTS: Spot[] = [
   { id: "goejeong", name: "괴정천", gu: "사하구", lat: 35.1028, lon: 128.9716, track: "boom", grade: "지방하천",
     note: "OpenBoom 무동력 붐 물리 실증 트랙(마이크로소프트 기금 응모 중)" },
   { id: "eulsukdo", name: "을숙도 하구", gu: "사하구", lat: 35.097, lon: 128.940, track: "estuary", grade: "국가하천 하구",
-    note: "4중 중첩 규제(천연기념물 제179호 등) · 단계적 확장 검토" },
+    note: "4중으로 겹친 규제(천연기념물 제179호 등) · 단계적 확장 검토" },
 ];
 
 // 낙동강 본류 흐름(북→남, 바다로) — 방향 상징용 폴리라인
@@ -37,7 +38,7 @@ const VKEY = process.env.NEXT_PUBLIC_VWORLD_KEY;
 const MTOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const TRACK: Record<Track, { color: string; fill: string; label: string; r: number }> = {
-  data: { color: "#0e7490", fill: "#06b6d4", label: "데이터 실증 (우선)", r: 11 },
+  data: { color: "#1f5290", fill: "#3772b7", label: "데이터 실증 (우선)", r: 11 },
   boom: { color: "#b45309", fill: "#f59e0b", label: "OpenBoom 물리 실증", r: 11 },
   obs: { color: "#475569", fill: "#94a3b8", label: "관측 지점", r: 9 },
   estuary: { color: "#1d4ed8", fill: "#93c5fd", label: "하구 (확장 검토)", r: 9 },
@@ -80,11 +81,8 @@ export default function NakdongMap() {
 
       // 베이스맵 비교 — 우측 상단 컨트롤에서 전환(VWorld 한글 하천 / Mapbox / 심플 / 지형)
       const bases: Record<string, any> = {
-        "심플 라이트 (CARTO)": L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-          subdomains: "abcd", maxZoom: 19,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        }),
-        "하천·지형 (OpenTopoMap)": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+        "심플 라이트": simpleLight(L),
+        "하천과 지형 (OpenTopoMap)": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
           subdomains: "abc", maxZoom: 17,
           attribution: '&copy; OSM · SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
         }),
@@ -106,7 +104,7 @@ export default function NakdongMap() {
         });
       }
       // 기본은 심플 라이트 — 하천망을 직접 얹으므로 베이스는 깔끔하게(Ocean Cleanup 느낌)
-      const defaultBase = bases["심플 라이트 (CARTO)"];
+      const defaultBase = bases["심플 라이트"];
       defaultBase.addTo(map);
       L.control.layers(bases, {}, { collapsed: false, position: "topright" }).addTo(map);
 
@@ -257,13 +255,13 @@ export default function NakdongMap() {
               if (!from) return;
               const a: [number, number] = [from.lat, from.lon];
               const b: [number, number] = [estSpot.lat, estSpot.lon];
-              L.polyline([a, b], { color: "#0e7490", weight: 1.5, opacity: 0.5, dashArray: "2 6", interactive: false }).addTo(map);
+              L.polyline([a, b], { color: "#1f5290", weight: 1.5, opacity: 0.5, dashArray: "2 6", interactive: false }).addTo(map);
               const mid: [number, number] = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
               L.marker(mid as any, {
                 interactive: false,
                 icon: L.divIcon({
                   className: "",
-                  html: `<div style="white-space:nowrap;font-size:10.5px;font-weight:700;color:#0e7490;background:rgba(255,255,255,.82);border-radius:6px;padding:1px 5px;box-shadow:0 0 0 1px #cffafe">~${lt.lead_lo_h}–${lt.lead_hi_h}h 리드</div>`,
+                  html: `<div style="white-space:nowrap;font-size:10.5px;font-weight:700;color:#1f5290;background:rgba(255,255,255,.82);border-radius:6px;padding:1px 5px;box-shadow:0 0 0 1px #dbe7f6">~${lt.lead_lo_h}–${lt.lead_hi_h}h 리드</div>`,
                   iconSize: [88, 16], iconAnchor: [44, 8],
                 }),
               }).addTo(map);
@@ -336,9 +334,9 @@ export default function NakdongMap() {
         </div>
       )}
       <p className="mt-2 text-[11px] leading-5 text-neutral-400">
-        우측 상단에서 베이스맵을 바꿔 비교하세요 — <b className="font-semibold text-neutral-500">VWorld 일반</b>(한글 하천명·소하천), VWorld 하이브리드(위성), Mapbox, 심플, 지형.
-        지점 위치는 합류부 길목 기준 검토 단계 근사이며, 정확한 지점·하천구역은 부산시·관할 구청 협의로 확정합니다.
-        베이스맵 © VWorld · Mapbox · OpenStreetMap · CARTO.
+        오른쪽 위에서 바탕 지도를 바꿔 비교할 수 있습니다. <b className="font-semibold text-neutral-500">VWorld 일반</b>(한글 하천명, 소하천), VWorld 하이브리드(위성), Mapbox, 심플, 지형.
+        지점 위치는 합류부 길목 기준 검토 단계 근사이며, 정확한 지점과 하천구역은 부산시, 관할 구청과 협의해 확정합니다.
+        베이스맵 © OpenStreetMap · VWorld · Mapbox.
       </p>
     </div>
   );
