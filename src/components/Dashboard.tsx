@@ -93,9 +93,9 @@ export default function Dashboard() {
     key = "watch"; title = "둔치 진입 주의: 다리 위에서만";
     sub = raining ? `강우 진행 중 (${rn1}mm), 증수 가능` : "수위 주의선 접근, 둔치 주의";
   } else if (rehNum >= 60) {
-    key = "ok"; title = "측정, 거치 윈도우: 지금 진입 가능";
+    key = "ok"; title = "측정, 거치 적기: 지금 진입 가능";
     sub = "비 직후 베이스라인 적기, 강수와 특보 없음";
-    note = "정밀 윈도우 판정은 강우 이벤트 기록(M2) 연동 예정입니다. 현재는 강수, 예보, 습도로 근사합니다.";
+    note = "정밀한 적기 판정은 강우 이벤트 기록(M2)을 연동한 뒤 할 예정입니다. 현재는 강수, 예보, 습도로 추정합니다.";
   } else {
     key = "neutral"; title = "평상: 특이사항 없음";
     sub = "맑음, 강수/특보 없음" + (riverAvailable ? ", 수위 안전" : "");
@@ -126,7 +126,7 @@ export default function Dashboard() {
   const fillPct = level != null && planFlood ? Math.max(2, Math.min(100, (level / planFlood) * 100)) : 0;
   const riverColor = levelDanger ? "#dc2626" : levelWatch ? "#f59e0b" : "#16a34a";
   const watchPct = +Math.min(100, (watchLine / planFlood) * 100).toFixed(1);
-  const statusLabel = levelDanger ? "위험: 계획홍수위 초과" : levelWatch ? "주의: 증수 진행" : "안전권";
+  const statusLabel = levelDanger ? "위험: 계획홍수위(설계 기준 최고 수위) 초과" : levelWatch ? "주의: 증수 진행" : "안전권";
   const statusTint = levelDanger ? "#fef2f2" : levelWatch ? "#fffbeb" : "#f0fdf4";
   const statusBorder = levelDanger ? "#fecaca" : levelWatch ? "#fde68a" : "#bbf7d0";
   const collectedAt = (hje?.collectedAt as string) ?? `${baseTime} 수집`;
@@ -164,7 +164,7 @@ export default function Dashboard() {
         {/* 헤더 */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
           <div>
-            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 실증 운영과 안전 모니터</div>
+            <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 실증 운영과 안전 모니터링</div>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-.02em", marginTop: 2 }}>openc.caresea.kr</div>
           </div>
           <button onClick={refresh} style={{ display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 11, padding: "8px 11px", cursor: "pointer", color: "#475569", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}>
@@ -192,7 +192,7 @@ export default function Dashboard() {
             <span style={{ flex: "0 0 auto", marginTop: 1 }}><Icon name="alert" size={22} color="#fff" /></span>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-.01em" }}>호우특보 발효: 철거 절차 가동</div>
-              <div style={{ opacity: 0.92, fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>하천변과 둔치 출입을 통제하고 무동력 붐 비상 철거 절차를 가동하십시오.</div>
+              <div style={{ opacity: 0.92, fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>하천변과 둔치(물가의 평평한 땅) 출입을 통제하고 무동력 붐(물 위에 띄워 쓰레기를 막는 차단막)의 비상 철거 절차를 시작해 주세요.</div>
             </div>
           </div>
         )}
@@ -228,8 +228,8 @@ export default function Dashboard() {
 
           <div style={{ background: nowcast.bg, border: `1px solid ${nowcast.borderC}`, borderRadius: 18, padding: 16 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
-              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>지금 강수</div>
-              {ncstDemo ? chip("데모", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0")}
+              <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>현재 강수</div>
+              {ncstDemo ? chip("예시 데이터", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0")}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 13, margin: "10px 0 13px" }}>
               <div style={{ width: 48, height: 48, borderRadius: 13, background: nowcast.iconBg, display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
@@ -256,7 +256,7 @@ export default function Dashboard() {
           <div style={card}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
               <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-.01em", whiteSpace: "nowrap" }}>하천 수위</div>
-              {riverAvailable && (riverDemo ? chip("데모", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0"))}
+              {riverAvailable && (riverDemo ? chip("예시 데이터", "#b45309", "#fffbeb", "#fde68a") : chip("실시간", "#15803d", "#f0fdf4", "#bbf7d0"))}
             </div>
 
             {riverAvailable ? (
@@ -273,7 +273,7 @@ export default function Dashboard() {
                       {level ?? "—"}<span style={{ fontSize: 14, fontWeight: 700, marginLeft: 1 }}>m</span>
                     </div>
                     <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 7, background: level == null ? "#f1f5f9" : statusTint, border: `1px solid ${level == null ? "#e2e8f0" : statusBorder}`, color: level == null ? "#64748b" : riverColor, borderRadius: 999, padding: "3px 9px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
-                      {level == null ? "수위 데이터 수신 대기" : statusLabel}
+                      {level == null ? "수위 정보를 불러오는 중" : statusLabel}
                     </div>
                     <div style={{ marginTop: 11, fontSize: 11, lineHeight: 1.7, color: "#64748b" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ width: 14, borderTop: "2px dashed #dc2626" }} />위험 {planFlood}m</div>
@@ -281,11 +281,11 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 13, lineHeight: 1.55 }}>성산2교, {collectedAt}<br />사천교에 수위계가 없어 하류 성산2교 값을 씁니다</div>
+                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 13, lineHeight: 1.55 }}>성산2교, {collectedAt}<br />사천교에는 수위계가 없어 하류 성산2교 관측값을 대신 보여 줍니다</div>
               </>
             ) : (
               <div style={{ marginTop: 12, background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12, padding: 14, fontSize: 12.5, color: "#64748b", lineHeight: 1.65 }}>
-                {site.label} 구간은 공공 실시간 수위 데이터가 없습니다. <b style={{ color: "#475569" }}>자체 IoT 수위 계측{site.busanArea ? " + 강우" : ""}</b>으로 판단할 예정입니다.
+                {site.label} 구간은 공공 실시간 수위 데이터가 없습니다. <b style={{ color: "#475569" }}>자체 IoT 수위 계측{site.busanArea ? " + 강우" : ""}</b>으로 판단할 계획입니다.
                 {site.busanArea && (
                   <>
                     <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>현재 강우 ({site.busanArea})</div>
@@ -307,7 +307,7 @@ export default function Dashboard() {
             <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>향후 8시간, 강수확률(POP)</span>
           </div>
           {forecast.length === 0 ? (
-            <div style={{ fontSize: 13, color: "#94a3b8", padding: "8px 2px" }}>예보 데이터 수신 대기</div>
+            <div style={{ fontSize: 13, color: "#94a3b8", padding: "8px 2px" }}>예보를 불러오는 중</div>
           ) : (
             <div className="scroll-x" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 2px 4px" }}>
               {forecast.map((f, i) => (
@@ -342,16 +342,16 @@ export default function Dashboard() {
             <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 6, padding: "2px 7px" }}>다음 단계 예정</span>
             <div style={{ fontSize: 14, fontWeight: 800, color: "#475569", letterSpacing: "-.01em" }}>강우 기록과 측정 적기 계산</div>
           </div>
-          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작과 종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 거치와 측정의 적기를 판단하는 기능입니다. 현재는 자리만 잡아 둔 상태입니다.</div>
+          <div style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.65 }}>비 시작과 종료 시각, 누적 강수량, 지속시간을 기록하고 <b style={{ color: "#64748b" }}>마지막 비 종료 후 경과시간</b>으로 거치와 측정의 적기를 판단하는 기능입니다. 현재는 준비 중인 상태입니다.</div>
         </div>
 
         {/* 출처 */}
         <div style={{ paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>출처</div>
           <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7 }}>기상청, 한강홍수통제소, 서울특별시(공공누리 제2유형, 비상업), 부산광역시</div>
-          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보와 관측 보조 정보이며 안전을 보증하지 않습니다. 호우특보, 현장 판단과 병행하십시오.</div>
+          <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.7, marginTop: 11 }}>예보와 관측을 돕는 참고 정보이며 안전을 보증하지 않습니다. 호우특보와 현장 상황을 반드시 함께 확인해 주세요.</div>
           <div style={{ fontSize: 11, color: "#475569", marginTop: 11 }}>
-            정책 배경 → <a href="/streams" style={{ color: "#1f5290", textDecoration: "underline" }}>전국 소하천 정비율 지도</a> (서울 79.1% ~ 광주 11.5%, 평균 46.5%)
+            관련 정책 배경 → <a href="/streams" style={{ color: "#1f5290", textDecoration: "underline" }}>전국 소하천 정비율 지도</a> (서울 79.1% ~ 광주 11.5%, 평균 46.5%)
           </div>
           <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700, marginTop: 11 }}>powered by 이타시티 · SEA:CUT · openc.caresea.kr</div>
         </div>

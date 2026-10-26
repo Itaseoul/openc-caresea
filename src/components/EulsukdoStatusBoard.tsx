@@ -155,7 +155,7 @@ export default function EulsukdoStatusBoard() {
                 <div style={{ fontSize: 10.5, color: "#cbd5e1", marginTop: 4 }}>
                   {r.distKm !== null ? `을숙도 ~${r.distKm.toFixed(1)}km` : ""}
                   {r.distKm !== null && r.time ? " · " : ""}
-                  {r.time ? `${r.time} 기준` : !r.distKm ? "관측시각 미상" : ""}
+                  {r.time ? `${r.time} 기준` : !r.distKm ? "관측 시각 확인 불가" : ""}
                 </div>
               </div>
             ))}

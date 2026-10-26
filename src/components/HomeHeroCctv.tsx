@@ -133,7 +133,7 @@ export default function HomeHeroCctv() {
           지금 {regionLabel || "현장"}
         </div>
         {curRaining && (
-          <span title="비가 온 직후에는 소하천 부유물이 크게 늘어납니다(first-flush). 지금은 관측 가치가 큰 때입니다." style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(14,116,144,.9)", color: "#fff", fontSize: 11, fontWeight: 800 }}>
+          <span title="비가 온 직후에는 소하천 부유물이 크게 늘어납니다(first-flush, 비 초기에 쓰레기가 한꺼번에 쓸려 오는 현상). 관측하기 좋은 때이지만 현장에서는 안전을 먼저 확인해 주세요." style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(14,116,144,.9)", color: "#fff", fontSize: 11, fontWeight: 800 }}>
             🌧 관측 적기{typeof curMm === "number" && curMm > 0 ? ` ${curMm}mm/h` : ""}
           </span>
         )}
@@ -198,7 +198,7 @@ export default function HomeHeroCctv() {
               <button
                 key={i}
                 onClick={() => pickCam(i)}
-                title={isDead ? "일시 오프라인, 다시 시도" : c.cctvname}
+                title={isDead ? "잠시 연결이 끊겼습니다. 눌러서 다시 시도해 주세요" : c.cctvname}
                 aria-pressed={active}
                 style={{ flex: "none", width: 104, cursor: "pointer", background: "transparent", border: "none", padding: 0, textAlign: "left" }}
               >
@@ -240,7 +240,7 @@ function EmptyPanel({ onOther }: { onOther: () => void }) {
     <div style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: 14, border: "1px solid rgba(255,255,255,.12)", background: "radial-gradient(120% 120% at 50% 0%,#1e293b,#0b1220)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center", padding: 18 }}>
       <div style={{ fontSize: 26 }}>🗺️</div>
       <div style={{ fontSize: 13, fontWeight: 800, color: "#e2e8f0" }}>이 지역은 공개 CCTV가 없습니다</div>
-      <div style={{ fontSize: 11.5, color: "#94a3b8", lineHeight: 1.5, maxWidth: 300 }}>소하천 자체는 공개 스트림이 없어, 대상 하천 하류의 공공 CCTV로 대신 봅니다.</div>
+      <div style={{ fontSize: 11.5, color: "#94a3b8", lineHeight: 1.5, maxWidth: 300 }}>소하천에는 공개된 실시간 영상이 없어, 대상 하천 하류의 공공 CCTV로 대신 보여 드립니다.</div>
       <button onClick={onOther} style={{ marginTop: 2, padding: "6px 14px", borderRadius: 999, border: "1px solid rgba(255,255,255,.2)", background: "rgba(14,116,144,.9)", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>다른 지역 보기</button>
     </div>
   );
@@ -256,9 +256,9 @@ function FallbackPanel({ onRetry, poster }: { onRetry: () => void; poster?: stri
       <div style={{ position: "relative", fontSize: 28 }}>{poster ? "🖼" : "🌊"}</div>
       <div style={{ position: "relative", fontSize: 13.5, fontWeight: 800, color: "#e2e8f0" }}>{poster ? "실시간 영상이 잠시 끊겼습니다" : "현장 영상이 일시적으로 연결되지 않습니다"}</div>
       <div style={{ position: "relative", fontSize: 11.5, color: "#cbd5e1", lineHeight: 1.5, maxWidth: 320 }}>
-        {poster ? "최근 정지영상을 보여 드리고 있습니다. 공공 CCTV 스트림이 복구되면 실시간 영상으로 돌아갑니다." : "공공 CCTV(ITS) 스트림 서버가 잠시 응답하지 않고 있습니다."}
+        {poster ? "최근 정지영상을 보여 드리고 있습니다. 공공 CCTV 영상이 복구되면 실시간 영상으로 돌아갑니다." : "공공 CCTV(ITS, 지능형 교통체계) 영상 서버가 잠시 응답하지 않습니다. 잠시 후 다시 시도해 주세요."}
       </div>
-      <button onClick={onRetry} style={{ position: "relative", marginTop: 2, padding: "7px 15px", borderRadius: 999, border: "none", background: "#1f5290", color: "#fff", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>↻ 실시간 다시 시도</button>
+      <button onClick={onRetry} style={{ position: "relative", marginTop: 2, padding: "7px 15px", borderRadius: 999, border: "none", background: "#1f5290", color: "#fff", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>↻ 실시간 영상 다시 연결</button>
     </div>
   );
 }

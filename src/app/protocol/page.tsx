@@ -416,7 +416,7 @@ export default function ProtocolPage() {
             <span style={{ width: 10, height: 10, background: "#cbd5e1", borderRadius: 3, display: "inline-block", marginLeft: 8 }} /> 기타
           </div>
           <div style={{ marginTop: 10, fontSize: 12, color: "#334155", lineHeight: 1.65, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 10px" }}>
-            데이터셋 단위로는 727건 채택 / 31건 실격 / 13건 na. 검증은 파트너 기관 → VLIZ, NIB 2차 품질관리 → VLIZ 조화, 표준화, 발행.
+            데이터셋 단위로는 727건 채택 / 31건 실격 / 13건 판정 없음(na). 검증은 파트너 기관 → VLIZ, NIB 2차 품질관리 → VLIZ 조화, 표준화, 발행.
             스키마의 <code>Source*</code>(주민, 방문객, 산업, 농업, 해운, 어업), <code>Weather_*</code>, 좌표, 강명 필드는 우리 관측 스키마로 직접 이식할 수 있습니다.
           </div>
         </div>
@@ -485,7 +485,7 @@ export default function ProtocolPage() {
 
         {/* 정직성 경계 */}
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 12.5, color: "#92400e", lineHeight: 1.7 }}>
-          <b>정직성 경계(정정).</b> 원문 부클릿은 <b>사진을 표본 채택의 전제조건으로 명문화</b>합니다.
+          <b>한계와 정정.</b> 원문 부클릿은 <b>사진을 표본 채택의 전제조건으로 명문화</b>합니다.
           “사진이 없으면 결과가 과학 연구에 포함될 수 없다”. 즉 사진 필수 규칙이 프로토콜에 이미 들어 있습니다.
           다만 검증 판정은 <b>연구 파트너의 사후 과학 평가</b>로 이뤄지며, SEA:CUT이 더하는 것은 <b>업로드 시점의 자동 EXIF/geo 검사</b>입니다.
           “EU 프로토콜이 채택한 사진 필수 규칙을 SEA:CUT은 업로드 단계에서 자동화하고 더 엄격하게 하려 한다”가 정확한 표현입니다.
@@ -514,7 +514,7 @@ export default function ProtocolPage() {
           <div style={{ marginTop: 11, fontSize: 12, color: "#334155", lineHeight: 1.7, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "9px 11px" }}>
             <b style={{ color: "#0f172a" }}>SEA:CUT 사용 원칙.</b> 시민 수거 데이터는 <b>절대량(플럭스)</b>이 아니라 <b>상대적 구성, 발생원, 핫스팟</b> 신호로 씁니다.
             개별 카운트는 <b>약라벨(라벨0)</b>로 취급하고, 사진 검증 절차 통과분만 라벨1로 승격합니다. 절대 질량은 우리 <b>수거 중량 기준값(앵커)</b>으로 따로 확보하고,
-            표류 예측은 드리프터 실측으로 폐루프로 검증합니다. <b>한계를 앵커와 검증으로 감싸는</b> 설계입니다.
+            표류 예측은 드리프터 실측으로 되짚어 검증하는 폐루프(실측과 예측을 맞대는 반복 검증)로 확인할 계획입니다. <b>한계를 앵커와 검증으로 감싸는</b> 설계입니다.
           </div>
         </div>
 

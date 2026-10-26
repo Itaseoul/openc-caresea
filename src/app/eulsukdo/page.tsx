@@ -55,8 +55,8 @@ export default function EulsukdoPage() {
         <div style={{ marginTop: 16, padding: "14px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 14 }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: "#b91c1c" }}>⚠️ 설치 전 선결: 국가유산청 현상변경 허가</div>
           <p style={{ fontSize: 12.5, color: "#7f1d1d", lineHeight: 1.65, marginTop: 6 }}>
-            을숙도와 낙동강 하구는 <b>4중으로 규제가 겹친 구역</b>입니다. 공유수면에 붐을 설치하는 것조차
-            천연기념물 보호구역 내 행위로 보아 <b>국가유산청 현상변경 허가가 사실상 선결 조건</b>이며,
+            을숙도와 낙동강 하구는 <b>네 겹으로 규제가 겹친 구역</b>입니다. 공유수면에 붐을 설치하는 일도
+            천연기념물 보호구역 내 행위로 볼 수 있어 <b>국가유산청 현상변경 허가를 먼저 확인해야 하며</b>,
             습지보전법 협의, 하천점용, 공유수면 점용 허가가 중첩됩니다. <b>후보지 선정보다 인허가 가능성 타진이 먼저</b>입니다.
             (참고: 낙동강 하구는 람사르 습지로 <b>등록되어 있지 않으며</b>, 을숙도가 람사르 습지라는 말은 잘못 알려진 내용입니다.)
           </p>
@@ -98,7 +98,7 @@ export default function EulsukdoPage() {
             ))}
           </div>
           <div style={{ marginTop: 9, fontSize: 11, color: "#94a3b8", lineHeight: 1.6 }}>
-            '대략' 핀은 오리엔테이션용이며, 정확한 위치와 하천구역은 아래 VWorld 항공영상과 RIMGIS로 현장 검증해야 합니다.
+            '대략' 핀은 대강의 위치를 보여 주는 표시이며, 정확한 위치와 하천구역은 아래 VWorld 항공영상과 RIMGIS로 현장 검증해야 합니다.
             기본 지도는 위성(Esri)입니다. 오른쪽 위에서 「하천과 지형」(OpenTopoMap)으로 바꾸면 물길이 또렷하게 보입니다.
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function EulsukdoPage() {
         <Section title="🎯 입지 전략: 보호구역 '밖'에서 시작 (권장)">
           <div style={{ fontSize: 12.5, color: "#065f46", lineHeight: 1.65, background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 10, padding: "9px 11px", marginBottom: 10 }}>
             국가유산청 협의가 어렵다면, <b>천연기념물 179호를 벗어난 지방하천 구간</b>에서 실증을 시작하는 편이 빠릅니다.
-            <b>괴정천, 장림천의 상류와 중류는 보호구역 밖(확정)</b>이고, 지방하천 점용허가는 부산시→<b>구청에 위임</b>되어 단일 창구가 됩니다.
+            <b>괴정천, 장림천의 상류와 중류는 보호구역 밖</b>으로 확인했고, 지방하천 점용허가는 부산시→<b>구청에 위임</b>되어 단일 창구가 됩니다.
             또한 「하천점용허가 세부기준」은 <b>‘부유식 구조 우선 고려’</b>를 명시하고 있어 붐 설치에 유리한 법적 근거가 됩니다.
             <br />→ <b>전략:</b> 보호구역 밖 지방하천에서 데이터와 신뢰를 먼저 쌓고, 단계적으로 하구로 확장하는 안입니다.
           </div>

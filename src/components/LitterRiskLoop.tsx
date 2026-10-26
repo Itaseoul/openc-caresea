@@ -87,7 +87,7 @@ export default function LitterRiskLoop() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
             </span>
-            <span className="text-[13px] font-bold text-neutral-800">하류 퇴적 위험 예측: 라이브</span>
+            <span className="text-[13px] font-bold text-neutral-800">하류 퇴적 위험 예측: 시험 계산</span>
           </div>
           <span className="text-[11px] text-neutral-400">
             {risk.loading ? "불러오는 중…" : risk.data?.generatedAt ? risk.data.generatedAt.slice(5, 16).replace("T", " ") : ""}
@@ -97,16 +97,16 @@ export default function LitterRiskLoop() {
           부산 강우 실값 → 물리 휴리스틱(발생원 × 트랩 × first-flush).{" "}
           {rain.length
             ? `강우 감지: ${rain.map((r) => `${r.area} ${r.rainfall_mm}mm`).join(", ")}`
-            : "현재 건기, 평시 정체 퇴적 위주"}
+            : "현재 비 소식 없음, 평시에 머물러 쌓이는 쓰레기 위주"}
         </p>
         {/* 지금 능동 알림(주의 이상) 요약 — 예측→알림→연대 사슬의 라이브 발령 */}
         {gov && gov.dispatchCount > 0 && (
           <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/70 p-3">
             <div className="flex items-center gap-1.5 text-[12px] font-bold text-amber-800">
-              <span aria-hidden>🔔</span> 지금 알림 기준 해당 {gov.dispatchCount}건, 수신 대상 {gov.recipients.join(", ")}
+              <span aria-hidden>🔔</span> 지금 알림 기준에 해당하는 곳 {gov.dispatchCount}건, 수신 대상 {gov.recipients.join(", ")}
             </div>
             <p className="mt-0.5 text-[11px] leading-4 text-amber-900/70">
-              예측 등급이 곧 알림 등급입니다. 주의 이상이면 해당 주체에게 알리도록 설계했습니다(출동 판단 보조, 자동 지시 아님).
+              예측 등급에 따라 알림 등급이 정해집니다. 주의 이상이면 해당 주체에게 알리도록 설계했습니다(출동 판단을 돕는 참고 자료이며 자동 지시가 아닙니다).
             </p>
           </div>
         )}
@@ -141,7 +141,7 @@ export default function LitterRiskLoop() {
           })}
           {!risk.loading && !hotspots.length && (
             <div className="rounded-xl border border-dashed border-neutral-200 p-4 text-center text-[12px] text-neutral-400">
-              예측 데이터를 불러오지 못했습니다.
+              예측 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
             </div>
           )}
         </div>
@@ -157,12 +157,12 @@ function ValidationPanel({ val, loading }: { val: ValResp | null | undefined; lo
   const v = val?.ok ? val.validation : undefined;
   return (
     <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-      <span className="text-[13px] font-bold text-neutral-800">예측 검증: GPS 드리프터 실측 폐루프</span>
+      <span className="text-[13px] font-bold text-neutral-800">예측 검증: GPS 드리프터 실측 폐루프(실측으로 예측을 되짚는 검증)</span>
       {v ? (
         <div className="mt-3">
           <div className="grid grid-cols-3 gap-2">
             <Stat label="궤적" v={`${v.tracks}건`} />
-            <Stat label={`적중률(상위${v.top_n})`} v={`${Math.round(v.hit_rate * 100)}%`} />
+            <Stat label={`상위 ${v.top_n}곳 적중률`} v={`${Math.round(v.hit_rate * 100)}%`} />
             <Stat label="평균거리" v={v.mean_distance_m != null ? `${v.mean_distance_m}m` : "—"} />
           </div>
           <div className="mt-3 space-y-1.5">
@@ -183,13 +183,13 @@ function ValidationPanel({ val, loading }: { val: ValResp | null | undefined; lo
           <p className="text-[12px] leading-5 text-neutral-500">
             {loading
               ? "불러오는 중…"
-              : "드리프터 캘리브레이션 캠페인 전이라 적재된 궤적은 0건입니다. 아래는 검증 방식입니다. GPS 드리프터를 흘려 실제 표류 종점을 기록하면, 그 종점이 상위 예측 핫스팟 반경 내에 도달했는지로 예측을 검증합니다."}
+              : "드리프터(위치를 기록하며 떠내려가는 부표) 보정용 방류 전이라 쌓인 궤적은 0건입니다. 아래는 검증 방식입니다. GPS 드리프터를 흘려 실제 표류 종점을 기록하면, 그 종점이 상위 예측 핫스팟 반경 내에 도달했는지로 예측을 검증합니다."}
           </p>
           <ValidationDiagram />
         </div>
       )}
       <p className="mt-3 text-[11px] leading-4 text-neutral-400">
-        정직 경계: 라벨 0단계의 휴리스틱과 약지도 검증입니다. 학습형 모델이 아니며, 드리프터는 상시 도구가 아니라 간헐 캘리브레이션입니다.
+        한계: 라벨 0단계의 휴리스틱(경험 규칙)과 약지도(느슨한 라벨로 확인하는 방식) 검증입니다. 학습형 모델이 아니며, 드리프터는 상시 장비가 아니라 가끔 띄워 보정하는 데 씁니다.
       </p>
     </div>
   );

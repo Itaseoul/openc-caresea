@@ -24,7 +24,7 @@ const SPOTS: Spot[] = [
   { id: "goejeong", name: "괴정천", gu: "사하구", lat: 35.1028, lon: 128.9716, track: "boom", grade: "지방하천",
     note: "OpenBoom 무동력 붐 물리 실증 트랙(마이크로소프트 기금 응모 중)" },
   { id: "eulsukdo", name: "을숙도 하구", gu: "사하구", lat: 35.097, lon: 128.940, track: "estuary", grade: "국가하천 하구",
-    note: "4중으로 겹친 규제(천연기념물 제179호 등) · 단계적 확장 검토" },
+    note: "네 겹으로 겹친 규제(천연기념물 제179호 등), 단계적 확장 검토" },
 ];
 
 // 낙동강 본류 흐름(북→남, 바다로) — 방향 상징용 폴리라인
@@ -313,10 +313,10 @@ export default function NakdongMap() {
           <span className="inline-block h-0.5 w-5 rounded bg-amber-600" /> 표류 예측 평균경로
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded-sm border border-sky-400 bg-sky-300/30" /> 예측 범위 · 도달분포 <span className="text-neutral-400">(앙상블)</span>
+          <span className="inline-block h-3 w-3 rounded-sm border border-sky-400 bg-sky-300/30" /> 예측 범위 · 도달분포 <span className="text-neutral-400">(앙상블, 여러 예측을 모은 결과)</span>
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개)</span>
+          <span className="inline-block h-1 w-4 rounded bg-sky-400" /> 소하천 물길·수면 <span className="text-neutral-400">(점선=복개, 덮개로 덮인 구간)</span>
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-full border-2 border-orange-500" /> 지금 퇴적 위험 후광 <span className="text-neutral-400">(관심·주의·높음)</span>

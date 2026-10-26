@@ -18,7 +18,7 @@ const STATS = [
 ];
 
 export const metadata = {
-  title: "전국 소하천 정비율 | SEA:CUT 정책 컨텍스트",
+  title: "전국 소하천 정비율 | SEA:CUT 정책 배경",
   description:
     "전국 22,099곳 소하천의 시도별 정비율 지도입니다. 평균 46.5%, 서울 79.1% ~ 광주 11.5%로 재정력에 따른 '빈익빈 부익부'를 보여 줍니다.",
 };
@@ -30,7 +30,7 @@ export default function StreamsPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#eef2f6", color: "#0f172a" }}>
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "20px 16px 40px" }}>
-        <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 정책 컨텍스트</div>
+        <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 정책 배경</div>
         <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", marginTop: 4, lineHeight: 1.25 }}>
           전국 소하천 정비율: <span style={{ color: "#dc2626" }}>"빈익빈 부익부"</span>
         </h1>
@@ -53,7 +53,7 @@ export default function StreamsPage() {
 
         <div style={{ marginTop: 18, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "12px 14px" }}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>시도별 정비율 (확보값, 내림차순)</div>
+            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>시도별 정비율 (확보한 값, 높은 순)</div>
             <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>전국 평균 46.5%</div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 7 }}>
@@ -89,7 +89,7 @@ export default function StreamsPage() {
         </div>
 
         <div style={{ marginTop: 16, padding: "13px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, fontSize: 13, color: "#92400e", lineHeight: 1.65 }}>
-          하천정비 사업 예산의 지방 이양(2020) 이후 3년간 소하천 피해 규모 <b>2,499억원</b>. 재정이 열악한 지자체엔 큰 부담이라는 지적이 있습니다. SEA:CUT은 데이터와 도면을 <b>공개</b>해 누구나 복제할 수 있게 하려는 OpenBoom으로 도시 소하천 병목의 부유 쓰레기 문제를 보완하려 합니다.
+          하천정비 사업 예산의 지방 이양(국가 사업을 지자체로 넘김, 2020) 이후 3년간 소하천 피해 규모 <b>2,499억원</b>. 재정이 열악한 지자체엔 큰 부담이라는 지적이 있습니다. SEA:CUT은 데이터와 도면을 <b>공개</b>해 누구나 복제할 수 있게 하려는 OpenBoom으로 도시 소하천 병목의 부유 쓰레기 문제를 보완하려 합니다.
         </div>
 
         <div style={{ marginTop: 18, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>

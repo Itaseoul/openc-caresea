@@ -164,7 +164,7 @@ export default function PermitGenerator() {
       </Block>
 
       {/* 요건 체크리스트 */}
-      <Block title={use === "cctv" ? "요건 체크리스트 (개인정보 보호법 §25 · 프라이버시 · 점용)" : "요건 체크리스트 (「하천점용허가 세부기준」)"}>
+      <Block title={use === "cctv" ? "요건 체크리스트 (개인정보 보호법 제25조, 개인정보 보호, 점용)" : "요건 체크리스트 (「하천점용허가 세부기준」)"}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 4 }}>
           {reqs.map((r) => (
             <div key={r.clause} style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 12 }}>

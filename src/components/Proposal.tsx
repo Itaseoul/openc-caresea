@@ -23,11 +23,11 @@ const CONTACT = {
 //   이미지는 전부 공공·공개 라이선스(Wikimedia Commons, public/img/). 출처·라이선스는 푸터에 명시.
 
 const LOGFRAME: { k: string; t: string; d: string; tag: string }[] = [
-  { k: "Mission", t: "사명", tag: "왜", d: "도시 하천 병목의 부유 쓰레기가 바다로 유입되는 것을 시민 참여로 줄이고, 작은 하천의 데이터 사각지대를 공개 데이터로 메웁니다." },
-  { k: "Outcomes", t: "영향", tag: "무엇이 달라지나", d: "학장천 한 병목에서 부유 쓰레기 흐름이 활동 전후로 달라지는지를 측정 가능한 숫자로 보입니다. 도시 소하천은 저수기에도 부유물이 늘 흐르므로 연중 측정하며, 비 직후 부유물이 크게 느는 구간은 신호가 강한 측정 구간으로 봅니다. 차단율은 보수적으로 약 팔 퍼센트로 봅니다. 시민의 책임감 변화를 함께 기록합니다." },
+  { k: "Mission", t: "사명", tag: "왜", d: "도시 하천 병목의 부유 쓰레기(물에 떠서 흘러가는 쓰레기)가 바다로 유입되는 것을 시민 참여로 줄이고, 작은 하천의 데이터 사각지대를 공개 데이터로 메우려 합니다." },
+  { k: "Outcomes", t: "영향", tag: "무엇이 달라지나", d: "학장천 한 병목에서 부유 쓰레기 흐름이 활동 전후로 달라지는지를 측정 가능한 숫자로 보이려 합니다. 도시 소하천은 저수기(물이 적은 시기)에도 부유물이 늘 흐르므로 연중 측정하며, 비 직후 부유물이 크게 느는 구간은 변화가 뚜렷하게 드러나는 측정 구간으로 봅니다. 차단율은 보수적으로 약 팔 퍼센트로 봅니다. 시민의 책임감 변화를 함께 기록합니다." },
   { k: "Outputs", t: "산출", tag: "만드는 것", d: "OpenBoom 한 기의 실증, 운영과 안전 알리미, 데이터 인프라, 활동 전후 부유 쓰레기 흐름 곡선, 누구나 복제할 수 있는 공개 도면과 데이터입니다." },
   { k: "Activities", t: "활동", tag: "하는 일", d: "구청 사전 협의와 점용 허가, 단기 무동력 거치(연중 가능), 주 일 회 시민 수거와 품목 분류, 영상과 수위 기록, 수위 단계에 따른 철거와 원상 복구입니다." },
-  { k: "Inputs", t: "투입", tag: "넣는 것", d: "삼천만 원을 자재와 설치와 안전과 보험과 수거 운영과 데이터에 배분합니다. 시민과 학교, 공공 데이터 네 종을 쓰고, 작은 하천은 자체 사물인터넷 계측으로 보완합니다." },
+  { k: "Inputs", t: "투입", tag: "넣는 것", d: "삼천만 원을 자재, 설치, 안전, 보험, 수거 운영, 데이터에 나누어 쓸 계획입니다. 시민과 학교, 공공 데이터 네 종을 쓰고, 작은 하천은 자체 사물인터넷 계측으로 보완합니다." },
   { k: "Governance", t: "거버넌스", tag: "누가 받치나", d: "운영은 사단법인 이타서울, 점용 허가는 관할 구청, 거버넌스 우산은 글로벌 반려해변 협력체와 부산시, 데이터 백본은 이타시티입니다. OpenBoom 이름과 인증은 안전 기준을 충족한 복제본에만 부여합니다." },
 ];
 
@@ -48,7 +48,7 @@ const IMG: Record<string, ImgMeta> = {
 
 // 상단 "지금 바로 확인 가능한 준비" — 사이트가 실제로 보유한 자산을 한 곳에 모은 인덱스(전부 실재 페이지·앵커).
 const READY: { href: string; tag: string; title: string; desc: string; icon: IconName }[] = [
-  { href: "#dashboard", tag: "실시간 공개 데이터", title: "운영, 안전 대시보드", desc: "강수, 하천 수위, 호우특보를 한 화면에 모아 거치, 수거, 철거 판단을 돕도록 만들었습니다.", icon: "monitor" },
+  { href: "#dashboard", tag: "실시간 공개 데이터", title: "운영, 안전 대시보드", desc: "강수, 하천 수위, 호우특보를 한 화면에 모아 붐의 거치, 수거, 철거 판단을 돕는 화면입니다.", icon: "monitor" },
   { href: "#dashboard", tag: "공개데이터 4종", title: "데이터 파이프라인 연동", desc: "기상청, 한강홍수통제소, 서울특별시, 부산광역시 자료를 우리 서버를 거쳐 안전하게 연동합니다.", icon: "data" },
   { href: "/streams", tag: "전국 지도", title: "소하천 정비율 지도", desc: "서울 79.1% ~ 광주 11.5%, 전국 평균 46.5%의 정책 사각지대를 지도로 보여 줍니다.", icon: "map" },
   { href: "/protocol", tag: "시민과학 표준", title: "시민 수거를 표준 관측과 라벨로", desc: "EU Plastic Pirates(14개국, 2.5만 명, 390개 강) 벤치마크로 사진 검증 절차를 설계했습니다.", icon: "globe" },
@@ -88,19 +88,19 @@ const GLOBAL_CASES: { tag: string; title: string; who: string; world: string; ta
     world: "U-Net++ 분할과 Lagrangian 표류 모델로 쓰레기가 쌓이는 곳을 짚어 냅니다.",
     take: "하류 퇴적 위험 예측(litter-risk)의 구조를 설계할 때 참조합니다." },
   { tag: "경로 최적화", title: "수거선 동선 최적화로 회수 효율 향상", who: "INFORMS, Operations Research",
-    world: "비선형 경로 최적화로 같은 비용에 더 많이, 더 짧은 시간에 걷어냅니다.",
+    world: "비선형 경로 최적화로 같은 비용에 더 많이, 더 짧은 시간에 걷어낸 사례입니다.",
     take: "시민 수거 동선과 붐 비움 출동의 우선순위를 정할 때 참고합니다." },
-  { tag: "표류 실측 (ground truth)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA, 제주 하구, 갠지스",
+  { tag: "표류 실측 (ground truth, 예측과 맞대어 볼 실제 관측값)", title: "GPS 추적 부표로 쓰레기 경로를 실측", who: "NOAA, 제주 하구, 갠지스",
     world: "GPS 드리프터를 흘려 실제 표류 경로를 좌표로 기록하고, 예측과 맞대어 볼 정답지를 만듭니다.",
-    take: "고정 붐을 드리프터의 종점으로 삼아 발생원에서 붐까지의 경로를 라벨로 남깁니다(회수, 재사용)." },
+    take: "고정 붐(물 위에 띄워 쓰레기를 막는 차단막)을 드리프터(위치를 기록하며 떠내려가는 부표)의 종점으로 삼아, 발생원에서 붐까지의 경로를 검증용 자료로 남기려 합니다(드리프터는 회수해 재사용)." },
 ];
 
 // 알림 거버넌스 — 예측이 "지금 정체됨"을 알릴 때, 누가·무엇을·어떤 근거로.
 // litterRisk의 RiskLevel(낮음/관심/주의/높음)에 매핑. is_estimate=true → 알림은 "출동 판단 보조"이지 자동 지시가 아니다.
 const ALERT_LADDER: { level: string; score: string; trigger: string; who: string; action: string; tone: "high" | "mid" | "low" | "base" }[] = [
-  { level: "높음", score: "≥ 0.60", trigger: "강우 first-flush × 트랩 집중: 지금 쓸려 와 걸리는 중", who: "현장 수거 코디, 관할 구청 하천팀", action: "붐 비움과 긴급 수거 출동 편성, 수위 단계에 따른 철거 판단", tone: "high" },
+  { level: "높음", score: "≥ 0.60", trigger: "강우 first-flush(비 초기에 쓰레기가 한꺼번에 쓸려 오는 현상) × 트랩 집중: 쓸려 와 걸리고 있을 가능성이 큼", who: "현장 수거 코디, 관할 구청 하천팀", action: "붐 비움과 긴급 수거 출동 편성, 수위 단계에 따른 철거 판단", tone: "high" },
   { level: "주의", score: "≥ 0.38", trigger: "정체 상승: 강우 이송 또는 평시 퇴적 누적", who: "시민 수거단, 이타서울 운영", action: "다음 정기 수거 우선순위 상향, 붐 장력과 수위 점검", tone: "mid" },
-  { level: "관심", score: "≥ 0.18", trigger: "평시 정체 바닥: 건기에 쌓여 머무는 퇴적(standing stock)", who: "대시보드 표시(수동 확인)", action: "관측 지속, 순회 시 육안 확인", tone: "low" },
+  { level: "관심", score: "≥ 0.18", trigger: "평시 정체 수준: 건기에 쌓여 머무는 양(standing stock, 정체 재고량)", who: "대시보드 표시(수동 확인)", action: "관측 지속, 순회 시 육안 확인", tone: "low" },
   { level: "낮음", score: "< 0.18", trigger: "정상, 특이 신호 없음", who: "—", action: "—", tone: "base" },
 ];
 
@@ -171,7 +171,7 @@ export default function Proposal() {
               <span className="text-brand-200">우리가 직접 막고 기록하고 공개하려 합니다.</span>
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/80 sm:text-base">
-              강물과 함께 쓰레기가 바다로 흘러드는 지점에서 부유 쓰레기를 가로채는 실증을 기획하고, 관련 공개 자료를 정리해 둔 곳입니다. 오른쪽은 대상 하천 하류의 공공 CCTV 실시간 화면입니다.
+              쓰레기가 강물과 함께 바다로 흘러드는 길목에서 부유 쓰레기를 막는 실증을 기획하고, 관련 공개 자료를 정리해 둔 곳입니다. 오른쪽은 대상 하천 하류의 공공 CCTV 실시간 화면입니다.
             </p>
 
             {/* 신뢰 배지 스트립 */}
@@ -232,7 +232,7 @@ export default function Proposal() {
             낙동강 하구로 흘러드는 소하천의 길목을 살핍니다
           </h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
-            바다로 들어오기 직전의 낙동강 지류 소하천 합류부가 SEA:CUT이 살피는 곳입니다. 기획안에서 사상구 감전천(엄궁동에서 학장천에 합류해 낙동강으로 드는 길목)은 부산시 협력 데이터 실증 후보, 사하구 괴정천은 무동력 차단막(붐) 물리 실증 후보이고, 학장천 엄궁동은 운영, 안전 대시보드의 관측 지점입니다. 을숙도 하구는 4중으로 겹친 규제를 검토하며 단계적으로 확장하는 안입니다. 부산시와 한국해양과학기술원이 낙동강 하구의 육상 기인(육지에서 흘러온) 부유 쓰레기를 위성, 드론, AI로 분석하고 있고, SEA:CUT은 그 상류 발생 지점인 소하천 길목을 다룹니다.
+            SEA:CUT은 바다로 들어가기 직전, 낙동강 지류와 소하천이 만나는 합류부를 살핍니다. 기획안의 후보지는 셋입니다. 사상구 감전천(엄궁동에서 학장천에 합류해 낙동강으로 드는 길목)은 부산시 협력 데이터 실증 후보이고, 사하구 괴정천은 무동력 차단막(붐) 물리 실증 후보이며, 학장천 엄궁동은 운영, 안전 대시보드의 관측 지점으로 검토하고 있습니다. 을숙도 하구는 네 겹으로 겹친 규제를 검토하며 단계적으로 확장하는 안입니다. 부산시와 한국해양과학기술원이 낙동강 하구의 육상 기인(육지에서 흘러온) 부유 쓰레기를 위성, 드론, AI로 분석하고 있고, SEA:CUT은 쓰레기가 시작되는 상류의 소하천 길목을 다룹니다.
           </p>
           <div className="mt-6">
             <NakdongMap />
@@ -250,9 +250,9 @@ export default function Proposal() {
               </div>
               <div className="bg-white p-5">
                 <div className="text-xs font-bold uppercase tracking-wider text-brand-700">상류 차단</div>
-                <div className="mt-1 text-[15px] font-bold text-neutral-900">SEA:CUT: 발생원 가까이에서 가로챕니다</div>
+                <div className="mt-1 text-[15px] font-bold text-neutral-900">SEA:CUT: 발생원 가까이에서 먼저 막습니다</div>
                 <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
-                  같은 낙동강 하구 문제를 SEA:CUT은 쓰레기가 바다로 나가기 <b>전</b>의 소하천 길목에서 무동력 붐으로 차단하고 기록하는 방식으로 다루려 합니다. <b>하류 관측(부산시)과 상류 차단(SEA:CUT)을 이으면</b> 발생원에서 바다까지(source-to-sea) 잇는 흐름의 한 축이 됩니다.
+                  같은 낙동강 하구 문제를 SEA:CUT은 쓰레기가 바다로 나가기 <b>전</b>의 소하천 길목에서 무동력 붐으로 차단하고 기록하는 방식으로 다루려 합니다. <b>하류 관측(부산시)과 상류 차단(SEA:CUT)을 이으면</b> 발생원에서 바다까지(source-to-sea) 잇는 흐름의 한 축을 만들 수 있습니다.
                 </p>
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function Proposal() {
           <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">공개 자료와 도구</div>
           <h2 className="text-balance text-2xl font-bold tracking-tight text-neutral-900 sm:text-[1.7rem]">지금 열어 볼 수 있는 자료와 도구</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-neutral-600">
-            아래 항목은 주소를 열어 바로 볼 수 있습니다. 공개 데이터 대시보드, 데이터 연동, 정책 지도, 행정 문서 생성기, 실증 후보지 분석을 모아 두었습니다.
+            아래 항목은 눌러서 바로 볼 수 있습니다. 공개 데이터 대시보드, 데이터 연동, 정책 지도, 행정 문서 생성기, 실증 후보지 분석을 모아 두었습니다.
           </p>
           <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {READY.map((r) => {
@@ -305,7 +305,7 @@ export default function Proposal() {
             note="도시의 작은 하천 병목, 실시간 감시의 사각지대"
           />
           <p>해양 쓰레기의 80% 이상은 육지에서 강을 타고 들어옵니다. 그런데 그 통로인 작은 하천은 실시간 감시의 사각지대입니다.</p>
-          <p>국가하천과 지방하천은 실시간 수위 관측망이 있지만, 작은 하천은 별도 법으로 관리되고 전국 이만 이천여 곳에 이릅니다. 일부에 자동 계측이 설치되고 있으나 목표는 전체의 십분의 일이며 그 데이터도 기관 내부에서만 흐릅니다. 공개된 실시간 수위 자료는 사실상 없습니다.</p>
+          <p>국가하천과 지방하천은 실시간 수위 관측망이 있지만, 작은 하천은 별도 법(소하천정비법)으로 관리되고 전국 이만 이천여 곳에 이릅니다. 일부에 자동 계측이 설치되고 있으나 목표는 전체의 십분의 일이며 그 데이터도 기관 내부에서만 흐릅니다. 시민이 바로 볼 수 있는 실시간 수위 자료는 찾기 어렵습니다.</p>
           <div className="not-prose grid grid-cols-2 gap-3 sm:grid-cols-4">
             {PROBLEM_STATS.map((s) => (
               <div key={s.l} className="rounded-2xl border border-neutral-200 border-t-2 border-t-brand-600 bg-neutral-50/60 p-4 text-center">
@@ -319,7 +319,7 @@ export default function Proposal() {
         {/* ───────── 접근 = 오픈소스 ───────── */}
         <Section eyebrow="접근" title="같은 원리를 오픈소스로 엽니다">
           <p>세계에는 이미 작은 하천의 부유 쓰레기를 막는 검증된 장치가 있습니다. 미국 Osprey Initiative의 Litter Gitter는 특허 장치이며 설치와 유지와 수거를 회사가 대행하는 상용 서비스입니다. 효과는 분명하지만 한 회사가 소유하고 운영하므로 다른 지역이 스스로 재현하기 어렵습니다.</p>
-          <p>SEA:CUT의 OpenBoom은 같은 수리 원리를 따르되 도면과 자재 명세와 운영 절차를 모두 공개할 계획입니다. 한 곳에서 검증한 설계를 다른 마을이 추가 비용을 거의 들이지 않고 그대로 세울 수 있습니다. 우리가 정한 성공 지표는 제삼의 시민 단체가 우리 도움 없이 다른 하천에 같은 붐을 세웠는가입니다.</p>
+          <p>SEA:CUT의 OpenBoom은 같은 수리 원리(물의 흐름과 힘을 다루는 원리)를 따르되 도면, 자재 명세, 운영 절차를 모두 공개할 계획입니다. 한 곳에서 검증한 설계를 다른 마을이 적은 비용으로 따라 설치할 수 있게 하려 합니다. 우리가 정한 성공 지표는 다른 시민 단체가 우리 도움 없이 다른 하천에 같은 붐을 설치했는가입니다.</p>
 
           {/* 상용(특허) vs 오픈소스 대비 */}
           <div className="not-prose grid gap-3 sm:grid-cols-2">
@@ -337,8 +337,8 @@ export default function Proposal() {
               <div className="mt-1 text-base font-bold text-brand-900">SEA:CUT OpenBoom</div>
               <ul className="mt-3 space-y-1.5 text-[13px] leading-5 text-brand-900/80">
                 <li className="flex gap-2"><span className="text-brand-500">+</span> 도면, 자재 명세, 운영 절차 공개 계획</li>
-                <li className="flex gap-2"><span className="text-brand-500">+</span> 추가 비용 거의 없이 그대로 복제</li>
-                <li className="flex gap-2"><span className="text-brand-500">+</span> 성공 지표 = 제삼자가 스스로 세운 붐</li>
+                <li className="flex gap-2"><span className="text-brand-500">+</span> 적은 비용으로 따라 만들 수 있게</li>
+                <li className="flex gap-2"><span className="text-brand-500">+</span> 성공 지표: 다른 단체가 스스로 설치한 붐의 수</li>
               </ul>
             </div>
           </div>
@@ -357,13 +357,13 @@ export default function Proposal() {
         {/* ───────── 글로벌 동향 = AI·데이터 정화 루프 ───────── */}
         <Section id="context" eyebrow="글로벌 동향" title="세계의 정화는 데이터 루프로 옮겨 가고 있습니다">
           <p>세계의 하천과 해양 정화는 떠 있는 쓰레기를 막는 물리 장치에서 <b>탐지하고 예측하고 최적 동선으로 걷어내는 데이터 루프</b>로 진화하고 있습니다. 특히 The Ocean Cleanup은 한 조직 안에서 데이터 수집, 위성 탐지, 표류 예측, 수거 경로 최적화를 하나의 열린 스택으로 쌓고 있습니다.</p>
-          <p>SEA:CUT은 이 흐름을 <b>소하천과 하구 규모에서, 시민 참여와 무동력 장치로</b> 가져오려 합니다. OpenBoom은 차단막이면서 그 데이터 루프의 첫 계측점이 되도록 설계합니다.</p>
+          <p>SEA:CUT은 이 흐름을 <b>소하천과 하구 규모에서, 시민 참여와 무동력 장치로</b> 가져오려 합니다. OpenBoom은 차단막이면서 그 데이터 루프(탐지, 예측, 수거가 이어지는 순환)의 첫 계측점(측정 지점)이 되도록 설계하고 있습니다.</p>
 
           {/* 글로벌 사례 이미지 갤러리(자유 라이선스, 출처 표기) */}
           <div className="not-prose">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <Figure img={IMG.satellite} ratio="aspect-[4/3]" caption={IMG.satellite.place} note="위성 탐지, Sentinel-2(ADOPT, DEEP-PLAST)" />
-              <Figure img={IMG.drifter} ratio="aspect-[4/3]" caption={IMG.drifter.place} note="GPS 드리프터, 표류 실측 라벨" />
+              <Figure img={IMG.drifter} ratio="aspect-[4/3]" caption={IMG.drifter.place} note="GPS 드리프터(위치 추적 부표), 표류 실측 자료" />
               <Figure img={IMG.edgeShip} ratio="aspect-[4/3]" caption={IMG.edgeShip.place} note="상업선 엣지 AI(ADIS)" />
               <Figure img={IMG.debris} ratio="aspect-[4/3]" caption={IMG.debris.place} note="해양 부유 쓰레기 실태" />
             </div>
@@ -402,7 +402,7 @@ export default function Proposal() {
           {/* 상·하류 정합 — 하구 도달 전 리드타임(예방 시간) */}
           <div className="not-prose mt-2 rounded-2xl border border-brand-100 bg-brand-50/40 p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <div className="text-[13px] font-bold text-neutral-800">상류와 하류 정합: 하구 도달 전 리드타임(미리 확보하는 시간)</div>
+              <div className="text-[13px] font-bold text-neutral-800">상류와 하류 연계: 하구 도달 전 리드타임(미리 확보하는 시간)</div>
               <div className="text-[11px] text-neutral-400">표면유속 0.2~0.6 m/s 가정, 추정</div>
             </div>
             <p className="mt-1 text-[12px] leading-5 text-neutral-500">
@@ -414,28 +414,28 @@ export default function Proposal() {
                   <div className="truncate text-[12.5px] font-semibold text-neutral-800">{lt.name}</div>
                   <div className="mt-1 flex items-baseline gap-1">
                     <span className="text-lg font-extrabold tabular-nums text-brand-700">{lt.lead_lo_h}–{lt.lead_hi_h}</span>
-                    <span className="text-[11px] text-neutral-500">시간 리드</span>
+                    <span className="text-[11px] text-neutral-500">시간 여유</span>
                   </div>
                   <div className="text-[10.5px] text-neutral-400">하구까지 {(lt.distance_m / 1000).toFixed(1)}km</div>
                 </div>
               ))}
             </div>
             <p className="mt-2.5 text-[11px] leading-4 text-neutral-400">
-              ⚠️ 유속 가정 기반 추정치입니다. <a href="/permit" className="font-semibold text-brand-600 hover:underline">MOU 데이터 교환</a>으로 하구 관측(부산시, KIOST)과 연결되면, 상류 알림 → 하구 유입 확인의 <b>실측 지연</b>으로 교정할 계획입니다.
+              ⚠️ 유속 가정 기반 추정치입니다. <a href="/permit" className="font-semibold text-brand-600 hover:underline">MOU 데이터 교환</a>으로 하구 관측(부산시, KIOST)과 연결되면, 상류 알림부터 하구 유입 확인까지 <b>실제로 걸린 시간</b>으로 교정할 계획입니다.
             </p>
           </div>
         </Section>
 
         {/* ───────── 예측 → 알림 → 연대 — 운영 거버넌스 척추 ───────── */}
         <Section id="govern" eyebrow="운영 거버넌스" title="정체를 알고, 알리고, 함께 걷어냅니다">
-          <p>예측만으로는 쓰레기가 줄지 않습니다. <b>정체가 감지되면 누구에게 알리고, 그 사람이 무엇을 하는지</b>가 실제 회수를 만듭니다. 예측 등급에 따라 알림 등급이 정해지고, 알림 등급에 따라 함께 할 행동이 정해집니다.</p>
+          <p>예측만으로는 쓰레기가 줄지 않습니다. <b>정체가 감지되면 누구에게 알리고, 각 주체가 무엇을 하는지</b>가 실제 수거로 이어집니다. 예측 등급에 따라 알림 등급이 정해지고, 알림 등급에 따라 함께 할 행동이 정해집니다.</p>
 
           {/* 3단 흐름 — 예측 → 알림 → 연대 */}
           <div className="not-prose grid items-stretch gap-2.5 sm:grid-cols-[1fr_auto_1fr_auto_1fr]">
             {[
-              { k: "1. 정체 예측", t: "언제, 어디서", d: "강우 first-flush × 트랩 기하로 지금 가장 걸려 있을 길목을 순위로 매깁니다", tone: "border-brand-200 bg-brand-50/60 text-brand-900" },
-              { k: "2. 알림", t: "누구에게, 무엇을", d: "등급별로 수신 주체와 행동을 미리 정해 두고 자동으로 올립니다", tone: "border-amber-200 bg-amber-50/70 text-amber-900" },
-              { k: "3. 연대 수거", t: "함께 걷어내기", d: "시민, 이타서울, 구청, 부산시가 각자의 역할로 출동, 회수, 연계합니다", tone: "border-emerald-200 bg-emerald-50/70 text-emerald-900" },
+              { k: "1. 정체 예측", t: "언제, 어디서", d: "강우 first-flush × 트랩 기하(쓰레기가 걸리기 쉬운 물길 모양)로 걸려 있을 가능성이 큰 길목을 순위로 매깁니다", tone: "border-brand-200 bg-brand-50/60 text-brand-900" },
+              { k: "2. 알림", t: "누구에게, 무엇을", d: "등급별로 수신 주체와 행동을 미리 정해 두고 알림을 보내도록 설계합니다", tone: "border-amber-200 bg-amber-50/70 text-amber-900" },
+              { k: "3. 연대 수거", t: "함께 걷어내기", d: "시민, 이타서울, 구청, 부산시가 역할을 나누어 출동, 수거, 행정 연계를 맡는 구조입니다", tone: "border-emerald-200 bg-emerald-50/70 text-emerald-900" },
             ].map((s, i) => (
               <React.Fragment key={s.k}>
                 <div className={`rounded-2xl border p-4 ${s.tone}`}>
@@ -450,10 +450,10 @@ export default function Proposal() {
 
           {/* 알림 거버넌스 사다리 — 등급 → 트리거 → 수신 → 행동 */}
           <div className="not-prose mt-2">
-            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">알림 거버넌스: 예측 등급이 곧 알림과 행동 등급입니다</div>
+            <div className="mb-2.5 text-[12.5px] font-semibold text-neutral-500">알림 운영 체계: 예측 등급에 따라 알림과 행동 등급이 정해집니다</div>
             <div className="overflow-hidden rounded-2xl border border-neutral-200">
               <div className="hidden bg-neutral-50 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-neutral-400 sm:grid sm:grid-cols-[84px_1fr_1fr_1.2fr]">
-                <div>등급</div><div>트리거, 정체 신호</div><div>알림 대상</div><div>행동</div>
+                <div>등급</div><div>발령 조건, 정체 신호</div><div>알림 대상</div><div>행동</div>
               </div>
               {ALERT_LADDER.map((r) => {
                 const chip =
@@ -467,7 +467,7 @@ export default function Proposal() {
                       <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ring-1 ${chip}`}>{r.level}</span>
                       <span className="ml-1.5 text-[10.5px] tabular-nums text-neutral-400">{r.score}</span>
                     </div>
-                    <div className="text-neutral-600"><span className="font-medium text-neutral-400 sm:hidden">트리거: </span>{r.trigger}</div>
+                    <div className="text-neutral-600"><span className="font-medium text-neutral-400 sm:hidden">발령 조건: </span>{r.trigger}</div>
                     <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">알림: </span>{r.who}</div>
                     <div className="text-neutral-700"><span className="font-medium text-neutral-400 sm:hidden">행동: </span>{r.action}</div>
                   </div>
@@ -531,7 +531,7 @@ export default function Proposal() {
         </Section>
 
         {/* ───────── 로그프레임 ───────── */}
-        <Section id="design" eyebrow="설계" title="사업 설계: 로그프레임">
+        <Section id="design" eyebrow="설계" title="사업 설계: 로그프레임(성과 관리 틀)">
           <p className="not-prose -mt-1 text-[13px] text-neutral-500">투입에서 사명까지, 결과의 사슬(results chain)로 설계했습니다.</p>
           <div className="not-prose space-y-2.5">
             {LOGFRAME.map((r, i) => (
@@ -558,7 +558,7 @@ export default function Proposal() {
             <BoomDiagram />
           </div>
           <div className="space-y-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-5 sm:p-6">
-            <p className="text-neutral-700">작은 하천 전용의 오픈소스 표층 부유 쓰레기 차단 붐입니다. 밀폐형 재생 고밀도 폴리에틸렌 부체를 쓰며 폐스티로폼은 쓰지 않습니다. 표층만 막아 어류와 새는 통과시키고, 홍수 시 한쪽 연결이 끊어지는 안전 장치를 둡니다. 하상을 굴착하지 않습니다.</p>
+            <p className="text-neutral-700">작은 하천 전용의 오픈소스 표층 부유 쓰레기 차단 붐입니다. 물에 뜨는 부체(뜨개)는 밀폐형 재생 고밀도 폴리에틸렌으로 만들며 폐스티로폼은 쓰지 않습니다. 표층만 막아 어류와 새는 통과시키고, 홍수 시 한쪽 연결이 끊어지는 안전 장치를 둡니다. 하상(강바닥)을 굴착하지 않습니다.</p>
             <p className="text-neutral-700">물리 설계와 함께 자재 조달, 교육, 진입 단계, 데이터 표준, 행정 협의 방법까지 하나의 묶음으로 공개하는 것을 목표로 합니다. 폭 삼사 미터 작은 하천 한 칸을 최소 복제 단위로 표준화하여 한두 사람이 하루 안에 설치하고 철거할 수 있게 설계합니다. 시민이 병목 지점을 사진과 위치로 제보하는 기능을 두되 안전신문고와 중복되지 않게 범위를 한정합니다.</p>
             <div className="flex flex-wrap gap-2">
               {BOOM_SPECS.map((s) => (
@@ -573,7 +573,7 @@ export default function Proposal() {
           <div className="not-prose">
             <SourceToSeaDiagram />
           </div>
-          <p>SEA:CUT은 국제 관리 프레임인 source to sea 위에서 설계했습니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원이며, 육지 기원 오염을 출발지에서 차단한다는 source to sea 원칙을 따릅니다.</p>
+          <p>SEA:CUT은 발원지에서 바다까지 하나로 보고 관리하는 국제 관리 틀인 source to sea를 바탕으로 설계했습니다. 사단법인 이타서울은 유엔환경계획 글로벌 플라스틱 허브의 등록 회원이며, 육지 기원 오염을 출발지에서 차단한다는 source to sea 원칙을 따릅니다.</p>
         </Section>
 
         {/* ───────── 라이브 대시보드 ───────── */}
@@ -585,7 +585,7 @@ export default function Proposal() {
             </span>
             LIVE 공개 데이터 실시간 연동
           </div>
-          <p>아래는 공개 데이터를 받아 보여 주는 운영, 안전 대시보드입니다. 강수와 하천 수위를 한 화면에 모아, 무동력 차단 붐을 언제 거치, 수거, 철거할지 판단하는 데 쓰도록 만들었습니다. 도시 소하천은 연중 부유물이 흐르므로 계절과 관계없이 쓸 수 있게 설계했고, 비가 온 직후는 부유물이 크게 늘어 신호가 강한 측정 구간입니다. 작은 하천의 실시간 수위는 공개 자료가 없어 자체 계측으로 메울 계획입니다.</p>
+          <p>아래는 공개 데이터를 받아 보여 주는 운영, 안전 대시보드입니다. 강수와 하천 수위를 한 화면에 모아, 무동력 차단 붐을 언제 거치, 수거, 철거할지 판단하는 데 쓰도록 만들었습니다. 도시 소하천은 연중 부유물이 흐르므로 계절과 관계없이 쓸 수 있게 설계했습니다. 비가 온 직후는 부유물이 크게 늘어 변화가 뚜렷한 측정 구간이지만, 물이 불어 위험할 수 있으므로 안전을 먼저 확인합니다. 작은 하천의 실시간 수위는 공개 자료가 없어 자체 계측으로 메울 계획입니다.</p>
           <div className="not-prose mt-5">
             <Dashboard />
           </div>
@@ -593,7 +593,7 @@ export default function Proposal() {
 
         {/* ───────── 정직 경계 ───────── */}
         <Section eyebrow="원칙" title="정직의 경계: 과장하지 않습니다">
-          <p className="text-sm leading-7 text-neutral-500">수면 붐은 떠 있는 쓰레기만 잡습니다. 홍수 시 안전이 가장 큰 관문이므로 소형과 탈착과 비굴착으로 대응하고 수위 단계에 따라 철거합니다. 영상 분석은 존재와 추세를 보여주는 보조 수단이며 자동 정확 집계를 약속하지 않습니다. 첫 시도는 학습으로 봅니다. 시 청소를 대체하지 않고 보완하며, 주민에게 무급 노동을 전가하지 않도록 사례비를 예산에 반영합니다.</p>
+          <p className="text-sm leading-7 text-neutral-500">수면 붐은 떠 있는 쓰레기만 잡습니다. 홍수 시 안전이 가장 큰 관문이므로 소형, 탈착식, 비굴착(땅을 파지 않는 고정) 설계로 대응하고 수위 단계에 따라 철거합니다. 영상 분석은 존재와 추세를 보여주는 보조 수단이며 자동 정확 집계를 약속하지 않습니다. 첫 시도는 학습으로 봅니다. 시 청소를 대체하지 않고 보완하며, 주민에게 무급 노동을 전가하지 않도록 사례비를 예산에 반영합니다.</p>
         </Section>
 
         {/* ───────── 확장 ───────── */}
@@ -601,7 +601,7 @@ export default function Proposal() {
           <Figure
             img={IMG.cleanup}
             caption="시민이 직접 하천을 돌보고 기록하는 참여, 복제의 출발점"
-            note="시민 참여로 굴러가는 운영, 다음 병목으로 복제되는 모델"
+            note="시민 참여로 이어지는 운영, 다음 병목으로 복제되는 모델"
           />
           <p>첫 한 기의 한계는 분명합니다. 그러나 OpenBoom의 가치는 두 번째 병목을 세우는 비용이 얼마나 낮아지는가에 있습니다. 한 곳에서 검증한 도면과 데이터와 운영 절차를 공개하면 다른 하천이 처음부터 다시 설계할 필요가 없습니다. 부산 학장천에서 검증할 방법을 다른 도시 하천이 그대로 가져다 쓰는 것이 이 사업의 최종 목표입니다.</p>
           <div className="not-prose flex items-center gap-2 sm:gap-3">
@@ -785,7 +785,7 @@ function SourceToSeaDiagram() {
           <rect x="160" y="22" width="100" height="56" rx="10" fill="#eef4fb" stroke="#b8cfec" strokeWidth="1.6" />
           <text x="210" y="42" textAnchor="middle" fontSize="12" fontWeight="800" fill="#1f5290">소하천 병목</text>
           <text x="210" y="56" textAnchor="middle" fontSize="9.5" fill="#2563a8">SEA:CUT OpenBoom</text>
-          <text x="210" y="69" textAnchor="middle" fontSize="9.5" fill="#2563a8">여기서 가로챕니다</text>
+          <text x="210" y="69" textAnchor="middle" fontSize="9.5" fill="#2563a8">여기서 먼저 막습니다</text>
         </g>
         <line x1="260" y1="50" x2="314" y2="50" stroke="#94a3b8" strokeWidth="1.6" markerEnd="url(#s2s)" />
         {/* 노드 3: 바다 */}

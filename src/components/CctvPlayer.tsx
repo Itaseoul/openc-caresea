@@ -270,7 +270,7 @@ export default function CctvPlayer({
           <div style={{ position: "relative", fontSize: 22 }}>{poster ? "🖼" : "📴"}</div>
           <div style={{ position: "relative", fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>{name ?? "현장 CCTV"}</div>
           <div style={{ position: "relative", fontSize: 11.5, color: "#cbd5e1", lineHeight: 1.5, maxWidth: 320 }}>
-            {poster ? "실시간 영상이 잠시 끊겨 최근 정지영상을 보여줍니다." : `${err}. 공공 스트림 서버가 일시적으로 응답하지 않습니다.`}
+            {poster ? "실시간 영상이 잠시 끊겨 최근 정지영상을 보여줍니다." : `${err}. 공공 영상 서버가 일시적으로 응답하지 않습니다. 잠시 후 다시 시도해 주세요.`}
           </div>
           <button
             onClick={() => setRetryNonce((n) => n + 1)}

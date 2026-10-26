@@ -149,7 +149,7 @@ export function requiredPermits(s: Spot, use: UseType = "boom"): Permit[] {
       agency: `${s.region}청 협의 (공동 운영·활용 기관)`,
       basis: "개인정보 보호법 제25조",
       flag: "주민 의견수렴",
-      note: "공개된 장소의 CCTV는 설치 전 20일 이상 행정예고, 운영·관리방침 공개, 안내판 게시가 필요. 지자체 공동명의가 깔끔.",
+      note: "공개된 장소의 CCTV는 설치 전 20일 이상 행정예고, 운영·관리방침 공개, 안내판 게시가 필요. 지자체와 공동명의로 하면 절차가 수월함.",
     });
     list.push({
       name: "민관 데이터 협약(MOU) 또는 기부채납",
@@ -208,7 +208,7 @@ export function pathway(s: Spot, use: UseType = "boom"): string[] {
     steps.push(`${s.region}청에 ${s.stream} 복개·구거 여부와 점용 근거(공유재산·조례) 확인`);
   }
   if (use === "cctv") {
-    steps.push(`${s.region}청 하천관리과·환경과·정보통신과 합동 미팅 제안 — 칸막이 돌파`);
+    steps.push(`${s.region}청 하천관리과·환경과·정보통신과 합동 미팅 제안 — 부서 간 업무 조율`);
     steps.push("민관 데이터 협약(MOU) 또는 기부채납 조건 협의 — 운영주체·데이터 공유항목 확정");
   }
   if (s.zone !== "밖") {
@@ -378,7 +378,7 @@ export function docRestorationPlan(s: Spot, use: UseType = "boom"): string {
 3. 설계 원칙: 비굴착·가역·탈착. 하상과 제방을 굴착하지 않아 원상복구 부담이 최소.
 4. 철거(원상복구) 절차:
    - ${detach}
-   - 굴착이 없으므로 되메우기·재포장이 불요하거나 최소
+   - 굴착이 없으므로 되메우기·재포장이 필요 없거나 최소
    - 현장 청소·잔재물 회수 후 원상 상태 확인
 5. 원상복구 시점: 점용기간 만료, 홍수기 긴급철거, 처분청의 원상회복 명령 시
 6. 확인: 처분청 입회 점검, 사진·기록 보관, 완료 보고
@@ -452,7 +452,7 @@ export function docConsultLetter(s: Spot, use: UseType = "boom"): string {
   return `[사전 협의(상담) 요청 공문 초안]
 수신: ${sb.agency}
 참조: ${s.region}청 하천 담당부서
-제목: ${s.stream} 부유식 부유 쓰레기 차단 붐 설치에 관한 점용허가 사전 협의 요청
+제목: ${s.stream} 부유식 쓰레기 차단 붐 설치에 관한 점용허가 사전 협의 요청
 
 1. 귀 기관의 하천 관리 노고에 감사드립니다.
 2. 사단법인 이타서울은 도시 하천 병목의 부유 쓰레기를 시민이 직접 차단·기록·공개하는
