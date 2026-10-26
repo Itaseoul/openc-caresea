@@ -1,7 +1,7 @@
 import PermitGenerator from "@/components/PermitGenerator";
 
 export const metadata = {
-  title: "행정 허가 에이전트 | 스팟별 점용허가 문서팩",
+  title: "하천 점용허가 생성기 | 지점별 점용허가 문서팩",
   description:
     "실증 스팟과 용도(부유식 붐 / 환경감시 CCTV)를 고르면 하천 등급, 관할, 보호구역에 따라 필요한 허가, 협의 순서, 요건 체크리스트와 사전채움 문서팩(사업계획서, 행정예고, MOU, 정보공개청구, 사전협의 공문) 초안을 생성합니다.",
 };
@@ -10,7 +10,7 @@ export default function PermitPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#eef2f6", color: "#0f172a" }}>
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "20px 16px 40px" }}>
-        <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 행정 허가 에이전트</div>
+        <div style={{ fontSize: 11, letterSpacing: ".1em", color: "#64748b", fontWeight: 700 }}>SEA:CUT · 하천 점용허가 생성기</div>
         <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", marginTop: 4, lineHeight: 1.25 }}>
           지점을 고르면 <span style={{ color: "#1f5290" }}>허가 경로와 문서팩</span>이 달라집니다
         </h1>
@@ -33,7 +33,7 @@ export default function PermitPage() {
 
         <div style={{ marginTop: 18, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>
           근거: 하천법 제33조, 「하천점용허가 세부기준」(환경부), 하천법 시행령 제44조, 소하천정비법 제14조, 개인정보 보호법 제25조, 자연유산법 제17조, 부산시 사무위임 조례.
-          상세 검토는 docs/하천점용허가-적합성검토.md, 정보공개청구서-초안.md, 소하천-CCTV-민관데이터협력-모델.md 에 있습니다. 본 페이지는 공개자료 기반 실무 보조 도구이며 인허가나 법률 자문이 아닙니다.
+          상세 검토 자료는 이타서울이 내부에서 관리합니다. 본 페이지는 공개자료 기반 실무 보조 도구이며 인허가나 법률 자문이 아닙니다.
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>

@@ -153,7 +153,7 @@ export default function EulsukdoPage() {
               <b> 제5조①2호 자·아목</b>(<b>재해복구비 자부담 + 홍수기 긴급철거</b>), <b>1호다·4호</b>(원상회복).
             </div>
             <div style={{ fontSize: 11.5, color: "#94a3b8" }}>
-              상세 조문별 검토와 점용허가 사업계획서 초안: <b>docs/하천점용허가-적합성검토.md</b>,
+              상세 조문별 검토와 점용허가 사업계획서 초안은 이타서울 내부 검토 자료로 관리합니다.
               소관 환경부, 「하천법」 제33조 위임 (제출 시 2026-03-09 시행 판본 대조 권장).
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function EulsukdoPage() {
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
           ← <a href="/" style={{ color: "#1f5290", textDecoration: "underline" }}>openc 메인</a> |{" "}
-          <a href="/permit" style={{ color: "#1f5290", textDecoration: "underline" }}>행정 허가 에이전트</a> |{" "}
+          <a href="/permit" style={{ color: "#1f5290", textDecoration: "underline" }}>하천 점용허가 생성기</a> |{" "}
           <a href="/streams" style={{ color: "#1f5290", textDecoration: "underline" }}>전국 소하천 정비율</a> |{" "}
           <a href="/dashboard" style={{ color: "#1f5290", textDecoration: "underline" }}>운영과 안전 대시보드</a>
         </div>

@@ -336,7 +336,7 @@ export default function ProtocolPage() {
         <div style={{ marginTop: 18, ...card, padding: "14px 16px" }}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
             <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a" }}>원문 프로토콜 심층: 해안, 해변 부클릿</div>
-            <code style={{ fontSize: 11, color: "#64748b", background: "#f1f5f9", borderRadius: 6, padding: "2px 7px" }}>docs/PP-해안해변-부클릿-번역분석-심층스터디.md</code>
+            <code style={{ fontSize: 11, color: "#64748b", background: "#f1f5f9", borderRadius: 6, padding: "2px 7px" }}>이타서울 번역 분석</code>
           </div>
           <p style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.65, margin: "5px 0 12px", maxWidth: 720 }}>
             공개 부클릿(<i>Coasts and Beaches</i>, DLR 2024) 전문을 번역하고 분석했습니다. 10–16세 청소년이
@@ -534,7 +534,6 @@ export default function ProtocolPage() {
 
         <div style={{ marginTop: 14, fontSize: 11, color: "#94a3b8", lineHeight: 1.75 }}>
           수치 표기: 강만 세면 360+, 해변 포함 390(기사별 상이). 본 페이지는 공개 자료 기반 벤치마크 컨텍스트이며 안전이나 정책 자문이 아닙니다.
-          근거 메모: <code>memory/plastic-pirates-benchmark.md</code>.
         </div>
 
         <div style={{ marginTop: 22, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
